@@ -21,6 +21,8 @@ Owner: Maria (solo, student, new to web3). Explain web3 terms in plain words whe
 - Secrets live only in `.env` files (gitignored) and GitHub Actions secrets.
 - Never print a mnemonic or PQ secret key in chat, logs, commits, test output or screenshots.
 - Before every commit: `git status` and check no `.env`, key file or mnemonic is staged.
+  Then search the staged diff for the real secret values (first words of the mnemonic, start
+  of the PQ secret key), because a secret can hide in a file with an innocent name.
 - Testnet only. Never use an account that has held mainnet funds. Never touch mainnet.
 
 ## Network (testnet `qorechain-diana`)
@@ -64,7 +66,22 @@ After each working session, append a dated entry to `docs/AI_LOG.md`: what was a
 the AI did, what was verified, what went wrong. This is evidence for the Best AI-Native Build
 award, so record failures and corrections too.
 
+## Commands
+
+None yet. Add a row here the moment a real command exists (run, test, deploy, keeper), so
+nobody has to guess. Do not write test counts here: they go stale.
+
 ## UI bar
 
-Premium, original design. No emoji as icons, no generic template look. Works at phone width.
-Real chain data on screen, never placeholder numbers.
+- Premium, original design. No emoji as icons, no generic template look.
+- **Never present simulated or placeholder data as live.** Every number on screen comes from
+  the chain, or is clearly labelled as an example. Judges will check, and a fake counter
+  would undo the project's whole claim.
+- A UI change is not done until it has been checked in screenshots at desktop width (1440)
+  and phone width (390).
+
+## Words on the site
+
+Visitors may know nothing about crypto. Main pages use plain words: vault, key, lock, thief,
+refused, proof. Terms like ML-DSA-87, precompile, EVM window and hashes appear only inside a
+"Technical details" area, where judges can find them.
