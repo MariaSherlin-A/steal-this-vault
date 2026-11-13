@@ -1,0 +1,25 @@
+# secrets: never commit
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*mnemonic*
+secrets/
+
+# dependencies and builds
+node_modules/
+dist/
+build/
+.next/
+out/
+artifacts/
+cache/
+typechain-types/
+coverage/
+
+# tooling
+.vercel/
+*.log
+.DS_Store
+Thumbs.db
