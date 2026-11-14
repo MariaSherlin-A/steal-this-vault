@@ -14,6 +14,8 @@ robs that one every time.
 
 Built for **Build Before Q-Day**, the QoreChain Developer Fest. Testnet only.
 
+**Live site: <https://steal-this-vault.vercel.app>**
+
 ## Why
 
 On Q-Day, a quantum computer can derive an ordinary private key from public data. In effect,
@@ -22,7 +24,7 @@ today, and the page shows, with live chain data, what still protects the money.
 
 ## Try it
 
-**On the site.** Open the attack lab and press *Run all*. Your browser signs each attempt
+**On the site.** Open <https://steal-this-vault.vercel.app>, go to the attack lab and press *Run all*. Your browser signs each attempt
 with the published key and sends it to the live testnet. Nothing is recorded or replayed.
 
 **From a terminal.**
