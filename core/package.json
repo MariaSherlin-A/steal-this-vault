@@ -7,7 +7,9 @@
   "exports": {
     ".": "./src/index.ts",
     "./native": "./src/native.ts",
-    "./abi": "./src/abi.ts"
+    "./abi": "./src/abi.ts",
+    "./node": "./src/node.ts",
+    "./evm": "./src/evm.ts"
   },
   "scripts": {
     "test": "node ../scripts/run-tests.mjs test .test.ts",

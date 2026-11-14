@@ -1,5 +1,5 @@
 import { qorechainTestnet } from "@qorechain/evm";
-import type { Address } from "viem";
+import { defineChain, type Address } from "viem";
 
 /** QoreChain testnet (`qorechain-diana`). The project runs here and nowhere else. */
 export const TESTNET = {
@@ -15,8 +15,19 @@ export const TESTNET = {
   faucet: "https://dashboard.qorechain.io/faucet",
 } as const;
 
-/** The viem chain definition, from the QoreChain EVM kit. */
-export const chain = qorechainTestnet;
+/**
+ * The viem chain definition. Values come from the QoreChain EVM kit; it is
+ * rebuilt with `defineChain` because the kit's bundled types target an older
+ * viem than the one installed here.
+ */
+export const chain = defineChain({
+  id: qorechainTestnet.id,
+  name: qorechainTestnet.name,
+  nativeCurrency: qorechainTestnet.nativeCurrency,
+  rpcUrls: { default: { http: [...qorechainTestnet.rpcUrls.default.http] } },
+  blockExplorers: { default: { name: "QoreChain Explorer", url: "https://explore.qore.network" } },
+  testnet: true,
+});
 
 /** `pqcVerify(bytes pubkey, bytes signature, bytes message) returns (bool)` */
 export const PQC_VERIFY_ADDRESS: Address = "0x0000000000000000000000000000000000000A01";
