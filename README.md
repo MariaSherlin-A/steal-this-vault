@@ -1,5 +1,7 @@
 # Steal This Vault
 
+[![Built on QoreChain](https://build.qorechain.io/badge/steal-this-vault.svg)](https://build.qorechain.io/p/steal-this-vault)
+
 **The key to this vault is public. The money is still in it.**
 
 ![Steal This Vault: the owner's private key, published on purpose, next to a vault with two locks](docs/cover.png)
