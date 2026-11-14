@@ -68,8 +68,21 @@ award, so record failures and corrections too.
 
 ## Commands
 
-None yet. Add a row here the moment a real command exists (run, test, deploy, keeper), so
-nobody has to guess. Do not write test counts here: they go stale.
+Run from the repository root. Node 20 or newer.
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | the site at http://localhost:5173 (add `?mockwallet` to test the QoreX flow without the extension) |
+| `npm run check` | compile contracts, typecheck, lint, all unit tests. Must be green before a commit |
+| `npm test` | unit tests only |
+| `npm run heist` | every attack with the published key (`--list`, `--only`, `--record`, `--json`) |
+| `npm run status` | read both vaults, the owner account and its window from the chain |
+| `npm run keeper -- --dry` | what the keeper would do now, changing nothing |
+| `npm run keeper` | one keeper tick. Signs with the mnemonic in `.env`: Maria runs this, or the scheduled workflow does |
+| `npm run deploy -w contracts` | deploy both vaults (already done; do not repeat without asking) |
+| `npm run build` | contracts, then the site into `web/dist` |
+
+Do not write test counts here: they go stale.
 
 ## UI bar
 
