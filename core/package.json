@@ -11,7 +11,12 @@
     "./node": "./src/node.ts",
     "./evm": "./src/evm.ts",
     "./attacks": "./src/attacks.ts",
-    "./attack-list": "./src/attack-list.ts"
+    "./attack-list": "./src/attack-list.ts",
+    "./chain": "./src/chain.ts",
+    "./deployments": "./src/deployments.ts",
+    "./refusal": "./src/refusal.ts",
+    "./published": "./src/published.ts",
+    "./intent": "./src/intent.ts"
   },
   "scripts": {
     "test": "node ../scripts/run-tests.mjs test .test.ts",
