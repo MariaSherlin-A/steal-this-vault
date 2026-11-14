@@ -1,0 +1,16 @@
+{
+  "name": "@stv/keeper",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Keeps the owner's EVM window open, scoped to the vaults, and makes a proof-of-life withdrawal once a day. Holds the secret keys.",
+  "scripts": {
+    "tick": "tsx src/tick.ts",
+    "test": "node ../scripts/run-tests.mjs test .test.ts",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@stv/core": "*",
+    "viem": "^2.57.0"
+  }
+}

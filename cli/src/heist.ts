@@ -19,9 +19,8 @@ async function main(): Promise<number> {
     return 0;
   }
 
-  // Loot goes to a throwaway wallet unless the user names one.
-  const lootKey = options.loot ? undefined : generatePrivateKey();
-  const loot = options.loot ?? privateKeyToAccount(lootKey!).address;
+  // Loot goes to a throwaway wallet unless the user names one. Its key is not kept.
+  const loot = options.loot ?? privateKeyToAccount(generatePrivateKey()).address;
 
   const ctx = createAttackContext({
     key: options.key ?? PUBLISHED_KEY,
@@ -105,10 +104,9 @@ async function main(): Promise<number> {
     say(`  control vault  ${qor(classicBefore.balance)} before, ${qor(classicAfter.balance)} after`);
     say(`  owner account  ${Number(ownerBefore) / 1e6} QOR liquid before, ${Number(ownerAfter) / 1e6} after (fees for recorded attempts)`);
     say(`  vault's own count of refused attempts: ${hybridBefore.refusedCount} before, ${hybridAfter.refusedCount} after`);
-    if (stolen > 0n && lootKey) {
+    if (stolen > 0n) {
       say();
-      say(`  The control vault paid ${qor(stolen)} to ${loot}.`);
-      say(`  That wallet's key, if you want the test coins: ${lootKey}`);
+      say(`  The control vault paid ${qor(stolen)} to ${loot}${options.loot ? "" : " (a throwaway wallet; pass --loot to use your own)"}.`);
     }
     say();
     say(

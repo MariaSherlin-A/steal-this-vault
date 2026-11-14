@@ -70,10 +70,10 @@ export function classifyEvmRefusal(error: unknown): EvmRefusal {
 
   let kind: EvmRefusal["kind"] = "other";
   if (text.includes("no open evm authorisation window")) kind = "no-window";
-  else if (text.includes("window exhausted") || text.includes("does not admit this transaction")) kind = "window-exhausted";
-  else if (text.includes("not an allowed target") || text.includes("allowed targets") || text.includes("allowed_targets"))
+  else if (text.includes("allowed recipient") || text.includes("allowed target") || text.includes("allowed_targets"))
     kind = "target-not-allowed";
   else if (text.includes("native-only") || text.includes("native only") || text.includes("contract creation")) kind = "window-scope";
+  else if (text.includes("window exhausted") || text.includes("does not admit this transaction")) kind = "window-exhausted";
   else if (text.includes("no registered pqc key") || text.includes("has no pqc key")) kind = "no-pqc-key";
   else if (text.includes("delegation")) kind = "delegation-consent";
   else if (text.includes("nonce") || text.includes("sequence")) kind = "nonce";
