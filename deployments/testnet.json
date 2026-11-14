@@ -1,0 +1,30 @@
+{
+  "network": "qorechain-diana",
+  "evmChainId": 9800,
+  "owner": {
+    "evm": "0xA2E46aDeDADD7163b4178Bb07AA086765e55dd73",
+    "native": "qor15tjx4hk6m4ck8dqh3wc84gyxwe09thtnfj6z7w"
+  },
+  "deployer": {
+    "evm": "0x965cc64A84Cf6E0D7089B72Ba918d7336b5900F0",
+    "native": "qor1jewvvj5yeahq6uyfku46jxxhxd44jq8snsd3j8"
+  },
+  "vaults": {
+    "hybrid": {
+      "address": "0x877BA271d7BdFdb7dfA0BB5863E9FBF04885c483",
+      "native": "qor1saa6yuwhhh7m0haqhdvx860m7pygt3yrq820ts",
+      "postQuantum": true,
+      "deployTx": "0x2818a31071f6dda36cbc678507ceeb5d3f04fd87a3458b74906607995ecc2b92",
+      "deployBlock": 10054281
+    },
+    "classic": {
+      "address": "0x57AD197DcfDbb76EDE44B0f3c239965Fae0A8F51",
+      "native": "qor127k3jlw0mwmkahjykreuywvkt7hq4r63mfsgkn",
+      "postQuantum": false,
+      "deployTx": "0x8b29c412e6add7553d8ca69c3e42c591e85e2724f907a328ae4238c9d394ed54",
+      "deployBlock": 10054283
+    }
+  },
+  "compiler": "0.8.28+commit.7893614a.Emscripten.clang",
+  "deployedAt": "2026-11-14T04:58:07.495Z"
+}
