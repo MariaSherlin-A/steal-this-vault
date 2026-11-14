@@ -80,8 +80,8 @@ storage. When the classical check passes and the post-quantum check fails, it al
 amount to `counterfactualLoss`: what a one-signature vault would have paid. Those counters are
 what the site shows.
 
-More detail: [docs/architecture.md](docs/architecture.md) and
-[docs/threat-model.md](docs/threat-model.md).
+More detail: [docs/architecture.md](docs/architecture.md),
+[docs/threat-model.md](docs/threat-model.md) and the QCAI audit in [docs/AUDIT.md](docs/AUDIT.md).
 
 ## The 18 attacks
 
