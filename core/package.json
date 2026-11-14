@@ -9,7 +9,9 @@
     "./native": "./src/native.ts",
     "./abi": "./src/abi.ts",
     "./node": "./src/node.ts",
-    "./evm": "./src/evm.ts"
+    "./evm": "./src/evm.ts",
+    "./attacks": "./src/attacks.ts",
+    "./attack-list": "./src/attack-list.ts"
   },
   "scripts": {
     "test": "node ../scripts/run-tests.mjs test .test.ts",

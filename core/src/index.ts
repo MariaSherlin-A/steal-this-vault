@@ -1,4 +1,5 @@
 export * from "./abi";
+export * from "./attack-list";
 export * from "./chain";
 export * from "./deployments";
 export * from "./evm";
