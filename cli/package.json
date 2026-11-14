@@ -1,0 +1,17 @@
+{
+  "name": "@stv/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "heist: try every attack on the vault from a terminal, with only the published key.",
+  "scripts": {
+    "heist": "tsx src/heist.ts",
+    "status": "tsx src/status.ts",
+    "test": "node ../scripts/run-tests.mjs test .test.ts",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@stv/core": "*",
+    "viem": "^2.57.0"
+  }
+}
