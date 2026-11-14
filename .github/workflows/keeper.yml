@@ -1,6 +1,7 @@
 # Keeps the experiment running: renews the owner's EVM window, refills the control
 # vault after it has been robbed, and now and then proves the hybrid vault pays its owner.
 # Needs two repository secrets: VAULT_MNEMONIC and DEPLOYER_MNEMONIC. Testnet accounts only.
+# For the Q-Day drill, set the repository variable KEEPER_MODE to "drill"; set it back to "normal" after.
 name: keeper
 
 on:
@@ -30,3 +31,4 @@ jobs:
         env:
           VAULT_MNEMONIC: ${{ secrets.VAULT_MNEMONIC }}
           DEPLOYER_MNEMONIC: ${{ secrets.DEPLOYER_MNEMONIC }}
+          KEEPER_MODE: ${{ vars.KEEPER_MODE }}

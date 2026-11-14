@@ -34,6 +34,25 @@ export const CONTROL_REFILL_TO_UQOR = 50_000n;
 /** The keeper stops if the owner's liquid balance falls below this, in uqor (3 QOR). */
 export const OWNER_RESERVE_UQOR = 3_000_000n;
 
+/**
+ * `normal`: keep the experiment open to visitors.
+ * `drill`: for the fest's Q-Day drill, when a bot holds the published key and every
+ * successful attack or lost coin counts against the project. The side door is shut,
+ * so attempts are refused at the door and cost the owner no fees, and the one-lock
+ * control vault is emptied back to the owner, because it opens for the published key
+ * by design, through any account, door or no door.
+ */
+export type Mode = "normal" | "drill";
+
+export function modeFrom(argv: readonly string[], env: string | undefined): Mode {
+  if (argv.includes("--drill")) return "drill";
+  if (argv.includes("--normal")) return "normal";
+  const value = (env ?? "").trim().toLowerCase();
+  if (value === "" || value === "normal") return "normal";
+  if (value === "drill") return "drill";
+  throw new Error(`KEEPER_MODE must be "normal" or "drill", not "${env}"`);
+}
+
 export interface Reading {
   door: Door;
   vaults: { hybrid: Address; classic: Address };
@@ -48,6 +67,8 @@ export type Action =
   | { kind: "open-window"; reason: string }
   | { kind: "proof-of-life"; reason: string }
   | { kind: "refill-control"; reason: string }
+  | { kind: "close-window"; reason: string }
+  | { kind: "empty-control"; reason: string }
   | { kind: "stop"; reason: string };
 
 export function sameTargets(door: Door, vaults: { hybrid: Address; classic: Address }): boolean {
@@ -56,7 +77,8 @@ export function sameTargets(door: Door, vaults: { hybrid: Address; classic: Addr
   return want.length === have.length && want.every((a, i) => a === have[i]);
 }
 
-export function plan(r: Reading): Action[] {
+export function plan(r: Reading, mode: Mode = "normal"): Action[] {
+  if (mode === "drill") return planDrill(r);
   if (r.ownerLiquidUqor < OWNER_RESERVE_UQOR) {
     return [{ kind: "stop", reason: `owner liquid balance ${r.ownerLiquidUqor} uqor is below the reserve` }];
   }
@@ -85,4 +107,34 @@ export function plan(r: Reading): Action[] {
     actions.push({ kind: "refill-control", reason: `control vault holds ${r.controlBalanceWei} wei` });
   }
   return actions;
+}
+
+/**
+ * Drill mode empties the one-lock vault back to the owner (the owner calls it over
+ * the EVM, which needs the window for one transaction), then shuts the window so
+ * every attempt is refused at the door at no cost to the owner. It runs even below
+ * the reserve, because each step leaves the owner safer.
+ */
+function planDrill(r: Reading): Action[] {
+  const actions: Action[] = [];
+  const mustEmpty = r.controlBalanceWei > 0n;
+  // The owner empties the control vault itself, over the EVM, so it needs a window that admits the vault.
+  if (mustEmpty && !doorAdmitsVault(r.door, r.vaults.classic)) {
+    actions.push({ kind: "open-window", reason: "drill mode: briefly, so the owner can empty the one-lock vault" });
+  }
+  if (mustEmpty) {
+    actions.push({
+      kind: "empty-control",
+      reason: `drill mode: the one-lock vault holds ${r.controlBalanceWei} wei that the published key can take`,
+    });
+  }
+  if (r.door.open || mustEmpty) {
+    actions.push({ kind: "close-window", reason: "drill mode: attempts must be refused at the door, at no cost to the owner" });
+  }
+  return actions;
+}
+
+function doorAdmitsVault(door: Door, vault: Address): boolean {
+  if (!door.open || door.nativeOnly || door.remainingTxs === 0n || door.remainingBlocks < 50n) return false;
+  return door.targets.length === 0 || door.targets.some((t) => t.toLowerCase() === vault.toLowerCase());
 }

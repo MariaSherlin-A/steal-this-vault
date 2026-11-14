@@ -17,7 +17,25 @@ Each tick reads the chain, decides in `src/plan.ts` (pure, unit-tested) and acts
 npm run keeper -- --dry     # read and decide, change nothing
 npm run keeper              # act
 npm run keeper -- --close   # close the window and stop (maintenance)
+npm run keeper -- --drill   # drill mode, see below
+npm run keeper -- --proof-tx  # one normal payment from the owner, signed with both keys
 ```
+
+## Drill mode
+
+For the fest's Q-Day drill, where a bot holds the published key and every successful attack
+or lost coin counts against the project. Set the repository variable `KEEPER_MODE=drill`
+(or pass `--drill`). Each tick then:
+
+1. empties the one-lock control vault back to the owner (it opens for the published key by
+   design, so on drill day it would only be a loss), opening the window for that one
+   transaction if needed;
+2. shuts the owner's window, so every attempt is refused at the door and costs the owner
+   nothing;
+3. never refills the control vault and never withdraws from the hybrid vault.
+
+After the drill, `--proof-tx` makes the "project still works" transaction; then set
+`KEEPER_MODE=normal` and the next tick reopens the window and refills the control vault.
 
 Secrets, from `.env` locally or GitHub Actions secrets: `VAULT_MNEMONIC`, `DEPLOYER_MNEMONIC`.
 Testnet accounts only. The keeper never prints them.

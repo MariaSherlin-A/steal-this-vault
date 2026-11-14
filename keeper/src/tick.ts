@@ -4,6 +4,8 @@
  *   npm run keeper                 act
  *   npm run keeper -- --dry        read and decide, change nothing
  *   npm run keeper -- --close      close the owner's window and stop (for maintenance)
+ *   npm run keeper -- --drill      drill mode (or KEEPER_MODE=drill): window shut, control vault emptied
+ *   npm run keeper -- --proof-tx   one normal payment from the owner account, signed with both keys
  *
  * This is the only process that holds the owner's mnemonic. It signs three
  * kinds of transaction, all on the native lane with both keys:
@@ -20,11 +22,19 @@ import { deployment, evmClient, readStats, sendWithKey, signWithdrawal, vaultRef
 import { readDoor } from "@stv/core/attacks";
 import { NativeLane, accountFromMnemonic, messages, type UnifiedAccount } from "@stv/core/native";
 import { requireSecret } from "@stv/core/node";
+import { encodeWithdraw } from "@stv/core/intent";
 import { formatEther, formatUnits, parseEther, type Hex } from "viem";
-import { CONTROL_REFILL_TO_UQOR, WINDOW, plan, type Action, type Reading } from "./plan";
+import { doorAdmits } from "@stv/core/attacks";
+import type { Address } from "viem";
+import { CONTROL_REFILL_TO_UQOR, WINDOW, modeFrom, plan, type Action, type Reading } from "./plan";
 
 const dry = process.argv.includes("--dry");
 const closeOnly = process.argv.includes("--close");
+const proofTx = process.argv.includes("--proof-tx");
+const mode = modeFrom(process.argv, process.env.KEEPER_MODE);
+
+/** The drill's proof that the project still works: the owner adds 0.01 QOR to the hybrid vault, signed with both keys. */
+const PROOF_TX_UQOR = 10_000n;
 
 /** What proof of life takes from the hybrid vault each day. */
 const PROOF_OF_LIFE_WEI = parseEther("0.001");
@@ -95,15 +105,52 @@ async function proofOfLife(owner: UnifiedAccount, payer: UnifiedAccount) {
   log(`proof of life: withdrew ${formatEther(intent.amount)} QOR, tx ${sent.hash} ${explorer.tx(sent.hash!)}`);
 }
 
-async function ensurePayerWindow(payer: UnifiedAccount) {
+async function ensurePayerWindow(payer: UnifiedAccount, target: Address) {
   const door = await readDoor(lane, payer.cosmos);
-  if (door.open && door.remainingTxs >= 2n && door.remainingBlocks > 200n) return;
+  if (doorAdmits(door, target) && door.remainingTxs >= 2n && door.remainingBlocks > 200n) return;
   await must(
     "payer window",
     await lane.send(payer, [
-      messages.openWindow({ sender: payer.cosmos, blocks: 17_000n, maxTxs: 40n, maxValueUqor: 2_000_000n, allowedTargets: [vaults.hybrid] }),
+      messages.openWindow({
+        sender: payer.cosmos,
+        blocks: 17_000n,
+        maxTxs: 40n,
+        maxValueUqor: 2_000_000n,
+        allowedTargets: [vaults.hybrid, vaults.classic],
+      }),
     ]),
   );
+}
+
+/**
+ * Take everything out of the one-lock vault, back to the owner. The owner account
+ * calls the vault itself, inside its window, exactly as the `control-rob` attack
+ * does. A relayed EIP-712 signature is not used: on this testnet the ecrecover
+ * precompile returned nothing for accounts with a registered ML-DSA-87 key while
+ * their window was shut (seen 14 Nov 2026).
+ */
+async function emptyControl(owner: UnifiedAccount) {
+  const stats = await readStats(client, vaults.classic);
+  if (stats.balance === 0n) return log("control vault already empty");
+  const intent = {
+    to: owner.evm as `0x${string}`,
+    amount: stats.balance,
+    nonce: stats.nonce,
+    deadline: (await client.getBlock()).timestamp + 1800n,
+  };
+  const sent = await sendWithKey(client, owner.privateKey as Hex, { to: vaults.classic, data: encodeWithdraw(intent), fallbackGas: 120_000n });
+  if (!sent.admitted || sent.receipt?.status !== "success") {
+    throw new Error(`emptying the control vault was not mined: ${sent.refusal?.message ?? sent.receipt?.status}`);
+  }
+  const after = await readStats(client, vaults.classic);
+  if (after.balance !== 0n) throw new Error(`the control vault still holds ${after.balance} wei`);
+  log(`emptied the control vault: ${formatEther(intent.amount)} QOR back to the owner, tx ${sent.hash} ${explorer.tx(sent.hash!)}`);
+}
+
+async function sendProofTx(owner: UnifiedAccount) {
+  const result = await lane.send(owner, [messages.send(owner.cosmos, deployment.vaults.hybrid.native, PROOF_TX_UQOR)]);
+  await must(`proof transaction: the owner added ${formatUnits(PROOF_TX_UQOR, 6)} QOR to the hybrid vault, signed with both keys`, result);
+  log(`submit this hash on the project page: ${result.hash}`);
 }
 
 async function refillControl(owner: UnifiedAccount) {
@@ -120,8 +167,12 @@ async function act(action: Action, owner: UnifiedAccount, payer: UnifiedAccount)
     case "open-window":
       return openWindow(owner);
     case "proof-of-life":
-      await ensurePayerWindow(payer);
+      await ensurePayerWindow(payer, vaults.hybrid);
       return proofOfLife(owner, payer);
+    case "close-window":
+      return must("close window", await lane.send(owner, [messages.closeWindow(owner.cosmos)]));
+    case "empty-control":
+      return emptyControl(owner);
     case "refill-control":
       return refillControl(owner);
     case "stop":
@@ -134,18 +185,24 @@ async function main() {
   // The deployer doubles as the payer: it holds a little QOR and has a PQC key.
   const payer = await accountFromMnemonic(requireSecret("DEPLOYER_MNEMONIC"));
 
+  if (proofTx) {
+    if (!dry) await sendProofTx(owner);
+    return;
+  }
+
   if (closeOnly) {
     if (!dry) await must("close window", await lane.send(owner, [messages.closeWindow(owner.cosmos)]));
     return;
   }
 
   const reading = await read(owner);
+  log(`mode ${mode}`);
   log(
     `window ${reading.door.open ? "open" : "closed"}, ${reading.door.remainingTxs} txs / ${reading.door.remainingBlocks} blocks / ${formatUnits(reading.door.remainingValueUqor, 6)} QOR left; ` +
       `hybrid ${formatEther(reading.hybridBalanceWei)} QOR, control ${formatEther(reading.controlBalanceWei)} QOR, owner liquid ${formatUnits(reading.ownerLiquidUqor, 6)} QOR, ` +
       `last paid at block ${reading.lastPaidAt}, now ${reading.currentBlock}`,
   );
-  const actions = plan(reading);
+  const actions = plan(reading, mode);
   if (actions.length === 0) log("nothing to do");
   for (const action of actions) await act(action, owner, payer);
 }

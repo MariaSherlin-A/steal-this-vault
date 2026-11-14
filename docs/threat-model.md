@@ -69,6 +69,20 @@ proof of possession, the vault refuses (`PqKeyUnavailable`). If a precompile cal
 wrapper in `QorePQC.sol` treats it as "not verified". The hybrid vault never falls back to the
 classical check alone.
 
+## Drill mode
+
+In normal mode two things are given away on purpose: the control vault's small balance (it
+is the control) and the window's fee allowance (the cost of recording attempts). During the
+fest's Q-Day drill both would count as losses, so the keeper's drill mode removes them: it
+empties the control vault back to the owner and shuts the window. Every attempt with the
+published key is then refused at the door, for free.
+
+An observation from building it: on this testnet, while the owner's window was shut, the
+`ecrecover` precompile returned nothing for signatures by accounts with a registered
+ML-DSA-87 key, though it worked for other keys. A relayed EIP-712 signature by the owner was
+therefore refused by both vaults (`NotAuthorized`). This is not documented that we could
+find, so the project does not rely on it.
+
 ## What is not covered
 
 - **Leak of the mnemonic.** Both keys derive from it. It is kept in `.env` (ignored by git)

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { Door } from "@stv/core/attacks";
-import { CONTROL_REFILL_BELOW, OWNER_RESERVE_UQOR, PROOF_OF_LIFE_EVERY_BLOCKS, RENEW_BELOW, plan, type Reading } from "../src/plan";
+import { CONTROL_REFILL_BELOW, OWNER_RESERVE_UQOR, PROOF_OF_LIFE_EVERY_BLOCKS, RENEW_BELOW, modeFrom, plan, type Reading } from "../src/plan";
 
 const vaults = {
   hybrid: "0x877BA271d7BdFdb7dfA0BB5863E9FBF04885c483",
@@ -82,5 +82,54 @@ describe("keeper plan", () => {
   it("combines independent actions", () => {
     const r = { ...healthy, door: { ...healthyDoor, open: false }, lastPaidAt: 0n, controlBalanceWei: 0n };
     assert.deepEqual(kinds(r), ["open-window", "proof-of-life", "refill-control"]);
+  });
+});
+
+const drill = (r: Reading) => plan(r, "drill").map((a) => a.kind);
+
+describe("keeper plan, drill mode", () => {
+  const shut = { ...healthyDoor, open: false };
+
+  it("empties the control vault through the open window, then shuts it", () => {
+    assert.deepEqual(drill(healthy), ["empty-control", "close-window"]);
+  });
+
+  it("opens the window briefly when it must empty the control vault", () => {
+    assert.deepEqual(drill({ ...healthy, door: shut }), ["open-window", "empty-control", "close-window"]);
+    assert.deepEqual(drill({ ...healthy, door: { ...healthyDoor, targets: [vaults.hybrid] } }), ["open-window", "empty-control", "close-window"]);
+  });
+
+  it("only shuts the window when the control vault is already empty", () => {
+    assert.deepEqual(drill({ ...healthy, controlBalanceWei: 0n }), ["close-window"]);
+  });
+
+  it("does nothing once both are done", () => {
+    assert.deepEqual(drill({ ...healthy, door: shut, controlBalanceWei: 0n }), []);
+  });
+
+  it("never refills the control vault or withdraws from the hybrid vault", () => {
+    assert.deepEqual(drill({ ...healthy, door: shut, controlBalanceWei: 0n, lastPaidAt: 0n }), []);
+  });
+
+  it("still makes the owner safer when the balance is below the reserve", () => {
+    assert.deepEqual(drill({ ...healthy, ownerLiquidUqor: 0n }), ["empty-control", "close-window"]);
+  });
+});
+
+describe("keeper mode", () => {
+  it("defaults to normal", () => {
+    assert.equal(modeFrom([], undefined), "normal");
+    assert.equal(modeFrom([], ""), "normal");
+    assert.equal(modeFrom([], "normal"), "normal");
+  });
+
+  it("reads the flag before the environment", () => {
+    assert.equal(modeFrom(["--drill"], "normal"), "drill");
+    assert.equal(modeFrom(["--normal"], "drill"), "normal");
+    assert.equal(modeFrom([], " Drill "), "drill");
+  });
+
+  it("refuses an unknown mode instead of guessing", () => {
+    assert.throws(() => modeFrom([], "drll"), /KEEPER_MODE/);
   });
 });
