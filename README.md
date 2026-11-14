@@ -164,7 +164,7 @@ Node 20 or newer.
 
 ## AI use
 
-Built by one student with Claude Code. What the AI was asked, what it did, what was checked
+Built by one student with Claude Code. How AI was used, what it generated and what the human did is in [AI_USAGE.md](AI_USAGE.md). What the AI was asked, what it did, what was checked
 on the live chain and what went wrong is in [docs/AI_LOG.md](docs/AI_LOG.md). Commits carry
 the AI co-author line.
 
