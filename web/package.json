@@ -1,0 +1,29 @@
+{
+  "name": "@stv/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The site: the published key, the two vaults, the attack lab, the wall.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit -p . && vite build",
+    "preview": "vite preview",
+    "test": "node ../scripts/run-tests.mjs test .test.ts",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@qorechain/qorex-types": "^0.1.0",
+    "@qorechain/sdk": "^0.14.0",
+    "@stv/core": "*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "viem": "^2.57.0"
+  },
+  "devDependencies": {
+    "@qorechain/qorex-wallet-mock": "^0.1.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "vite": "^5.4.0"
+  }
+}
