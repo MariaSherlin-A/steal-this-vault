@@ -1,0 +1,43 @@
+{
+  "name": "steal-this-vault",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A vault on QoreChain whose owner's ECDSA key is public. Withdrawals also need an ML-DSA-87 signature verified on chain.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.16"
+  },
+  "workspaces": [
+    "core",
+    "contracts",
+    "cli",
+    "keeper",
+    "web"
+  ],
+  "scripts": {
+    "build": "npm run build -w contracts && npm run build -w web",
+    "build:contracts": "npm run build -w contracts",
+    "test": "npm run test -w contracts && npm run test -w core && npm run test -w cli && npm run test -w keeper && npm run test -w web",
+    "test:live": "npm run test:live -w contracts",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint .",
+    "heist": "npm run heist -w cli --",
+    "keeper": "npm run tick -w keeper --",
+    "dev": "npm run dev -w web",
+    "check": "npm run build:contracts && npm run typecheck && npm run lint && npm test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "@types/node": "^20.17.0",
+    "create-qorechain-dapp": "0.14.0",
+    "eslint": "^9.20.0",
+    "globals": "^15.14.0",
+    "tsx": "^4.19.0",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.24.0"
+  },
+  "overrides": {
+    "rollup": "npm:@rollup/wasm-node@^4.44.0"
+  }
+}
