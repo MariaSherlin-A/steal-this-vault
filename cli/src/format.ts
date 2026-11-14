@@ -157,3 +157,97 @@ export function summarise(results: readonly AttackResult[]): Summary {
 
 /** JSON cannot hold bigint; print them as decimal strings. */
 export const jsonReplacer = (_key: string, value: unknown) => (typeof value === "bigint" ? value.toString() : value);
+
+// ---------------------------------------------------------------- status
+
+/** What `npm run status` reads from the chain. */
+export interface VaultReport {
+  label: string;
+  address: Address;
+  postQuantum: boolean;
+  balance: bigint;
+  paidCount: bigint;
+  paidTotal: bigint;
+  refusedCount: bigint;
+  keyholderRefusedCount: bigint;
+  counterfactualThefts: bigint;
+  counterfactualLoss: bigint;
+  lastPaidAt: bigint;
+  lastRefusedAt: bigint;
+  refusedBy: Record<string, bigint>;
+}
+
+export interface StatusReport {
+  network: string;
+  evmChainId: number;
+  block: bigint;
+  owner: {
+    evm: Address;
+    native: string;
+    liquidUqor: bigint;
+    pqcRegistered: boolean;
+    possessionProven: boolean;
+  };
+  door: Door;
+  vaults: VaultReport[];
+}
+
+/** "about 3 h ago" from a block distance, at the testnet's 1.4 s blocks. */
+export function ago(block: bigint, current: bigint): string {
+  if (block === 0n) return "never";
+  const seconds = Number(current > block ? current - block : 0n) * 1.4;
+  if (seconds < 90) return `block ${block}, about ${Math.round(seconds)} s ago`;
+  if (seconds < 5400) return `block ${block}, about ${Math.round(seconds / 60)} min ago`;
+  if (seconds < 172_800) return `block ${block}, about ${(seconds / 3600).toFixed(1)} h ago`;
+  return `block ${block}, about ${(seconds / 86_400).toFixed(1)} days ago`;
+}
+
+function formatVault(v: VaultReport, block: bigint): string[] {
+  const lines = [
+    c.bold(`${v.label}  ${v.address}`),
+    `  locks            ${v.postQuantum ? "secp256k1 and ML-DSA-87" : "secp256k1 only (the control)"}`,
+    `  holds            ${qor(v.balance)}`,
+    `  paid             ${v.paidCount} withdrawal${v.paidCount === 1n ? "" : "s"}, ${qor(v.paidTotal)} in total`,
+    `  last paid        ${ago(v.lastPaidAt, block)}`,
+    `  refused          ${v.refusedCount} attempt${v.refusedCount === 1n ? "" : "s"}, ${v.keyholderRefusedCount} of them holding the owner's secp256k1 key`,
+    `  last refused     ${ago(v.lastRefusedAt, block)}`,
+  ];
+  if (v.postQuantum) {
+    lines.push(
+      `  would have lost  ${qor(v.counterfactualLoss)} over ${v.counterfactualThefts} attempt${v.counterfactualThefts === 1n ? "" : "s"} that only the ML-DSA-87 check stopped`,
+    );
+  }
+  const reasons = Object.entries(v.refusedBy).filter(([name, count]) => name !== "None" && count > 0n);
+  for (const [name, count] of reasons) lines.push(c.dim(`    ${name.padEnd(22)} ${count}`));
+  return lines;
+}
+
+/** The whole status report as text. */
+export function formatStatus(s: StatusReport): string {
+  const key = s.owner.pqcRegistered
+    ? s.owner.possessionProven
+      ? c.green("registered, with proof of possession")
+      : c.yellow("registered, WITHOUT proof of possession")
+    : c.red("NOT registered");
+  const lines = [
+    c.bold("Steal This Vault: status"),
+    `network        ${s.network} (EVM chain ${s.evmChainId}), block ${s.block}`,
+    `owner account  ${s.owner.evm}  (${s.owner.native})`,
+    `  liquid         ${formatUnits(s.owner.liquidUqor, 6)} QOR`,
+    `  ML-DSA-87 key  ${key}`,
+    `  EVM window     ${describeDoor(s.door)}`,
+  ];
+  for (const v of s.vaults) lines.push("", ...formatVault(v, s.block));
+  return lines.join("\n");
+}
+
+/** Problems worth a non-zero exit: the things that would make the public claim false. */
+export function statusProblems(s: StatusReport): string[] {
+  const problems: string[] = [];
+  if (!s.owner.pqcRegistered) problems.push("the owner account has no ML-DSA-87 key on record");
+  else if (!s.owner.possessionProven) problems.push("the owner's ML-DSA-87 key has no proof of possession");
+  const hybrid = s.vaults.find((v) => v.postQuantum);
+  if (!hybrid) problems.push("no hybrid vault in the report");
+  else if (hybrid.balance === 0n) problems.push("the hybrid vault is empty");
+  return problems;
+}
