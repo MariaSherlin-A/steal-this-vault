@@ -100,3 +100,32 @@ documents a judge needs. Then: "complete the work within this session".
 **Not done**
 - The Q-Day drill (separate task, signup by 17 Nov).
 - A test with the real QoreX extension and a real visitor payment.
+
+## 14 Nov 2026 (evening): drill mode and a rehearsal of the Q-Day drill
+
+**Asked:** close the weak spots before the fest's Q-Day drill, test it, then push.
+
+**Weak spots found by reviewing the drill rules against the design**
+- The one-lock control vault opens for the published key by design, so on drill day it
+  would count as a successful attack and a loss.
+- While the owner's window is open, each attempt spends the owner's fee allowance.
+
+**Fix:** a keeper drill mode (`--drill` or `KEEPER_MODE=drill`) that empties the control
+vault back to the owner and then shuts the window, plus `--proof-tx` for the drill's
+"project still works" transaction. Unit-tested (plan is pure).
+
+**What went wrong first.** The first version had the payer account relay the owner's signed
+withdrawal. It was mined, but the vault recorded `NotAuthorized`. Probing showed that the
+chain's `ecrecover` precompile returned nothing for both accounts that have an ML-DSA-87 key
+(while their windows were shut), yet worked for random keys. The earlier proof-of-life
+payout used the same path successfully while the owner's window was open. This behaviour is
+not documented that we could find. Drill mode was changed so the owner calls the vault
+itself, which does not depend on it.
+
+**Rehearsal on testnet** (Maria ran the keeper, since it signs with the mnemonic; the safety
+layer stopped the AI from doing so):
+- Drill mode: window opened, control vault emptied (tx `0xe741fea0…8c4b06b4`), window closed.
+- Then every attack with the published key: 17 refused (11 by the chain, 6 by the vault, the
+  vault ones checked with a call because the door was shut), the control attack skipped
+  because there was nothing to take. `npm run status`: no problems, control vault 0 QOR,
+  window closed. Cost of switching to drill mode: about 0.09 QOR in fees.

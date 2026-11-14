@@ -75,7 +75,8 @@ In normal mode two things are given away on purpose: the control vault's small b
 is the control) and the window's fee allowance (the cost of recording attempts). During the
 fest's Q-Day drill both would count as losses, so the keeper's drill mode removes them: it
 empties the control vault back to the owner and shuts the window. Every attempt with the
-published key is then refused at the door, for free.
+published key is then refused at the door, for free. Rehearsed on testnet on 14 Nov 2026:
+17 attacks refused, the control attack had nothing to take, nothing lost.
 
 An observation from building it: on this testnet, while the owner's window was shut, the
 `ecrecover` precompile returned nothing for signatures by accounts with a registered
