@@ -10,7 +10,7 @@
     "./abi": "./src/abi.ts"
   },
   "scripts": {
-    "test": "tsx --test --test-reporter=spec \"test/*.test.ts\"",
+    "test": "node ../scripts/run-tests.mjs test .test.ts",
     "typecheck": "tsc --noEmit -p ."
   },
   "dependencies": {
