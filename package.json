@@ -19,13 +19,13 @@
     "build": "npm run build -w contracts && npm run build -w web",
     "build:contracts": "npm run build -w contracts",
     "test": "npm run test -w contracts && npm run test -w core && npm run test -w cli && npm run test -w keeper && npm run test -w web",
-    "test:live": "npm run test:live -w contracts",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
     "heist": "npm run heist -w cli --",
     "keeper": "npm run tick -w keeper --",
     "dev": "npm run dev -w web",
-    "check": "npm run build:contracts && npm run typecheck && npm run lint && npm test"
+    "check": "npm run build:contracts && npm run typecheck && npm run lint && npm test",
+    "status": "npm run status -w cli --"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
