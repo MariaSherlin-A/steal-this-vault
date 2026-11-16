@@ -129,3 +129,37 @@ layer stopped the AI from doing so):
   vault ones checked with a call because the door was shut), the control attack skipped
   because there was nothing to take. `npm run status`: no problems, control vault 0 QOR,
   window closed. Cost of switching to drill mode: about 0.09 QOR in fees.
+
+## 16 Nov 2026: drill-day safety, the demo film
+
+**Asked:** make every change needed for drill day and make sure it is safe now; write the
+demo video script; build the film as an animated piece (not a screen recording) that takes
+Maria's voiceover, scene by scene.
+
+**Found while checking the site before the video.** The owner's window was closed although
+the keeper workflow is scheduled every 15 minutes: GitHub ran it only every 5 to 7 hours
+(`gh run list`), and a window lasted 3.9 hours. Fix: the keeper now opens 17,000-block windows
+(about 6.6 hours, just under the chain's ceiling), so the side door is open most of the day.
+
+**Drill-day changes.**
+- The drill period (17 Nov 18:00 to 19 Nov 06:00 UTC, from the fest rules: 18 Nov 00:00 to
+  23:59 UTC) is hard-coded in `keeper/src/plan.ts`. Inside it the keeper is in drill mode
+  whatever `KEEPER_MODE` says; only `--normal` typed by a human overrides it. So the one step
+  that could be forgotten (setting the variable) cannot open the window on drill day.
+- `--proof-tx` says when it is run outside drill day, so a rehearsal is not mistaken for the
+  real proof. The proof is a native payment, so it needs no window.
+- `docs/drill-day.md`: the runbook for 17, 18 and 19 Nov, in UTC and Indian time.
+- Tests for the forced period; `npm run check` green.
+
+**The film.** `video/` is a Remotion project (React rendered frame by frame, encoded with
+FFmpeg), kept out of the root workspaces so the keeper's install stays small. Eight scenes
+pace themselves against their own length, so the pictures follow the voice however fast it
+is read. `scripts/timing.mjs` measures each voice file with ffprobe and sets the scene
+lengths; a scene without a file plays silent at the script's estimate. The record scene
+shows real figures from `npm run status` with the date they were read, per the rule that no
+simulated number is shown as live. Verified with stills of every scene and a full silent
+half-size render. Fixed from the stills: a block strip that wrapped to a wrong block number,
+an overlapping footer, and a closing line that crowded the one-lock vault.
+
+**Still open.** Maria records the eight voice files; then `npm run video:timing` and
+`npm run video`. QCAI stage 2. A Hardhat or Foundry test suite for the category.
