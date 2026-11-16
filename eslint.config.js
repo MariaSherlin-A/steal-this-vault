@@ -5,7 +5,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["**/node_modules/**", "**/dist/**", "**/artifacts/**", "**/cache/**", "**/typechain-types/**", "**/coverage/**", "spikes/**"],
+    ignores: ["**/node_modules/**", "**/dist/**", "**/artifacts/**", "**/cache/**", "**/typechain-types/**", "**/coverage/**", "spikes/**", "video/**"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
