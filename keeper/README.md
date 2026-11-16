@@ -7,7 +7,9 @@ Each tick reads the chain, decides in `src/plan.ts` (pure, unit-tested) and acts
 `src/tick.ts`:
 
 - **Renew the EVM window** when it is close to its limits. The window is scoped to the two
-  vaults: 10,000 blocks, 400 transactions, 0.5 QOR of fees.
+  vaults: 17,000 blocks (about 6.6 hours), 400 transactions, 0.5 QOR of fees. The schedule asks for
+  a tick every 15 minutes, but GitHub runs it only every few hours, so the window is sized to
+  outlast that gap.
 - **Refill the control vault** after it has been robbed, so the next visitor can rob it too.
 - **Proof of life**: now and then, withdraw a little from the hybrid vault with both keys,
   so the record shows the vault does pay its owner.

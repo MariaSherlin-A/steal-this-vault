@@ -13,8 +13,9 @@ import type { Address } from "viem";
 
 /** The window the keeper opens. */
 export const WINDOW = {
-  /** About 4 hours at the testnet's 1.4 s blocks. The chain's ceiling is 17,280. */
-  blocks: 10_000n,
+  /** About 6.6 hours at the testnet's 1.4 s blocks, just under the chain's ceiling of 17,280. GitHub runs the
+   * schedule only every few hours, so the window has to outlast the gap between ticks. */
+  blocks: 17_000n,
   /** Attempts admitted per window. */
   maxTxs: 400n,
   /** Fee budget per window, in uqor (0.5 QOR). A refused attempt costs about 0.01 QOR at 100 gwei. */
