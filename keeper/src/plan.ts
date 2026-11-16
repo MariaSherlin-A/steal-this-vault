@@ -45,9 +45,26 @@ export const OWNER_RESERVE_UQOR = 3_000_000n;
  */
 export type Mode = "normal" | "drill";
 
-export function modeFrom(argv: readonly string[], env: string | undefined): Mode {
+/**
+ * The fest's Q-Day drill runs on 18 Nov 2026 from 00:00 to 23:59 UTC. Inside this period,
+ * with six hours of margin on each side, the keeper is in drill mode no matter what
+ * `KEEPER_MODE` says, so a forgotten variable cannot open the window on drill day. Only
+ * an explicit `--normal` on the command line (a human at the keyboard) overrides it.
+ */
+export const DRILL_PERIOD = {
+  from: Date.UTC(2026, 10, 17, 18, 0, 0),
+  to: Date.UTC(2026, 10, 19, 6, 0, 0),
+} as const;
+
+export function inDrillPeriod(now: Date): boolean {
+  const t = now.getTime();
+  return t >= DRILL_PERIOD.from && t < DRILL_PERIOD.to;
+}
+
+export function modeFrom(argv: readonly string[], env: string | undefined, now: Date = new Date()): Mode {
   if (argv.includes("--drill")) return "drill";
   if (argv.includes("--normal")) return "normal";
+  if (inDrillPeriod(now)) return "drill";
   const value = (env ?? "").trim().toLowerCase();
   if (value === "" || value === "normal") return "normal";
   if (value === "drill") return "drill";

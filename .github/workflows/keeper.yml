@@ -2,6 +2,7 @@
 # vault after it has been robbed, and now and then proves the hybrid vault pays its owner.
 # Needs two repository secrets: VAULT_MNEMONIC and DEPLOYER_MNEMONIC. Testnet accounts only.
 # For the Q-Day drill, set the repository variable KEEPER_MODE to "drill"; set it back to "normal" after.
+# On drill day itself (17 Nov 18:00 to 19 Nov 06:00 UTC) the keeper forces drill mode regardless.
 name: keeper
 
 on:

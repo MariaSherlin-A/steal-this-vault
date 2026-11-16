@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { Door } from "@stv/core/attacks";
-import { CONTROL_REFILL_BELOW, OWNER_RESERVE_UQOR, PROOF_OF_LIFE_EVERY_BLOCKS, RENEW_BELOW, modeFrom, plan, type Reading } from "../src/plan";
+import { CONTROL_REFILL_BELOW, OWNER_RESERVE_UQOR, PROOF_OF_LIFE_EVERY_BLOCKS, RENEW_BELOW, inDrillPeriod, modeFrom, plan, type Reading } from "../src/plan";
 
 const vaults = {
   hybrid: "0x877BA271d7BdFdb7dfA0BB5863E9FBF04885c483",
@@ -131,5 +131,26 @@ describe("keeper mode", () => {
 
   it("refuses an unknown mode instead of guessing", () => {
     assert.throws(() => modeFrom([], "drll"), /KEEPER_MODE/);
+  });
+
+  it("is in drill mode on drill day whatever the variable says", () => {
+    const drillDay = new Date(Date.UTC(2026, 10, 18, 12, 0, 0));
+    assert.equal(inDrillPeriod(drillDay), true);
+    assert.equal(modeFrom([], "normal", drillDay), "drill");
+    assert.equal(modeFrom([], undefined, drillDay), "drill");
+    assert.equal(modeFrom([], "drll", drillDay), "drill", "an unknown variable cannot break drill day");
+    // The margin: the evening before and the early morning after.
+    assert.equal(modeFrom([], "normal", new Date(Date.UTC(2026, 10, 17, 18, 0, 0))), "drill");
+    assert.equal(modeFrom([], "normal", new Date(Date.UTC(2026, 10, 19, 5, 59, 59))), "drill");
+    // Outside it the variable decides again.
+    assert.equal(modeFrom([], "normal", new Date(Date.UTC(2026, 10, 17, 17, 59, 59))), "normal");
+    assert.equal(modeFrom([], "normal", new Date(Date.UTC(2026, 10, 19, 6, 0, 0))), "normal");
+    assert.equal(inDrillPeriod(new Date(Date.UTC(2026, 10, 16, 12, 0, 0))), false);
+  });
+
+  it("lets only an explicit --normal override drill day", () => {
+    const drillDay = new Date(Date.UTC(2026, 10, 18, 12, 0, 0));
+    assert.equal(modeFrom(["--normal"], "drill", drillDay), "normal");
+    assert.equal(modeFrom(["--drill"], "normal", drillDay), "drill");
   });
 });

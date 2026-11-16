@@ -76,7 +76,10 @@ is the control) and the window's fee allowance (the cost of recording attempts).
 fest's Q-Day drill both would count as losses, so the keeper's drill mode removes them: it
 empties the control vault back to the owner and shuts the window. Every attempt with the
 published key is then refused at the door, for free. Rehearsed on testnet on 14 Nov 2026:
-17 attacks refused, the control attack had nothing to take, nothing lost.
+17 attacks refused, the control attack had nothing to take, nothing lost. The drill period
+(17 Nov 18:00 to 19 Nov 06:00 UTC) is hard-coded in the keeper, which stays in drill mode
+through it whatever its configuration says, so the one human step that could be forgotten
+cannot open the window on drill day.
 
 An observation from building it: on this testnet, while the owner's window was shut, the
 `ecrecover` precompile returned nothing for signatures by accounts with a registered

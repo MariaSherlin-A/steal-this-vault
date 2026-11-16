@@ -26,7 +26,7 @@ import { encodeWithdraw } from "@stv/core/intent";
 import { formatEther, formatUnits, parseEther, type Hex } from "viem";
 import { doorAdmits } from "@stv/core/attacks";
 import type { Address } from "viem";
-import { CONTROL_REFILL_TO_UQOR, WINDOW, modeFrom, plan, type Action, type Reading } from "./plan";
+import { CONTROL_REFILL_TO_UQOR, WINDOW, inDrillPeriod, modeFrom, plan, type Action, type Reading } from "./plan";
 
 const dry = process.argv.includes("--dry");
 const closeOnly = process.argv.includes("--close");
@@ -186,6 +186,7 @@ async function main() {
   const payer = await accountFromMnemonic(requireSecret("DEPLOYER_MNEMONIC"));
 
   if (proofTx) {
+    if (!inDrillPeriod(new Date())) log("note: this is not drill day (18 Nov 2026 UTC); a proof made now is a rehearsal and will not count");
     if (!dry) await sendProofTx(owner);
     return;
   }
@@ -196,7 +197,7 @@ async function main() {
   }
 
   const reading = await read(owner);
-  log(`mode ${mode}`);
+  log(`mode ${mode}${inDrillPeriod(new Date()) && !process.argv.includes("--normal") ? " (drill period: forced, KEEPER_MODE ignored)" : ""}`);
   log(
     `window ${reading.door.open ? "open" : "closed"}, ${reading.door.remainingTxs} txs / ${reading.door.remainingBlocks} blocks / ${formatUnits(reading.door.remainingValueUqor, 6)} QOR left; ` +
       `hybrid ${formatEther(reading.hybridBalanceWei)} QOR, control ${formatEther(reading.controlBalanceWei)} QOR, owner liquid ${formatUnits(reading.ownerLiquidUqor, 6)} QOR, ` +
