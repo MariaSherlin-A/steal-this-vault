@@ -7,11 +7,12 @@
  */
 import { createAttackContext, readDoor, runAttack, type AttackContext, type AttackResult, type Door } from "@stv/core/attacks";
 import { TESTNET } from "@stv/core/chain";
-import { NativeLane } from "@stv/core/native";
+import { NativeLane, nativeAddress } from "@stv/core/native";
+import { EVM_MODULE_ACCOUNT, followMoney, type Trail } from "@stv/core/trail";
 import { PUBLISHED_KEY } from "@stv/core/published";
 import type { Address } from "viem";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
-import { OWNER, REST, VAULTS } from "./clients";
+import { DEPLOYMENT, OWNER, REST, VAULTS } from "./clients";
 
 export type { AttackContext, AttackResult, Door };
 
@@ -51,4 +52,22 @@ export async function secondLock(nativeAddress: string): Promise<{ registered: b
 
 export function nativeBalance(nativeAddress: string): Promise<bigint> {
   return lane.balance(nativeAddress);
+}
+
+// ---------------------------------------------------------------- the money trail
+
+/** Plain names for the accounts a trail may run into, in their native (qor1...) form. */
+export const KNOWN_NATIVE: Record<string, string> = {
+  [OWNER.native]: "the owner's own account",
+  [DEPLOYMENT.deployer.native]: "the project's own test account",
+  [nativeAddress(VAULTS.hybrid)]: "the two-lock vault",
+  [nativeAddress(VAULTS.classic)]: "the one-lock vault",
+  [EVM_MODULE_ACCOUNT]: "a vault paying out: the chain files every contract payment under this address",
+};
+
+export type { Trail };
+
+/** Who funded this wallet and where its money went afterwards, from the robbery onwards. */
+export function followTrail(wallet: Address, sinceBlock: bigint): Promise<Trail> {
+  return followMoney(lane, nativeAddress(wallet), { sinceHeight: sinceBlock });
 }

@@ -1,6 +1,7 @@
 import { Experiment } from "./components/Experiment";
 import { Lab } from "./components/Lab";
 import { Footer, HowItWorks, Technical } from "./components/More";
+import { Intruders } from "./components/Intruders";
 import { Record } from "./components/Record";
 import { Stake } from "./components/Stake";
 import { Header, Hero } from "./components/Top";
@@ -17,6 +18,7 @@ export function App() {
         <Experiment />
         <Lab />
         <Record />
+        <Intruders />
         <HowItWorks />
         <Stake />
         <Technical />
