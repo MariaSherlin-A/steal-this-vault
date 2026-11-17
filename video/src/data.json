@@ -1,0 +1,24 @@
+{
+  "note": "Real figures read from the testnet with `npm run status`. Update asOf and the numbers before a final render; the film shows the date.",
+  "asOf": "16 Nov 2026",
+  "block": 10202654,
+  "hybrid": {
+    "address": "0x877BA271d7BdFdb7dfA0BB5863E9FBF04885c483",
+    "holdsQor": "9.998",
+    "paidWithdrawals": 2,
+    "refusedAttempts": 5,
+    "wouldHaveLostQor": "39.996",
+    "wouldHaveLostAttempts": 4
+  },
+  "control": {
+    "address": "0x57AD197DcfDbb76EDE44B0f3c239965Fae0A8F51",
+    "robbedTimes": 2,
+    "holdsQor": "0.05"
+  },
+  "owner": {
+    "evm": "0xA2E46aDeDADD7163b4178Bb07AA086765e55dd73",
+    "publishedKey": "0xc8bc3de735c84abc54a084c33ae989e75c075a619ffc5340d7dc9ebf8b07acf9"
+  },
+  "site": "steal-this-vault.vercel.app",
+  "repo": "github.com/MariaSherlin-A/steal-this-vault"
+}
