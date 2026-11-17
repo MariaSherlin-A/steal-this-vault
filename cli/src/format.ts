@@ -1,5 +1,7 @@
 /** Argument parsing and text output for the CLI. No network access here, so it can be unit-tested. */
 import { ATTACKS, GROUPS, attackInfo, type AttackGroup } from "@stv/core";
+import type { IntruderFile } from "@stv/core/history";
+import type { Trail } from "@stv/core/trail";
 import type { AttackResult, Door } from "@stv/core/attacks";
 import { formatEther, formatUnits, isAddress, isHex, type Address, type Hex } from "viem";
 
@@ -250,4 +252,62 @@ export function statusProblems(s: StatusReport): string[] {
   if (!hybrid) problems.push("no hybrid vault in the report");
   else if (hybrid.balance === 0n) problems.push("the hybrid vault is empty");
   return problems;
+}
+
+// ---------------------------------------------------------------- intruder file
+
+export interface IntruderReport {
+  block: bigint;
+  file: IntruderFile;
+  /** A money trail per intruder wallet, keyed by lower-cased EVM address. Missing when the trail could not be read. */
+  trails: Record<string, Trail>;
+  /** Plain names for the project's own accounts in their native (qor1...) form. */
+  knownNative: Record<string, string>;
+}
+
+const uqorText = (uqor: bigint) => `${formatUnits(uqor, 6)} QOR`;
+
+function nameNative(address: string, knownNative: Record<string, string>): string {
+  const label = knownNative[address];
+  return label ? `${address} (${label})` : `${address} (a stranger)`;
+}
+
+function formatTrail(trail: Trail, knownNative: Record<string, string>): string[] {
+  const lines: string[] = [];
+  lines.push(trail.funding ? `  first coins came from   ${nameNative(trail.funding.from, knownNative)}, ${uqorText(trail.funding.uqor)} at block ${trail.funding.height}` : "  first coins came from   nobody yet: this wallet has never received anything");
+  if (trail.hops.length === 0) {
+    lines.push(`  the money went          nowhere: it has not left this wallet`);
+  } else {
+    for (const hop of trail.hops) lines.push(`  then paid               ${uqorText(hop.uqor)} to ${nameNative(hop.to, knownNative)} at block ${hop.height}`);
+    if (trail.cut) lines.push(c.dim("  (trail cut short here)"));
+  }
+  lines.push(`  trail ends at           ${trail.endsAt}, which holds ${uqorText(trail.holdsUqor)} now`);
+  return lines;
+}
+
+/** The intruder file as text: one entry per wallet, most recent first. */
+export function formatIntruders(r: IntruderReport): string {
+  const { file } = r;
+  const lines: string[] = [c.bold(`Intruder file  (block ${r.block})`), ""];
+  const strangers = file.intruders.filter((i) => i.label === null).length;
+  lines.push(
+    `${file.intruders.length} wallet${file.intruders.length === 1 ? "" : "s"} came for the money, ${strangers} of them stranger${strangers === 1 ? "" : "s"}. ` +
+      `The owner withdrew from the two-lock vault ${file.ownerWithdrawals} time${file.ownerWithdrawals === 1 ? "" : "s"} and took bait money back ${file.ownerCleanouts} time${file.ownerCleanouts === 1 ? "" : "s"}; those are not thefts.`,
+  );
+  file.intruders.forEach((i, n) => {
+    lines.push("", c.bold(`${n + 1}. ${i.address}  ${i.label ?? "a stranger"}`));
+    lines.push(`  attempts                ${i.attempts.length}, ${i.withPublishedKey} with the published key`);
+    lines.push(`  first seen              ${ago(i.firstBlock, r.block)}`);
+    lines.push(`  last seen               ${ago(i.lastBlock, r.block)}`);
+    const methods = Object.entries(i.methods).map(([m, count]) => `${m} x${count}`);
+    lines.push(`  methods                 ${methods.join(", ")}`);
+    lines.push(`  wanted                  ${qor(i.wantedWei)} in ${i.refused} refused attempt${i.refused === 1 ? "" : "s"}`);
+    lines.push(i.robbed > 0 ? c.red(`  took                    ${qor(i.tookWei)} from the one-lock vault in ${i.robbed} robber${i.robbed === 1 ? "y" : "ies"}`) : `  took                    nothing`);
+    lines.push(`  sent by                 ${i.callers.join(", ")}`);
+    const trail = r.trails[i.address.toLowerCase()];
+    if (trail) lines.push(...formatTrail(trail, r.knownNative));
+    else lines.push(c.dim(i.label === null ? "  money trail             could not be read" : "  money trail             not followed: this is one of the project's own accounts"));
+  });
+  lines.push("", c.dim("These are wallets, not people. The chain says where money came from and went, never who sent it."));
+  return lines.join("\n");
 }

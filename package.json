@@ -26,6 +26,7 @@
     "dev": "npm run dev -w web",
     "check": "npm run build:contracts && npm run typecheck && npm run lint && npm test",
     "status": "npm run status -w cli --",
+    "intruders": "npm run intruders -w cli --",
     "video:timing": "npm run timing --prefix video",
     "video": "npm run render --prefix video"
   },

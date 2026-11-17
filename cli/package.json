@@ -7,6 +7,7 @@
   "scripts": {
     "heist": "tsx src/heist.ts",
     "status": "tsx src/status.ts",
+    "intruders": "tsx src/intruders.ts",
     "test": "node ../scripts/run-tests.mjs test .test.ts",
     "typecheck": "tsc --noEmit -p ."
   },
