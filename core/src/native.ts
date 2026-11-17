@@ -49,6 +49,14 @@ export interface NativeResult {
   gasUsed?: bigint;
 }
 
+/** The parts of a `tx_response` the trail reader looks at. */
+export interface TxResponseRaw {
+  txhash?: string;
+  height?: string;
+  timestamp?: string;
+  events?: { type: string; attributes: { key: string; value: string }[] }[];
+}
+
 interface TxResponseJson {
   code?: number;
   codespace?: string;
@@ -118,6 +126,19 @@ export class NativeLane {
   pqcStatus(address: string) {
     clearPqcStatusCache();
     return fetchPqcStatus({ rest: this.rest, address });
+  }
+
+  /**
+   * Committed transactions matching a Tendermint event query, for example
+   * `transfer.sender='qor1...'`. Raw `tx_response` objects, as the REST API returns them.
+   */
+  async searchTxs(query: string, options: { order?: "asc" | "desc"; limit?: number } = {}): Promise<TxResponseRaw[]> {
+    const order = options.order === "asc" ? "ORDER_BY_ASC" : "ORDER_BY_DESC";
+    const { status, body } = await this.get<{ tx_responses?: TxResponseRaw[] }>(
+      `/cosmos/tx/v1beta1/txs?query=${encodeURIComponent(query)}&order_by=${order}&limit=${options.limit ?? 20}`,
+    );
+    if (status !== 200 || !body?.tx_responses) return [];
+    return body.tx_responses;
   }
 
   /** A committed transaction, or null if the node does not have it (yet). */

@@ -16,7 +16,9 @@
     "./deployments": "./src/deployments.ts",
     "./refusal": "./src/refusal.ts",
     "./published": "./src/published.ts",
-    "./intent": "./src/intent.ts"
+    "./intent": "./src/intent.ts",
+    "./history": "./src/history.ts",
+    "./trail": "./src/trail.ts"
   },
   "scripts": {
     "test": "node ../scripts/run-tests.mjs test .test.ts",

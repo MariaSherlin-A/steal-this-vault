@@ -3,6 +3,7 @@ export * from "./attack-list";
 export * from "./chain";
 export * from "./deployments";
 export * from "./evm";
+export * from "./history";
 export * from "./intent";
 export * from "./published";
 export * from "./refusal";
