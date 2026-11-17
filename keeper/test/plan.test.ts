@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { Door } from "@stv/core/attacks";
-import { CONTROL_REFILL_BELOW, OWNER_RESERVE_UQOR, PROOF_OF_LIFE_EVERY_BLOCKS, RENEW_BELOW, inDrillPeriod, modeFrom, plan, type Reading } from "../src/plan";
+import { CONTROL_REFILL_BELOW, OWNER_RESERVE_UQOR, PROOF_OF_LIFE_EVERY_BLOCKS, RENEW_BELOW, inDrillPeriod, modeFrom, plan, rescueProblems, type Reading } from "../src/plan";
 
 const vaults = {
   hybrid: "0x877BA271d7BdFdb7dfA0BB5863E9FBF04885c483",
@@ -152,5 +152,29 @@ describe("keeper mode", () => {
     const drillDay = new Date(Date.UTC(2026, 10, 18, 12, 0, 0));
     assert.equal(modeFrom(["--normal"], "drill", drillDay), "normal");
     assert.equal(modeFrom(["--drill"], "normal", drillDay), "drill");
+  });
+});
+
+describe("rescueProblems", () => {
+  const facts = {
+    target: "0x1111111111111111111111111111111111111111",
+    owner: "0xA2E46aDeDADD7163b4178Bb07AA086765e55dd73",
+    deployer: "0x965cc64A84Cf6E0D7089B72Ba918d7336b5900F0",
+    vaults: { hybrid: "0x877BA271d7BdFdb7dfA0BB5863E9FBF04885c483", classic: "0x57AD197DcfDbb76EDE44B0f3c239965Fae0A8F51" },
+    targetHasSecondLock: true,
+    hybridBalanceWei: 1n,
+  } as const;
+
+  it("allows a fresh account with its own second lock", () => {
+    assert.deepEqual(rescueProblems(facts), []);
+  });
+
+  it("refuses the owner, the deployer, the vaults, a one-lock account, a bad address and an empty vault", () => {
+    assert.match(rescueProblems({ ...facts, target: facts.owner.toLowerCase() })[0]!, /owner account itself/);
+    assert.match(rescueProblems({ ...facts, target: facts.deployer })[0]!, /deployer/);
+    assert.match(rescueProblems({ ...facts, target: facts.vaults.classic })[0]!, /one of the vaults/);
+    assert.match(rescueProblems({ ...facts, targetHasSecondLock: false })[0]!, /no second lock yet/);
+    assert.match(rescueProblems({ ...facts, target: "qor1notevm" })[0]!, /not an EVM address/);
+    assert.match(rescueProblems({ ...facts, hybridBalanceWei: 0n })[0]!, /empty/);
   });
 });

@@ -191,3 +191,28 @@ browser extension was not connected.
 
 **Still open.** Alerts when the leaked key is used (channel to be chosen by Maria), the
 rescue command, the voiced video.
+
+## 17 Nov 2026, later: the warning and the way out
+
+**Asked.** Carry on with the extra features: alerts, then the rescue.
+
+**Done.** `core/src/alerts.ts` turns a new attempt into a plain-words message (what happened,
+which vault, how much, where the money was to go, who sent it, the explorer link) and posts
+it to a Telegram bot or a Discord webhook; a burst becomes one digest. `npm run watch`
+(keeper package, but it holds no mnemonic) looks every 20 seconds from the last block it
+saw, kept in `keeper/.watch.json` (ignored by git). Dry-run over the robbery blocks printed
+the seven real attempts correctly; nothing was sent, since no channel is set yet. The
+channel is Maria's choice.
+
+`npm run keeper -- --rescue <0x…>`: refuses the owner account, the deployer, a vault, an
+account without a registered post-quantum key, or an empty vault (pure checks in
+`plan.ts`, tested); otherwise shuts the owner's side door and withdraws the whole two-lock
+balance to the new account, signed with both keys and relayed by the payer, the same path
+proof of life already uses live. Live dry run against an unregistered address: refused with
+the right message. The full rescue has not been run: it would empty the vault that the
+experiment depends on. It can be rehearsed on drill day's eve only if Maria wants.
+
+**Verified.** `npm run check` green. README and CLAUDE.md updated.
+
+**Open.** Maria picks Telegram or Discord and fills `.env`; where the watcher runs (a laptop
+that stays on, or a small server); the voiced video; QCAI stage 2.

@@ -6,6 +6,7 @@
  *   npm run keeper -- --close      close the owner's window and stop (for maintenance)
  *   npm run keeper -- --drill      drill mode (or KEEPER_MODE=drill): window shut, control vault emptied
  *   npm run keeper -- --proof-tx   one normal payment from the owner account, signed with both keys
+ *   npm run keeper -- --rescue <0x…>  the way out: shut the side door and move everything in the two-lock vault to a fresh account
  *
  * This is the only process that holds the owner's mnemonic. It signs three
  * kinds of transaction, all on the native lane with both keys:
@@ -20,17 +21,18 @@
  */
 import { deployment, evmClient, readStats, sendWithKey, signWithdrawal, vaultRef, explorer } from "@stv/core";
 import { readDoor } from "@stv/core/attacks";
-import { NativeLane, accountFromMnemonic, messages, type UnifiedAccount } from "@stv/core/native";
+import { NativeLane, accountFromMnemonic, messages, nativeAddress, type UnifiedAccount } from "@stv/core/native";
 import { requireSecret } from "@stv/core/node";
 import { encodeWithdraw } from "@stv/core/intent";
 import { formatEther, formatUnits, parseEther, type Hex } from "viem";
 import { doorAdmits } from "@stv/core/attacks";
 import type { Address } from "viem";
-import { CONTROL_REFILL_TO_UQOR, WINDOW, inDrillPeriod, modeFrom, plan, type Action, type Reading } from "./plan";
+import { CONTROL_REFILL_TO_UQOR, WINDOW, inDrillPeriod, modeFrom, plan, rescueProblems, type Action, type Reading } from "./plan";
 
 const dry = process.argv.includes("--dry");
 const closeOnly = process.argv.includes("--close");
 const proofTx = process.argv.includes("--proof-tx");
+const rescueTo = process.argv.includes("--rescue") ? (process.argv[process.argv.indexOf("--rescue") + 1] ?? "") : null;
 const mode = modeFrom(process.argv, process.env.KEEPER_MODE);
 
 /** The drill's proof that the project still works: the owner adds 0.01 QOR to the hybrid vault, signed with both keys. */
@@ -160,6 +162,45 @@ async function refillControl(owner: UnifiedAccount) {
   );
 }
 
+
+/**
+ * The way out. When the owner fears the leaked key is about to be joined by a
+ * leaked second key, or simply wants the money somewhere the public key has
+ * never been: shut the owner's side door, then move everything in the two-lock
+ * vault to a fresh account that has its own second lock. The withdrawal is
+ * signed with both of the owner's keys and relayed by the payer, exactly like
+ * proof of life, so the owner account's window is not needed and stays shut.
+ */
+async function rescue(owner: UnifiedAccount, payer: UnifiedAccount, target: string) {
+  const [stats, pqc] = await Promise.all([readStats(client, vaults.hybrid), target.startsWith("0x") && target.length === 42 ? lane.pqcStatus(nativeAddress(target as Address)) : null]);
+  const problems = rescueProblems({
+    target,
+    owner: owner.evm as Address,
+    deployer: payer.evm as Address,
+    vaults,
+    targetHasSecondLock: pqc?.registered === true,
+    hybridBalanceWei: stats.balance,
+  });
+  if (problems.length > 0) throw new Error(`rescue refused:\n  - ${problems.join("\n  - ")}`);
+  const to = target as Address;
+  log(`rescue: move ${formatEther(stats.balance)} QOR from the two-lock vault to ${to}, which has its own second lock`);
+  if (dry) return log("dry run: nothing moved");
+
+  const door = await readDoor(lane, owner.cosmos);
+  if (door.open) await must("shut the owner's side door", await lane.send(owner, [messages.closeWindow(owner.cosmos)]));
+  else log("the owner's side door is already shut");
+
+  await ensurePayerWindow(payer, vaults.hybrid);
+  const intent = { to, amount: stats.balance, nonce: stats.nonce, deadline: (await client.getBlock()).timestamp + 1800n };
+  const signed = await signWithdrawal({ privateKey: owner.privateKey as Hex, pqSecretKey: owner.pqc.secretKey }, vaultRef("hybrid"), intent);
+  const sent = await sendWithKey(client, payer.privateKey as Hex, { to: vaults.hybrid, data: signed.calldata, fallbackGas: 420_000n });
+  if (!sent.admitted || sent.receipt?.status !== "success") throw new Error(`rescue not mined: ${sent.refusal?.message ?? sent.receipt?.status}`);
+  const after = await readStats(client, vaults.hybrid);
+  if (after.balance !== 0n) throw new Error(`the two-lock vault still holds ${formatEther(after.balance)} QOR`);
+  log(`rescued ${formatEther(intent.amount)} QOR to ${to}, tx ${sent.hash} ${explorer.tx(sent.hash!)}`);
+  log("the vault is empty and the side door is shut. The keeper will reopen the door on its next tick; stop the keeper workflow if that is not wanted.");
+}
+
 async function act(action: Action, owner: UnifiedAccount, payer: UnifiedAccount) {
   log(`${action.kind}: ${action.reason}`);
   if (dry) return;
@@ -188,6 +229,11 @@ async function main() {
   if (proofTx) {
     if (!inDrillPeriod(new Date())) log("note: this is not drill day (18 Nov 2026 UTC); a proof made now is a rehearsal and will not count");
     if (!dry) await sendProofTx(owner);
+    return;
+  }
+
+  if (rescueTo !== null) {
+    await rescue(owner, payer, rescueTo);
     return;
   }
 

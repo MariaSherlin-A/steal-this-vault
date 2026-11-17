@@ -9,7 +9,7 @@
  * window's fee budget, which bounds what a flood of attempts can cost.
  */
 import type { Door } from "@stv/core/attacks";
-import type { Address } from "viem";
+import { isAddress, type Address } from "viem";
 
 /** The window the keeper opens. */
 export const WINDOW = {
@@ -155,4 +155,36 @@ function planDrill(r: Reading): Action[] {
 function doorAdmitsVault(door: Door, vault: Address): boolean {
   if (!door.open || door.nativeOnly || door.remainingTxs === 0n || door.remainingBlocks < 50n) return false;
   return door.targets.length === 0 || door.targets.some((t) => t.toLowerCase() === vault.toLowerCase());
+}
+
+// ---------------------------------------------------------------- the rescue
+
+export interface RescueFacts {
+  /** The account the money is to go to. */
+  target: string;
+  owner: Address;
+  deployer: Address;
+  vaults: { hybrid: Address; classic: Address };
+  /** Whether the target has a post-quantum key on record. */
+  targetHasSecondLock: boolean;
+  hybridBalanceWei: bigint;
+}
+
+/**
+ * Why a rescue must not go ahead. Empty when it may. The target has to be a new
+ * account with its own second lock: moving the money to an account with one
+ * lock, or back to the account whose key leaked, would rescue nothing.
+ */
+export function rescueProblems(f: RescueFacts): string[] {
+  const problems: string[] = [];
+  const same = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
+  if (!isAddress(f.target)) problems.push(`"${f.target}" is not an EVM address (0x and 40 hex characters)`);
+  else {
+    if (same(f.target, f.owner)) problems.push("that is the owner account itself, whose key is public: the money would be no safer");
+    if (same(f.target, f.deployer)) problems.push("that is the project's deployer account, not a fresh one");
+    if (same(f.target, f.vaults.hybrid) || same(f.target, f.vaults.classic)) problems.push("that is one of the vaults");
+    if (!f.targetHasSecondLock) problems.push("the new account has no second lock yet: register its post-quantum key first, then rescue");
+  }
+  if (f.hybridBalanceWei === 0n) problems.push("the two-lock vault is empty: nothing to rescue");
+  return problems;
 }

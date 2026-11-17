@@ -107,6 +107,24 @@ hop by hop, what the last wallet holds now). The project's own accounts are name
 rather than passed off as strangers. These are leads about wallets, never identities: the
 chain does not know who holds a key, and the site never claims to.
 
+## A warning, time to react, a way out
+
+On an ordinary chain a leaked key means you lose everything and learn about it afterwards.
+With two locks the vault refuses, so three things become possible that this project adds on
+top of the vault:
+
+- **A warning.** `npm run watch` reads new vault events every few seconds and sends a plain
+  message to a Telegram bot or a Discord webhook (set `ALERT_TELEGRAM_BOT_TOKEN` and
+  `ALERT_TELEGRAM_CHAT_ID`, or `ALERT_DISCORD_WEBHOOK_URL`, in `.env`). It needs no secret
+  key. It runs wherever a process can stay up; GitHub's cron is too irregular for it.
+- **A trail.** The intruder file above.
+- **A way out.** `npm run keeper -- --rescue <0x…>` shuts the owner's side door and moves
+  everything in the two-lock vault to a fresh account, signed with both of the owner's keys
+  and relayed by the payer. It refuses an account without its own post-quantum key, the
+  owner account itself, the deployer or a vault. `--dry` shows the plan without moving
+  anything. The owner's key cannot be swapped in place: on QoreChain the classical key is
+  the account's identity, so the way out is a new account, not a new key.
+
 ## QoreChain features used
 
 - ML-DSA-87 key registration with proof of possession (`MsgRegisterPQCKeyV2`)
@@ -141,6 +159,8 @@ chain does not know who holds a key, and the site never claims to.
 | `npm run check` | compile contracts, typecheck, lint, all unit tests |
 | `npm run keeper -- --dry` | what the keeper would do now, without doing it |
 | `npm run keeper` | one keeper tick (needs the secrets in `.env`) |
+| `npm run keeper -- --rescue <0x…>` | shut the side door and move the two-lock vault's money to a fresh account with its own second lock (`--dry` to preview) |
+| `npm run watch` | alert the owner on every new attempt, over Telegram or Discord (`--once`, `--dry`) |
 
 Node 20 or newer.
 

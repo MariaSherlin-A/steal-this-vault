@@ -81,6 +81,8 @@ Run from the repository root. Node 20 or newer.
 | `npm run intruders` | the intruder file from the vault logs, with money trails (`--json`). Read-only |
 | `npm run keeper -- --dry` | what the keeper would do now, changing nothing |
 | `npm run keeper` | one keeper tick. Signs with the mnemonic in `.env`: Maria runs this, or the scheduled workflow does |
+| `npm run keeper -- --rescue <0x…>` | the way out: shut the side door, move the two-lock vault's money to a fresh PQC-registered account. Maria runs this; `--dry` previews |
+| `npm run watch` | alerts on new attempts to Telegram or Discord (`ALERT_*` in `.env`). Read-only; `--once`, `--dry` |
 | `npm run deploy -w contracts` | deploy both vaults (already done; do not repeat without asking) |
 | `npm run build` | contracts, then the site into `web/dist` |
 | `npm run video:timing` | measure the voice files in `video/public/audio` and set the scene lengths |
