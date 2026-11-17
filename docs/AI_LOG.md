@@ -163,3 +163,31 @@ an overlapping footer, and a closing line that crowded the one-lock vault.
 
 **Still open.** Maria records the eight voice files; then `npm run video:timing` and
 `npm run video`. QCAI stage 2. A Hardhat or Foundry test suite for the category.
+
+## 17 Nov 2026, evening: the intruder file
+
+**Asked.** Start on the extra features discussed earlier: first the intruder file and money
+trail on the site, then alerts, then the one-click rescue. Video and audio wait until Maria
+says so.
+
+**Done.** `core/src/history.ts` reads every `Refused` and `Paid` event from each vault's
+deployment block (the RPC allows 10,000 blocks per request, so it pages; checked that the
+testnet still serves logs from block 10,054,281) and builds the file: one entry per wallet
+the money was meant for, with methods, amounts wanted and taken, callers, and the project's
+own accounts named instead of passed off as strangers. `core/src/trail.ts` follows a wallet's
+money over the native lane's `transfer` events: first funding, then the largest payment hop
+by hop, then what the last wallet holds. `npm run intruders` prints it; the site has a new
+section after The record, kept in the browser between visits and reread when the counters
+move. Tests use the real decoded events as fixtures and a fake ledger for the trail.
+
+**Found.** A contract's payment inside an EVM transaction is recorded as coming from the
+chain's EVM module account (`qor1vqu8r…jhp2`), not from the contract. The thief's loot
+therefore "came from" that address; it is labelled as a vault paying out.
+
+**Verified.** `npm run check` green; `npm run intruders` live against the testnet matches
+the counters (2 wallets, 5 refusals, 1 robbery of 0.01 QOR, loot still in the stranger's
+wallet). Section checked at 1440 and 390 through Chrome's DevTools protocol, since the
+browser extension was not connected.
+
+**Still open.** Alerts when the leaked key is used (channel to be chosen by Maria), the
+rescue command, the voiced video.

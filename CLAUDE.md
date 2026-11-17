@@ -78,6 +78,7 @@ Run from the repository root. Node 20 or newer.
 | `npm test` | unit tests only |
 | `npm run heist` | every attack with the published key (`--list`, `--only`, `--record`, `--json`) |
 | `npm run status` | read both vaults, the owner account and its window from the chain |
+| `npm run intruders` | the intruder file from the vault logs, with money trails (`--json`). Read-only |
 | `npm run keeper -- --dry` | what the keeper would do now, changing nothing |
 | `npm run keeper` | one keeper tick. Signs with the mnemonic in `.env`: Maria runs this, or the scheduled workflow does |
 | `npm run deploy -w contracts` | deploy both vaults (already done; do not repeat without asking) |

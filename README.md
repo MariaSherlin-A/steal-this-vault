@@ -38,6 +38,7 @@ npm install
 npm run heist            # all 18 attacks with the published key
 npm run heist -- --list  # what each one does
 npm run status           # both vaults and the owner's window, read from the chain
+npm run intruders        # every wallet that came for the money, and where the money went
 ```
 
 No account, wallet or coins are needed for either. The key is in
@@ -95,6 +96,17 @@ More detail: [docs/architecture.md](docs/architecture.md),
 The catalogue is [core/src/attack-list.ts](core/src/attack-list.ts); the code that runs it is
 [core/src/attacks.ts](core/src/attacks.ts). The site and the CLI use the same runner.
 
+## The intruder file
+
+A leaked key on an ordinary chain means the money is gone and you learn about it
+afterwards. Here every attempt is logged by the vault with the wallet the thief wanted the
+money sent to, so the site and `npm run intruders` build a file from the logs: one entry per
+wallet, its attempts and methods, what it wanted and what it took from the one-lock twin,
+and the money trail on the native lane (who first funded the wallet, where the loot went
+hop by hop, what the last wallet holds now). The project's own accounts are named as such
+rather than passed off as strangers. These are leads about wallets, never identities: the
+chain does not know who holds a key, and the site never claims to.
+
 ## QoreChain features used
 
 - ML-DSA-87 key registration with proof of possession (`MsgRegisterPQCKeyV2`)
@@ -125,6 +137,7 @@ The catalogue is [core/src/attack-list.ts](core/src/attack-list.ts); the code th
 | `npm run dev` | the site at <http://localhost:5173> |
 | `npm run heist` | every attack, from a terminal (`--list`, `--only <ids>`, `--record`, `--json`) |
 | `npm run status` | both vaults, the owner account and its window (`--json`) |
+| `npm run intruders` | the intruder file: every wallet that came for the money, built from the vault logs, with each one's money trail (`--json`) |
 | `npm run check` | compile contracts, typecheck, lint, all unit tests |
 | `npm run keeper -- --dry` | what the keeper would do now, without doing it |
 | `npm run keeper` | one keeper tick (needs the secrets in `.env`) |
