@@ -6,6 +6,7 @@
 *.pem
 *mnemonic*
 secrets/
+keeper/.watch.json
 
 # dependencies and builds
 node_modules/

@@ -18,6 +18,7 @@
     "./published": "./src/published.ts",
     "./intent": "./src/intent.ts",
     "./history": "./src/history.ts",
+    "./alerts": "./src/alerts.ts",
     "./trail": "./src/trail.ts"
   },
   "scripts": {

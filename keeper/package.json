@@ -6,6 +6,7 @@
   "description": "Keeps the owner's EVM window open, scoped to the vaults, and makes a proof-of-life withdrawal once a day. Holds the secret keys.",
   "scripts": {
     "tick": "tsx src/tick.ts",
+    "watch": "tsx src/watch.ts",
     "test": "node ../scripts/run-tests.mjs test .test.ts",
     "typecheck": "tsc --noEmit -p ."
   },
