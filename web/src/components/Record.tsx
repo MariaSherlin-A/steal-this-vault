@@ -1,26 +1,23 @@
 /** What the vaults have written down about themselves: why attempts failed, and the latest ones. */
 import { explorer } from "@stv/core/chain";
-import type { VaultEntry } from "@stv/core/evm";
+import { sortAttempts } from "@stv/core/history";
 import { REFUSAL_NAMES, REFUSAL_TEXT } from "@stv/core/refusal";
-import { blocksAgo, plural, short } from "../lib/format";
+import { blocksAgo, plural, qor, short } from "../lib/format";
 import { useChain } from "../lib/useChain";
+import { useHistory } from "../lib/useHistory";
+import { scene } from "./Theatre";
 import { Ext, Reveal, Skeleton } from "./ui";
 
-type Line = VaultEntry & { vault: "hybrid" | "classic" };
+const WALL_CLASS = { refused: undefined, owner: "wall-paid", reset: "wall-reset", rehearsal: "wall-reset", robbed: "wall-robbed" } as const;
 
 export function Record() {
-  const { hybrid, classic, block } = useChain();
+  const { hybrid, block } = useChain();
+  const { attempts, status } = useHistory();
   const stats = hybrid?.stats;
   const reasons = REFUSAL_NAMES.filter((name) => name !== "None").map((name) => ({ name, count: stats?.refusedBy[name] ?? 0n }));
   const most = reasons.reduce((m, r) => (r.count > m ? r.count : m), 0n);
 
-  const wall: Line[] = [
-    ...(hybrid?.recent ?? []).map((e) => ({ ...e, vault: "hybrid" as const })),
-    ...(classic?.recent ?? []).map((e) => ({ ...e, vault: "classic" as const })),
-  ]
-    .filter((e) => e.blockNumber > 0n)
-    .sort((a, b) => (a.blockNumber < b.blockNumber ? 1 : a.blockNumber > b.blockNumber ? -1 : 0))
-    .slice(0, 16);
+  const wall = sortAttempts(attempts).reverse().slice(0, 16).map(scene);
 
   return (
     <section className="section" id="record">
@@ -65,27 +62,22 @@ export function Record() {
 
           <Reveal className="panel" delay={100}>
             <h3>Latest attempts</h3>
-            {hybrid === null || block === null ? (
-              <p>
-                <Skeleton width="100%" />
-              </p>
+            {status !== "live" || block === null ? (
+              <p>{status === "offline" ? "The record could not be read just now." : <Skeleton width="100%" />}</p>
             ) : wall.length === 0 ? (
               <p className="panel-note">No attempts recorded yet. Yours can be the first.</p>
             ) : (
               <ol className="wall">
-                {wall.map((e, i) => (
-                  <li key={`${e.vault}-${e.blockNumber}-${i}`} className={e.refusal !== "None" ? undefined : e.vault === "classic" ? "wall-robbed" : "wall-paid"}>
-                    <span className="wall-when">{blocksAgo(e.blockNumber, block)}</span>
+                {wall.map((s) => (
+                  <li key={`${s.attempt.txHash}-${s.attempt.logIndex}`} className={WALL_CLASS[s.verdict]}>
+                    <span className="wall-when">{blocksAgo(s.attempt.blockNumber, block)}</span>
                     <span className="wall-what">
-                      {e.refusal !== "None"
-                        ? REFUSAL_TEXT[e.refusal].plain
-                        : e.vault === "classic"
-                          ? "Robbed. The one-lock vault paid out to the stolen key."
-                          : "Paid out to the owner, who signed with both keys."}
+                      {s.head}
                       <small>
-                        {e.vault === "hybrid" ? "Two-lock vault" : "One-lock vault"} · from <span className="mono">{short(e.caller)}</span>
-                        {e.keyholder ? " · with the published key" : ""} ·{" "}
-                        <Ext href={explorer.block(e.blockNumber)}>block {e.blockNumber.toLocaleString("en-US")}</Ext>
+                        {s.vault === "hybrid" ? "Two-lock vault" : "One-lock vault"} · {qor(s.attempt.amount)} QOR to{" "}
+                        <span className="mono">{short(s.wallet)}</span> ({s.who})
+                        {s.attempt.keyholder ? " · with the published key" : ""} ·{" "}
+                        <Ext href={explorer.tx(s.attempt.txHash)}>block {s.attempt.blockNumber.toLocaleString("en-US")}</Ext>
                       </small>
                     </span>
                   </li>

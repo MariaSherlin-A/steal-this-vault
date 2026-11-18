@@ -38,10 +38,40 @@ export function Skeleton({ width = "4ch" }: { width?: string }) {
   return <span className="skel" style={{ width }} aria-label="Loading" />;
 }
 
-/** A value read from the chain. Shows a skeleton until it is known, and pulses once when it changes. */
+/** Counts a number up from zero the first time it is shown. Text that is not a plain number shows as is. */
+function useCountUp(value: string | null | undefined): string | null | undefined {
+  const [shown, setShown] = useState(value);
+  const started = useRef(false);
+  useEffect(() => {
+    const target = value != null && /^\d+(\.\d+)?$/.test(value) ? Number(value) : null;
+    const reduce = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (started.current || target === null || target === 0 || reduce) {
+      setShown(value);
+      if (value != null) started.current = true;
+      return undefined;
+    }
+    started.current = true;
+    const decimals = value!.includes(".") ? value!.split(".")[1]!.length : 0;
+    const t0 = performance.now();
+    const ms = 1100;
+    let frame = 0;
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - t0) / ms);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setShown(p < 1 ? (target * eased).toFixed(decimals) : value);
+      if (p < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [value]);
+  return shown;
+}
+
+/** A value read from the chain. Shows a skeleton until it is known, counts up when it first appears, and pulses when it changes. */
 export function Live({ value, width }: { value: string | null | undefined; width?: string }) {
   const previous = useRef<string | null | undefined>(value);
   const [bump, setBump] = useState(false);
+  const shown = useCountUp(value);
   useEffect(() => {
     if (previous.current !== value && previous.current != null && value != null) {
       setBump(true);
@@ -52,8 +82,8 @@ export function Live({ value, width }: { value: string | null | undefined; width
     previous.current = value;
     return undefined;
   }, [value]);
-  if (value == null) return <Skeleton width={width} />;
-  return <span className={bump ? "bump" : undefined}>{value}</span>;
+  if (value == null || shown == null) return <Skeleton width={width} />;
+  return <span className={bump ? "bump" : undefined}>{shown}</span>;
 }
 
 export function CopyButton({ text, label = "Copy", className = "" }: { text: string; label?: string; className?: string }) {
