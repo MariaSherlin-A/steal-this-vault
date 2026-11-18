@@ -6,18 +6,18 @@
 import { useEffect, useState } from "react";
 
 export const VIEWS = [
-  ["top", "Home"],
-  ["experiment", "The experiment"],
-  ["lab", "Try to rob it"],
-  ["record", "The record"],
+  ["top", "Overview"],
   ["how", "How it works"],
-  ["technical", "Technical details"],
+  ["experiment", "Live comparison"],
+  ["lab", "Attack lab"],
+  ["record", "Threat log"],
+  ["technical", "Technical specs"],
 ] as const;
 
 export type View = (typeof VIEWS)[number][0];
 
 /** Section ids that live inside another view. */
-const INSIDE: Record<string, View> = { intruders: "record", stake: "how" };
+const INSIDE: Record<string, View> = { intruders: "record", stake: "lab" };
 
 function read(): { view: View; anchor: string | null } {
   const id = window.location.hash.replace(/^#/, "");

@@ -177,7 +177,7 @@ export function Intruders() {
     <section className="section" id="intruders">
       <div className="wrap">
         <Reveal className="section-head">
-          <p className="eyebrow">The intruder file</p>
+          <p className="eyebrow">Attacker profiles</p>
           <h2>Every thief leaves a trail.</h2>
           <p className="section-lead">
             A stolen key is not just a loss. Each attempt tells the vault where the thief wanted the money sent, and the chain

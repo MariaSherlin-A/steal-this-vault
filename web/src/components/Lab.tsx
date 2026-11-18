@@ -148,7 +148,7 @@ export function Lab() {
     <section className="section section--lab" id="lab">
       <div className="wrap">
         <Reveal className="section-head">
-          <p className="eyebrow">The attack lab</p>
+          <p className="eyebrow">Attack lab</p>
           <h2>You have the key. Go on, then.</h2>
           <p className="section-lead">
             These are {ATTACKS.length} things a thief can do with a stolen key. Each button really does it: your browser signs with the

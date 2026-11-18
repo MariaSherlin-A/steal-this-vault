@@ -66,7 +66,7 @@ export function Experiment() {
     <section className="section" id="experiment">
       <div className="wrap">
         <Reveal className="section-head">
-          <p className="eyebrow">The experiment</p>
+          <p className="eyebrow">Live comparison</p>
           <h2>Two vaults. One key. One difference.</h2>
           <p className="section-lead">
             Both vaults run the same code, belong to the same owner, and are guarded by the same published key. The one on the left

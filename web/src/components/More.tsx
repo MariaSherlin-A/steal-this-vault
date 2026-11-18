@@ -67,7 +67,7 @@ export function Technical() {
       <div className="wrap">
         <Reveal className="section-head">
           <p className="eyebrow">
-            <CodeIcon size={14} /> Technical details
+            <CodeIcon size={14} /> Technical specs
           </p>
           <h2>For people who want to check.</h2>
           <p className="section-lead">Everything above, in the terms a developer or a judge would use. All of it is verifiable from the links.</p>
