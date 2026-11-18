@@ -22,7 +22,9 @@ const FPS = 30;
 const scene = {};
 let at = 0;
 for (const s of timing.scenes) {
-  const frames = Math.round(s.seconds * FPS) + (s.audio ? Math.round(timing.tailSeconds * FPS) : 0);
+  const lead = s.audio ? Math.round((s.lead ?? 0) * FPS) : 0;
+  const hold = s.audio ? Math.round((s.hold ?? 0) * FPS) : 0;
+  const frames = lead + Math.round(s.seconds * FPS) + hold + (s.audio ? Math.round(timing.tailSeconds * FPS) : 0);
   scene[s.id] = { start: at / FPS, dur: frames / FPS };
   at += frames;
 }
@@ -306,6 +308,14 @@ riser(cue("drill", 0.58) - 1.5, cue("drill", 0.58), 0.2);
 bell(cue("drill", 0.58), 72, 0.2);
 bell(cue("drill", 0.58) + 0.2, 76, 0.16);
 bell(cue("drill", 0.58) + 0.4, 79, 0.14);
+
+// ---------------------------------------------------------------- transitions: a soft air whoosh into every cut
+
+for (const [id, sc] of Object.entries(scene)) {
+  if (sc.start < 0.5 || id === "title") continue;
+  noiseHit(sc.start - 0.35, 0.8, 0.13, 0.3, 400, 5200, id.length % 2 ? 0.3 : -0.3, 0.55);
+  sine(sc.start, 0.5, 90, 45, 0.18, 0.18, 0, 0.1);
+}
 
 // ---------------------------------------------------------------- the close
 

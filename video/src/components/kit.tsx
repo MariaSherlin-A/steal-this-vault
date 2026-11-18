@@ -123,9 +123,10 @@ export const Captions: React.FC<{ text: string; lines?: TimedLine[] }> = ({ text
     const t = frame / fps;
     const now = lines.find((l) => t >= l.start && t < l.end);
     if (!now) return null;
-    return <CaptionBox text={now.text} local={frame - now.start * fps} />;
+    // the voice ends a little before the subtitle does: spread the words over ~90% of the span
+    return <CaptionBox text={now.text} local={frame - now.start * fps} span={Math.max(8, (now.end - now.start) * fps * 0.9)} />;
   }
-  const words = text.split(/\s+/);
+  const words = text.split(/s+/);
   const chunks: string[][] = [];
   let cur: string[] = [];
   for (const w of words) {
@@ -146,26 +147,53 @@ export const Captions: React.FC<{ text: string; lines?: TimedLine[] }> = ({ text
   });
   const now = spans.find((s) => frame >= s.start && frame < s.end) ?? null;
   if (!now) return null;
-  return <CaptionBox text={now.c.join(" ")} local={frame - now.start} />;
+  return <CaptionBox text={now.c.join(" ")} local={frame - now.start} span={now.end - now.start} />;
 };
 
-const CaptionBox: React.FC<{ text: string; local: number }> = ({ text, local }) => {
+/** Words that carry the story get the palette: danger in red, the answer in cyan. */
+const RED_WORDS = /^(leak|leaks|phishing|malware|thief|gone|stolen|robbed|q-day|quantum|cracked|attack|attacks|attacker's|steal)$/i;
+const SAFE_WORDS = /^(vault|refused|quantum-safe|proof|seventeen|ml-dsa-87)$/i;
+
+/** One subtitle phrase on a glass bar; each word lights up as the voice reaches it. */
+const CaptionBox: React.FC<{ text: string; local: number; span: number }> = ({ text, local, span }) => {
+  const words = text.split(" ");
+  const weights = words.map((w) => w.length + 1);
+  const total = weights.reduce((a, b) => a + b, 0);
+  let acc = 0;
+  const enter = interpolate(local, [0, 7], [0, 1], { ...clamp, easing: ease });
   return (
-    <div style={{ position: "absolute", left: 0, right: 0, bottom: 54, display: "flex", justifyContent: "center" }}>
+    <div style={{ position: "absolute", left: 0, right: 0, bottom: 64, display: "flex", justifyContent: "center" }}>
       <div
         style={{
-          padding: "10px 22px",
-          borderRadius: 10,
-          background: "rgba(5,7,15,0.62)",
-          backdropFilter: "blur(6px)",
-          font: `500 32px ${FONT.sans}`,
-          color: C.text,
-          opacity: fadeIn(local, 0, 5),
-          maxWidth: 1500,
+          position: "relative",
+          padding: "14px 30px 15px",
+          borderRadius: 14,
+          background: "linear-gradient(180deg, rgba(14,20,38,0.78), rgba(5,7,15,0.82))",
+          border: `1px solid ${alpha(C.primary, 0.28)}`,
+          boxShadow: `0 18px 50px -20px rgba(0,0,0,0.9), inset 0 1px 0 ${alpha(C.text, 0.06)}`,
+          backdropFilter: "blur(10px)",
+          font: `500 36px/1.3 ${FONT.sans}`,
+          letterSpacing: "-0.005em",
+          maxWidth: 1560,
           textAlign: "center",
+          opacity: enter,
+          transform: `translateY(${(1 - enter) * 14}px)`,
         }}
       >
-        {text}
+        <div style={{ position: "absolute", left: 18, right: 18, top: 0, height: 2, borderRadius: 2, background: `linear-gradient(90deg, transparent, ${alpha(C.safe, 0.7)}, transparent)` }} />
+        {words.map((w, i) => {
+          const at = (acc / total) * span;
+          acc += weights[i]!;
+          const lit = interpolate(local, [at - 2, at + 4], [0, 1], clamp);
+          const bare = w.replace(/[.,:;!?]/g, "");
+          const tint = RED_WORDS.test(bare) ? C.red : SAFE_WORDS.test(bare) ? C.safe : C.text;
+          return (
+            <span key={i} style={{ color: tint, opacity: 0.38 + 0.62 * lit, fontWeight: tint === C.text ? 500 : 600, textShadow: lit > 0.5 && tint !== C.text ? `0 0 18px ${alpha(tint, 0.55)}` : undefined }}>
+              {w}
+              {i < words.length - 1 ? " " : ""}
+            </span>
+          );
+        })}
       </div>
     </div>
   );

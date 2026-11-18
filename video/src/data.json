@@ -1,7 +1,7 @@
 {
   "note": "Real figures read from the testnet with `npm run status`. Update asOf and the numbers before a final render; the film shows the date.",
-  "asOf": "18 Nov 2026",
-  "block": 10328301,
+  "asOf": "19 Nov 2026",
+  "block": 10336490,
   "hybrid": {
     "address": "0x877BA271d7BdFdb7dfA0BB5863E9FBF04885c483",
     "holdsQor": "10.007",

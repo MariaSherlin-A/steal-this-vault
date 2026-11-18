@@ -1,19 +1,110 @@
 {
-  "note": "Scene lengths in seconds. The film is music-only: the score (scripts/score.mjs) is composed to these lengths, so run `npm run score` after changing them. `npm run timing` is only for an optional voiceover in public/audio.",
+  "note": "Scene lengths in seconds. seconds = the voice recording (set by npm run timing); lead = pause before the voice starts; hold = extra time after it. Run npm run score after changing.",
   "tailSeconds": 0.6,
   "scenes": [
-    { "id": "wallet", "file": "scene-01", "seconds": 9, "audio": null },
-    { "id": "leak", "file": "scene-02", "seconds": 13, "audio": null },
-    { "id": "drain", "file": "scene-03", "seconds": 9, "audio": null },
-    { "id": "quantum", "file": "scene-04", "seconds": 15, "audio": null },
-    { "id": "qday", "file": "scene-05", "seconds": 9, "audio": null },
-    { "id": "title", "file": "scene-06", "seconds": 7, "audio": null },
-    { "id": "dare", "file": "scene-07", "seconds": 12, "audio": null },
-    { "id": "locks", "file": "scene-08", "seconds": 14, "audio": null },
-    { "id": "attacks", "file": "scene-09", "seconds": 16, "audio": null },
-    { "id": "control", "file": "scene-10", "seconds": 12, "audio": null },
-    { "id": "product", "file": "scene-11", "seconds": 18, "audio": null },
-    { "id": "drill", "file": "scene-12", "seconds": 12, "audio": null },
-    { "id": "close", "file": "scene-13", "seconds": 10, "audio": null }
+    {
+      "id": "wallet",
+      "file": "scene-01",
+      "seconds": 7.56,
+      "audio": "wav",
+      "lead": 1,
+      "hold": 0.3
+    },
+    {
+      "id": "leak",
+      "file": "scene-02",
+      "seconds": 11.59,
+      "audio": "wav",
+      "lead": 0.3,
+      "hold": 0
+    },
+    {
+      "id": "drain",
+      "file": "scene-03",
+      "seconds": 7.3,
+      "audio": "wav",
+      "lead": 0.3,
+      "hold": 0.3
+    },
+    {
+      "id": "quantum",
+      "file": "scene-04",
+      "seconds": 10.18,
+      "audio": "wav",
+      "lead": 0.3,
+      "hold": 0
+    },
+    {
+      "id": "qday",
+      "file": "scene-05",
+      "seconds": 7.8,
+      "audio": "wav",
+      "lead": 0.5,
+      "hold": 0.8
+    },
+    {
+      "id": "title",
+      "file": "scene-06",
+      "seconds": 4.61,
+      "audio": "wav",
+      "lead": 1.4,
+      "hold": 1.6
+    },
+    {
+      "id": "dare",
+      "file": "scene-07",
+      "seconds": 11.42,
+      "audio": "wav",
+      "lead": 0.4,
+      "hold": 0
+    },
+    {
+      "id": "locks",
+      "file": "scene-08",
+      "seconds": 15.55,
+      "audio": "wav",
+      "lead": 0.3,
+      "hold": 0
+    },
+    {
+      "id": "attacks",
+      "file": "scene-09",
+      "seconds": 17.71,
+      "audio": "wav",
+      "lead": 0.3,
+      "hold": 0.3
+    },
+    {
+      "id": "control",
+      "file": "scene-10",
+      "seconds": 11.98,
+      "audio": "wav",
+      "lead": 0.3,
+      "hold": 0.5
+    },
+    {
+      "id": "product",
+      "file": "scene-11",
+      "seconds": 16.37,
+      "audio": "wav",
+      "lead": 0.4,
+      "hold": 0.4
+    },
+    {
+      "id": "drill",
+      "file": "scene-12",
+      "seconds": 12.79,
+      "audio": "wav",
+      "lead": 0.4,
+      "hold": 0.6
+    },
+    {
+      "id": "close",
+      "file": "scene-13",
+      "seconds": 6.7,
+      "audio": "wav",
+      "lead": 0.5,
+      "hold": 3.2
+    }
   ]
 }
