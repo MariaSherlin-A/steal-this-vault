@@ -47,7 +47,7 @@ export const WalletScene: React.FC = () => {
           </Card>
         </div>
       </div>
-      <Statement at={second} top={830} color={C.red} lines={["Whoever holds the key owns it all."]} size={64} />
+      <Statement at={second} top={800} color={C.red} lines={["Whoever holds the key owns it all."]} size={64} />
     </AbsoluteFill>
   );
 };
@@ -122,7 +122,7 @@ export const LeakScene: React.FC = () => {
           <KeyGlyph size={64} color={C.red} />
         </div>
       </div>
-      <Statement at={converge + 20} top={920} color={C.red} size={52} lines={["One bad click, and the key is someone else's."]} />
+      <Statement at={converge + 20} top={850} color={C.red} size={52} lines={["One bad click, and the key is someone else's."]} />
     </AbsoluteFill>
   );
 };
@@ -206,7 +206,7 @@ export const QuantumScene: React.FC = () => {
           <div style={{ font: `400 20px ${FONT.sans}`, color: C.faint, marginTop: 12 }}>Worked out. Never stolen.</div>
         </Card>
       </div>
-      <Statement at={Math.round(d * 0.62)} top={900} color={C.red} size={46} lines={["It works out the private key from the public one."]} />
+      <Statement at={Math.round(d * 0.62)} top={850} color={C.red} size={46} lines={["It works out the private key from the public one."]} />
     </AbsoluteFill>
   );
 };

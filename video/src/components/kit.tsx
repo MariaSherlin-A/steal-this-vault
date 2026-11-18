@@ -109,9 +109,22 @@ export const Chapter: React.FC<{ step: string; title: string; tone?: "blue" | "r
 };
 
 /** Captions at the bottom, the narration split into short phrases timed across the scene. */
-export const Captions: React.FC<{ text: string }> = ({ text }) => {
+export interface TimedLine {
+  text: string;
+  start: number;
+  end: number;
+}
+
+/** Subtitles. With `lines` (timed to the recording by scripts/timing.mjs) they follow the voice exactly. */
+export const Captions: React.FC<{ text: string; lines?: TimedLine[] }> = ({ text, lines }) => {
   const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
+  const { durationInFrames, fps } = useVideoConfig();
+  if (lines && lines.length) {
+    const t = frame / fps;
+    const now = lines.find((l) => t >= l.start && t < l.end);
+    if (!now) return null;
+    return <CaptionBox text={now.text} local={frame - now.start * fps} />;
+  }
   const words = text.split(/\s+/);
   const chunks: string[][] = [];
   let cur: string[] = [];
@@ -133,7 +146,10 @@ export const Captions: React.FC<{ text: string }> = ({ text }) => {
   });
   const now = spans.find((s) => frame >= s.start && frame < s.end) ?? null;
   if (!now) return null;
-  const local = frame - now.start;
+  return <CaptionBox text={now.c.join(" ")} local={frame - now.start} />;
+};
+
+const CaptionBox: React.FC<{ text: string; local: number }> = ({ text, local }) => {
   return (
     <div style={{ position: "absolute", left: 0, right: 0, bottom: 54, display: "flex", justifyContent: "center" }}>
       <div
@@ -149,7 +165,7 @@ export const Captions: React.FC<{ text: string }> = ({ text }) => {
           textAlign: "center",
         }}
       >
-        {now.c.join(" ")}
+        {text}
       </div>
     </div>
   );
