@@ -235,3 +235,22 @@ that stays on, or a small server); the voiced video; QCAI stage 2.
   forced drill period. The keeper was right; the tests now pin an ordinary date.
 - **Verified:** `npm run check` green; screenshots at 1440 and 390 of home, replay, record and
   header. Not deployed: Maria chose to wait until after the drill.
+
+## 19 Nov 2026: the voiced demo film
+
+- **Asked:** finish the demo film with a narrator, high quality, modern type and motion, in the
+  Quantum blue palette; voice it with Edge's neural voice "Andrew"; use the GPU.
+- **Went wrong first:** ElevenLabs refused generation on the free tier; Hume was never
+  connected; a local model (Kokoro) needed a large download Maria had not approved. Maria then
+  chose Edge "Andrew" via `edge-tts`. A narrator from another team's video was not cloned.
+- **Did:** `video/scripts/voice.py` voices the 13 lines (spoken text adjusted only for
+  pronunciation: "Core Chain", "M L D S A eighty-seven"), loudness-matched to -16 LUFS.
+  `npm run timing` fitted every scene to its recording and timed the subtitles to the pauses.
+  Per-scene `lead` and `hold` in `timing.json` give the title and the close room to breathe.
+  New for the whole film: a blur-and-zoom cut with a light sweep into every scene, a slow
+  camera push, a quiet frame overlay with a progress line, subtitles on a glass bar that light
+  up word by word with danger words in red and the answer in cyan, and a whoosh on every cut
+  in the score. Rendered in Chrome's GPU mode (`--gl=angle`) on the RTX 2050.
+- **Verified:** figures re-read with `npm run status` (unchanged: 10.007 QOR held, 5 refused,
+  control vault paid 3 times); stills checked across all 13 scenes at half and full size;
+  film length 2:44, under the 3 minute limit. Two files: with subtitles, and clean.

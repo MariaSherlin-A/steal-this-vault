@@ -1,6 +1,6 @@
 # Demo video: the film
 
-A narrated film of about 2 min 20 s (limit: 3 min, the fest's only video rule). Act one tells
+A narrated film of 2 min 44 s (limit: 3 min, the fest's only video rule). Act one tells
 the problem in pictures and big words; act two shows how Steal This Vault answers it. A
 narrator voices every scene, subtitles follow the voice, and an original score, composed in
 code, dips under the narration. Colours are the site's: midnight navy, electric blue, ice
@@ -11,10 +11,11 @@ cyan, signal red.
 ```sh
 cd video
 npm install          # once
-# put the voice files in public/audio: scene-01.mp3 ... scene-13.mp3 (wav/m4a also fine)
+# the voice: Edge's neural voice "Andrew" via edge-tts (or drop your own scene-01..13 files in public/audio)
+python scripts/voice.py   # in a venv with edge-tts installed; writes public/audio/scene-NN.wav
 npm run timing       # fit each scene to its recording, time the subtitles to the pauses
 npm run score        # compose the music to the new scene lengths
-npm run render       # -> out/steal-this-vault-demo.mp4
+npm run render       # -> out/steal-this-vault-demo.mp4 (add --props='{"clean":true}' for no subtitles)
 ```
 
 Before a final render, re-read the figures from the chain (`npm run status` at the repo root)
@@ -22,9 +23,10 @@ and update `video/src/data.json`.
 
 ## How the sync works
 
-Each scene lasts exactly as long as its recording plus 0.6 s, so a cut never lands mid-sentence.
+Each scene lasts as long as its recording plus 0.6 s, plus an optional `lead` (silence before the
+voice) and `hold` (time after it) set per scene in `src/timing.json`, so a cut never lands mid-sentence.
 `scripts/timing.mjs` finds the pauses in each recording with ffmpeg and starts each subtitle
-where the voice resumes. The music is composed to the resulting lengths and drops to about a
+where the voice resumes; each word of a subtitle lights up as the voice reaches it. The music is composed to the resulting lengths and drops to about a
 third of its volume while the narrator speaks.
 
 ## Narration, scene by scene
