@@ -2,13 +2,15 @@
   "note": "Scene lengths in seconds. `npm run timing` measures the audio files in public/audio and overwrites `seconds` and `audio`; until then these are the script's estimates and no audio is placed.",
   "tailSeconds": 0.6,
   "scenes": [
-    { "id": "key", "file": "scene-01", "seconds": 10, "audio": null },
-    { "id": "qday", "file": "scene-02", "seconds": 22, "audio": null },
-    { "id": "vaults", "file": "scene-03", "seconds": 24, "audio": null },
-    { "id": "attacks", "file": "scene-04", "seconds": 42, "audio": null },
-    { "id": "record", "file": "scene-05", "seconds": 18, "audio": null },
-    { "id": "layers", "file": "scene-06", "seconds": 26, "audio": null },
-    { "id": "alive", "file": "scene-07", "seconds": 22, "audio": null },
-    { "id": "close", "file": "scene-08", "seconds": 12, "audio": null }
+    { "id": "incident", "file": "scene-01", "seconds": 11, "audio": null },
+    { "id": "threat", "file": "scene-02", "seconds": 14, "audio": null },
+    { "id": "title", "file": "scene-03", "seconds": 6, "audio": null },
+    { "id": "dare", "file": "scene-04", "seconds": 13, "audio": null },
+    { "id": "locks", "file": "scene-05", "seconds": 15, "audio": null },
+    { "id": "attacks", "file": "scene-06", "seconds": 18, "audio": null },
+    { "id": "control", "file": "scene-07", "seconds": 13, "audio": null },
+    { "id": "product", "file": "scene-08", "seconds": 20, "audio": null },
+    { "id": "drill", "file": "scene-09", "seconds": 13, "audio": null },
+    { "id": "close", "file": "scene-10", "seconds": 9, "audio": null }
   ]
 }

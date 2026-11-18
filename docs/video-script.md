@@ -1,119 +1,104 @@
 # Demo video script
 
-An animated film, not a screen recording: dark, slow, cinematic, in the site's own colours
-(warm black, brass, mint, red). Your voice carries it. The pictures are built from code in
-[video/](../video/) and rendered to MP4 with your audio placed scene by scene.
+A film, not a screen recording. It opens like a short cinematic story, moves into a bold
+step-by-step explainer, shows the real website with callouts, and closes on real numbers.
+Colours are the site's: midnight navy, electric blue, ice cyan, signal red. The pictures are
+built from code in [video/](../video/) and rendered to MP4 with your voice placed scene by
+scene. Captions of your words run along the bottom.
 
-Length: about 2 min 40 s at a calm reading pace. Limit: 3 min. Eight scenes, 380 words.
+Length: about 2 min 15 s at a steady pace. Limit: 3 min. Ten scenes, about 320 words.
 
 ## Recording your voice
 
-- One audio file per scene, named `scene-01.mp3` to `scene-08.mp3` (WAV or M4A also fine).
-  Put them in `video/public/audio/`. One file per scene lets the pictures follow your pace.
-- Read slowly. Pause at full stops. Leave about half a second of silence at the start and
-  end of each file. Do not rush the last line of a scene; it is the one people remember.
+- One audio file per scene, named `scene-01.mp3` to `scene-10.mp3` (WAV or M4A also fine).
+  Put them in `video/public/audio/`. Each scene stretches to fit your recording.
+- Read with energy, a little faster than conversation. Pause at full stops. Leave about half
+  a second of silence at the start and end of each file.
 - Quiet room, phone 15 cm from your mouth, or a headset. A phone voice memo is good enough.
-- If you stumble, stop and record that scene again from the start. Don't splice.
-- Say the words as written. The on-screen text matches them.
+- If you stumble, record that scene again from the start. Don't splice.
+- Say the words exactly as written: the captions show the same words.
+- Before the final render, the numbers in `video/src/data.json` are re-read from the chain.
 
 ## Scenes
 
-### Scene 1. The key (about 10 s)
+### Scene 1. Incident (about 11 s)
 
-Picture: black. Hex characters drift like rain. One line is typed out, then the real
-published private key appears, glowing brass, alone on the screen.
+Picture: red-tinted network. "ONE LEAKED KEY." glitches in. A wallet card drains from
+$48,210.55 to $0.00, a red flash, then "THE MONEY IS GONE." Marked as a dramatization.
 
-> This is a private key. It controls a vault with real coins in it.
-> And it is public. We put it there.
+> One leaked private key. That's all it takes. On almost every blockchain, whoever holds
+> the key owns the wallet, and the money is gone in seconds.
 
-### Scene 2. Q-Day (about 22 s)
+### Scene 2. The threat (about 14 s)
 
-Picture: a field of small keys, warm and dim. A lock icon cracks. The keys turn red in a
-wave, left to right. The words Q-DAY in serif, large.
+Picture: "Phishing" and "Malware" struck through, then "Quantum computers." in blue. A public
+key turns red character by character, a lock splits in two, and Q-DAY slams in.
 
-> Every wallet on every chain today is locked with a key like this one.
-> The day a quantum computer arrives, those keys stop being secret.
-> Security people call it Q-Day.
-> On that day, a stolen key is not a bug. It is every key.
+> Today, keys leak through phishing and malware. Tomorrow, quantum computers will work them
+> out from public data. That day has a name: Q-Day. Every exposed wallet becomes a leaked key.
 
-### Scene 3. Two vaults (about 24 s)
+### Scene 3. Title (about 6 s)
 
-Picture: two vault doors drawn in brass line. The left one has one lock. The right one has
-two; the second lock glows mint and the label ML-DSA-87 appears under it. Then the key from
-scene 1 drops in between them.
+Picture: the two-ring logo draws itself. "Steal This Vault", a light sweep, the tagline.
 
-> So we built two vaults on the QoreChain testnet, with the same owner and the same leaked key.
-> The one-lock vault checks only the classical signature.
-> The two-lock vault also demands a post-quantum signature, ML-DSA-87,
-> checked on chain against the key the chain itself holds for the owner.
-> And then we handed out the key.
+> So we built a vault that survives it. Steal This Vault.
 
-### Scene 4. Eighteen ways to steal (about 42 s)
+### Scene 4. Step 1, the dare (about 13 s)
 
-Picture: an attack feed. Eighteen attempts type in one after another; each gets a red
-REFUSED stamp slammed over it with the reason the vault gave. The two-lock door shakes and
-holds every time. On the last row the one-lock door swings open, coins fly out, and the
-stamp is ROBBED in brass. Counter at the bottom: 17 refused, 1 robbed.
+Picture: STEP 01 THE DARE. The real published key types in, stamped PUBLISHED ON PURPOSE.
+The vault balance counts up. Real testnet blocks tick along the bottom.
 
-> Eighteen ways to steal.
-> Send the coins. Add a second key of your own. Swap the owner's lock for yours.
-> Open the side door. Hand the vault a fake signature.
-> Replay the owner's last real withdrawal. Reuse a real signature on a new request.
-> Every attempt is written on chain by the vault itself, with the reason it was refused.
-> Seventeen refused.
-> And the one-lock vault, the control, the kind of vault the rest of the world still uses:
-> robbed. Same thief. Same key.
-> One lock gave way. Two locks held.
+> Step one: the dare. We published the owner's private key. The real one, in full, on the
+> website. It guards real money on the QoreChain testnet, and anyone can take it.
 
-### Scene 5. The record (about 18 s)
+### Scene 5. Step 2, two locks (about 15 s)
 
-Picture: a chain of blocks slides past. A panel shows the real numbers read from the chain
-on the day of rendering, labelled with the date: what the two-lock vault holds, what it
-would have lost, how many attempts it refused, how many times the one-lock vault paid out.
+Picture: STEP 02 TWO LOCKS. Lock 1 (ordinary key) and lock 2 (quantum-safe key) wired to the
+vault, the chain's checker below. Both signatures arrive: "the vault pays". Then only the
+stolen one: lock 2 flashes red, "One key alone: refused."
 
-> The record is public. The vault counts every attempt, and what it would have lost.
-> Anyone can run the attacks, from the site or from the command line,
-> and check every one of them on the explorer.
+> Step two: two locks. The ordinary key every wallet uses, and a quantum-safe key, ML-DSA-87,
+> that never leaves the owner. The chain itself checks both signatures. One without the other
+> moves nothing.
 
-### Scene 6. How it holds (about 26 s)
+### Scene 6. Step 3, attack it (about 18 s)
 
-Picture: three rings around a coin. Each ring lights as it is named: the chain, the window,
-the vault. The outer rings are brass; the inner one is mint.
+Picture: STEP 03 ATTACK IT. The 17 real attacks from the lab stream in, each stamped
+REFUSED, the counter climbing to 17 / 17. Then the 18th in red: the control, ROBBED.
 
-> Three layers.
-> The chain refuses any native transaction that lacks the second signature.
-> The chain's window lets the owner's account reach only the two vaults,
-> and only the owner can open it, with both keys.
-> And the vault itself verifies the post-quantum signature with the chain's precompile.
-> There is no fallback. If a check fails, the vault counts the attempt and keeps the money.
+> Step three: attack it. The lab runs eighteen real attacks with the stolen key. Send the
+> coins. Swap the second lock. Fake a signature. Replay the owner's own withdrawal. Seventeen
+> are refused, and the vault counts every refusal on chain.
 
-### Scene 7. Still alive (about 22 s)
+### Scene 7. Step 4, the control (about 13 s)
 
-Picture: one row in the feed gets a mint PAID stamp: "Paid out to the owner, who signed
-with both keys." Then four small cards fade in: keeper, drill mode, tests, two audits.
+Picture: STEP 04 THE CONTROL. The same key flies at two vaults. The one-lock vault bursts
+open, coins fly, ROBBED. The two-lock vault pulses a shield, REFUSED, with the real figures.
 
-> A vault that refuses everyone is just a hole.
-> This one pays its owner, who signs with both keys.
-> A keeper renews the window and proves the vault is alive.
-> A drill mode empties the control vault and shuts the door for the fest's Q-Day drill.
-> The contracts are tested against a real ML-DSA-87 implementation, and audited twice.
+> Step four: the control. The eighteenth attack hits an identical vault with only the
+> ordinary lock. Same key, same code. That one gets robbed. The two-lock vault keeps every coin.
 
-### Scene 8. Close (about 12 s)
+### Scene 8. The product (about 20 s)
 
-Picture: the key again, then the tagline typed in serif, then the address of the site and
-the repository.
+Picture: the real website in a browser frame, slowly zooming: the overview, the replay, the
+attacker profiles, the attack lab, each with a callout. Then two cards: the alert, the rescue.
 
-> The key is on the screen. The money is still in the vault.
-> Steal This Vault.
-> The key is free. The money isn't.
+> And it's all live. The site reads the chain as you watch. The replay plays back every real
+> attempt. The threat log profiles each attacker and follows the stolen money. If the key is
+> ever used, the owner is alerted, and one command moves the funds out.
 
-## After recording
+### Scene 9. Drill day (about 13 s)
 
-Put the eight files in `video/public/audio/`, then from the repository root:
+Picture: "18 NOV 2026 · Q-DAY DRILL" typed out. A 24-hour ring fills. "Coins the attacker
+moved: 0". The real proof transaction hash, block and time, signed with both keys.
 
-```sh
-npm run video:timing   # measures each file and sets the scene lengths
-npm run video          # renders video/out/steal-this-vault-demo.mp4
-```
+> On Q-Day drill day, the published key was in an attacker's hands from start to finish.
+> Not a single coin left the vault. Our proof transaction, signed with both keys, went
+> straight through.
 
-Upload the MP4 to YouTube as unlisted and paste the link in the fest form.
+### Scene 10. Close (about 9 s)
+
+Picture: four real numbers count up (still in the vault, attempts refused, saved by the
+second lock, attacks in the lab). The logo, the site address, the fest.
+
+> The private key is public. The money is still in the vault. Steal This Vault. Come and try.

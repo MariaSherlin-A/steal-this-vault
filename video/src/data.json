@@ -1,24 +1,51 @@
 {
   "note": "Real figures read from the testnet with `npm run status`. Update asOf and the numbers before a final render; the film shows the date.",
-  "asOf": "16 Nov 2026",
-  "block": 10202654,
+  "asOf": "18 Nov 2026",
+  "block": 10328301,
   "hybrid": {
     "address": "0x877BA271d7BdFdb7dfA0BB5863E9FBF04885c483",
-    "holdsQor": "9.998",
-    "paidWithdrawals": 2,
+    "holdsQor": "10.007",
+    "paidWithdrawals": 3,
     "refusedAttempts": 5,
     "wouldHaveLostQor": "39.996",
     "wouldHaveLostAttempts": 4
   },
   "control": {
     "address": "0x57AD197DcfDbb76EDE44B0f3c239965Fae0A8F51",
-    "robbedTimes": 2,
-    "holdsQor": "0.05"
+    "paidTimes": 3,
+    "takenQor": "0.1"
   },
   "owner": {
     "evm": "0xA2E46aDeDADD7163b4178Bb07AA086765e55dd73",
     "publishedKey": "0xc8bc3de735c84abc54a084c33ae989e75c075a619ffc5340d7dc9ebf8b07acf9"
   },
+  "drill": {
+    "date": "18 Nov 2026",
+    "proofTx": "860064E01688CBCD7EF3D4D699BB8741DF4BD8894594EF2A0E6CE0A621A192AC",
+    "proofBlock": 10328183,
+    "proofTime": "17:30:48 UTC",
+    "proofQor": "0.01"
+  },
+  "attacks": [
+    "Send the owner's coins to my wallet",
+    "Add a second key of my own",
+    "Swap the owner's second lock for mine",
+    "Unlock the side door myself",
+    "Give my own account permission to spend",
+    "Let my contract take over the account",
+    "Send the coins the way MetaMask would",
+    "Approve my wallet to spend the owner's tokens",
+    "Deploy my own contract as the owner",
+    "Turn the owner's account into my contract",
+    "Move the coins into the weak vault, then rob that",
+    "Ask the vault for everything",
+    "Hand it a fake second signature",
+    "Sign with a second key of my own",
+    "Send it through someone else",
+    "Replay the owner's last real withdrawal",
+    "Reuse the owner's real signature for my withdrawal"
+  ],
+  "control_attack": "Rob the vault with one lock",
   "site": "steal-this-vault.vercel.app",
   "repo": "github.com/MariaSherlin-A/steal-this-vault"
 }

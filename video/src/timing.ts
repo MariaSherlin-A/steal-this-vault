@@ -1,7 +1,7 @@
 import { FPS } from "./theme";
 import timing from "./timing.json";
 
-export type SceneId = "key" | "qday" | "vaults" | "attacks" | "record" | "layers" | "alive" | "close";
+export type SceneId = "incident" | "threat" | "title" | "dare" | "locks" | "attacks" | "control" | "product" | "drill" | "close";
 
 export interface Scene {
   id: SceneId;

@@ -2,25 +2,23 @@ import React from "react";
 import { AbsoluteFill, Audio, Composition, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { C, FPS, H, W } from "./theme";
 import { SCENES, TOTAL_FRAMES, type SceneId } from "./timing";
-import { Background } from "./components/Background";
+import { NARRATION } from "./script";
 import { sceneFade } from "./components/anim";
-import { KeyScene } from "./scenes/KeyScene";
-import { QDayScene } from "./scenes/QDayScene";
-import { VaultsScene } from "./scenes/VaultsScene";
-import { AttacksScene } from "./scenes/AttacksScene";
-import { RecordScene } from "./scenes/RecordScene";
-import { LayersScene } from "./scenes/LayersScene";
-import { AliveScene } from "./scenes/AliveScene";
-import { CloseScene } from "./scenes/CloseScene";
+import { Captions, Grain } from "./components/kit";
+import { IncidentScene, ThreatScene, TitleScene } from "./scenes/Opening";
+import { AttacksScene, ControlScene, DareScene, LocksScene } from "./scenes/Steps";
+import { CloseScene, DrillScene, ProductScene } from "./scenes/Ending";
 
 const SCENE: Record<SceneId, React.FC> = {
-  key: KeyScene,
-  qday: QDayScene,
-  vaults: VaultsScene,
+  incident: IncidentScene,
+  threat: ThreatScene,
+  title: TitleScene,
+  dare: DareScene,
+  locks: LocksScene,
   attacks: AttacksScene,
-  record: RecordScene,
-  layers: LayersScene,
-  alive: AliveScene,
+  control: ControlScene,
+  product: ProductScene,
+  drill: DrillScene,
   close: CloseScene,
 };
 
@@ -28,23 +26,24 @@ const SCENE: Record<SceneId, React.FC> = {
 const Fade: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
-  return <AbsoluteFill style={{ opacity: sceneFade(frame, durationInFrames) }}>{children}</AbsoluteFill>;
+  return <AbsoluteFill style={{ opacity: sceneFade(frame, durationInFrames, 10) }}>{children}</AbsoluteFill>;
 };
 
 export const Main: React.FC = () => (
   <AbsoluteFill style={{ background: C.bg, color: C.text }}>
-    <Background />
     {SCENES.map((s) => {
       const Scene = SCENE[s.id];
       return (
         <Sequence key={s.id} from={s.start} durationInFrames={s.frames} name={s.id}>
           <Fade>
             <Scene />
+            <Captions text={NARRATION[s.id]} />
           </Fade>
           {s.audio ? <Audio src={staticFile(`audio/${s.file}.${s.audio}`)} /> : null}
         </Sequence>
       );
     })}
+    <Grain />
   </AbsoluteFill>
 );
 
