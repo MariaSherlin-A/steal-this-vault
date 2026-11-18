@@ -216,3 +216,22 @@ experiment depends on. It can be rehearsed on drill day's eve only if Maria want
 
 **Open.** Maria picks Telegram or Discord and fills `.env`; where the watcher runs (a laptop
 that stays on, or a small server); the voiced video; QCAI stage 2.
+
+## 18 Nov 2026: drill day check, and the site gets views and a replay
+
+- **Asked:** how the drill went; then, after Maria found the site slow to navigate and the
+  record confusing ("what is robbed?"), make it feel automatic and alive, and fix the menu.
+- **Drill so far (read from the chain at 17:33 UTC):** window closed, control vault empty,
+  no new attempts on either vault, all three scheduled keeper runs in the drill period
+  succeeded. Maria ran `--proof-tx`; it landed at 17:30:48 UTC, block 10,328,183, code 0,
+  0.01 QOR to the two-lock vault, signed with both keys.
+- **Found:** the "Latest attempts" list called the keeper's clean-out of the bait vault
+  "Robbed", because it only knew the sender, not where the money went. Misleading.
+- **Did:** each menu item now opens its own view (no long smooth scroll), with a tab strip on
+  phones, where the menu used to be hidden. A replay on the home view plays back the latest real
+  attempts from the vault logs, lock by lock, labelled as a replay. The record list reads the
+  full history and says "The owner took the bait money back. Not a theft." Live figures count up.
+- **Went wrong:** two keeper tests failed because they used today's date, which is inside the
+  forced drill period. The keeper was right; the tests now pin an ordinary date.
+- **Verified:** `npm run check` green; screenshots at 1440 and 390 of home, replay, record and
+  header. Not deployed: Maria chose to wait until after the drill.
