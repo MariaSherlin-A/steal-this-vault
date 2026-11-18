@@ -4,8 +4,11 @@ import { Footer, HowItWorks, Technical } from "./components/More";
 import { Intruders } from "./components/Intruders";
 import { Record } from "./components/Record";
 import { Stake } from "./components/Stake";
+import { Network } from "./components/Network";
+import { ChainStrip, Explore, Steps } from "./components/Overview";
 import { Theatre } from "./components/Theatre";
 import { Header, Hero, NextView } from "./components/Top";
+import { useSpotlight } from "./lib/useSpotlight";
 import { useView, type View } from "./lib/useView";
 
 function Content({ view }: { view: View }) {
@@ -13,7 +16,12 @@ function Content({ view }: { view: View }) {
     case "experiment":
       return <Experiment />;
     case "lab":
-      return <Lab />;
+      return (
+        <>
+          <Lab />
+          <Stake />
+        </>
+      );
     case "record":
       return (
         <>
@@ -22,19 +30,17 @@ function Content({ view }: { view: View }) {
         </>
       );
     case "how":
-      return (
-        <>
-          <HowItWorks />
-          <Stake />
-        </>
-      );
+      return <HowItWorks />;
     case "technical":
       return <Technical />;
     default:
       return (
         <>
-          <Hero />
+          <Hero backdrop={<Network />} />
+          <ChainStrip />
+          <Steps />
           <Theatre />
+          <Explore />
         </>
       );
   }
@@ -42,6 +48,7 @@ function Content({ view }: { view: View }) {
 
 export function App() {
   const view = useView();
+  useSpotlight();
   return (
     <>
       <a className="skip" href="#lab">

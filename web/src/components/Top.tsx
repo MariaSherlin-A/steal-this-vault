@@ -1,10 +1,11 @@
 /** The header and the opening screen: the claim, the published key, and four live figures. */
 import { PUBLISHED_KEY } from "@stv/core/published";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { qor, short } from "../lib/format";
 import { useChain } from "../lib/useChain";
 import { VIEWS, nextView, type View } from "../lib/useView";
 import { useWallet } from "../lib/useWallet";
+import { Logo } from "./Brand";
 import { KeyIcon, WalletIcon } from "./icons";
 import { CopyButton, Live } from "./ui";
 
@@ -59,10 +60,10 @@ export function Header({ view }: { view: View }) {
     <header className="header">
       <div className="wrap header-row">
         <a href="#top" className="wordmark" aria-label="Steal This Vault, back to top">
-          <span className="wordmark-mark" aria-hidden>
-            <KeyIcon size={16} />
+          <Logo size={30} />
+          <span className="wordmark-text">
+            Steal This <b>Vault</b>
           </span>
-          Steal This Vault
         </a>
         <Tabs view={view} className="nav" />
         <div className="header-side">
@@ -118,28 +119,29 @@ function KeyCard() {
   );
 }
 
-export function Hero() {
+export function Hero({ backdrop }: { backdrop?: ReactNode }) {
   const { hybrid, classic } = useChain();
   const h = hybrid?.stats;
   const c = classic?.stats;
   return (
     <section className="hero" id="top">
+      {backdrop}
       <div className="wrap hero-grid">
         <div className="hero-copy">
-          <p className="eyebrow">A public experiment on the QoreChain testnet</p>
+          <p className="eyebrow hero-eyebrow"><span className="live-dot" aria-hidden /> Post-quantum wallet security · live on QoreChain</p>
           <h1>
-            The key to this vault is public. <em>The money is still in it.</em>
+            We published the private key. <em>The money is still in the vault.</em>
           </h1>
           <p className="lead">
-            A leaked private key normally means the money is gone within minutes. This vault’s owner key is printed on this page. Take
-            it and try to empty the vault. The account has a second, quantum-safe lock, and the stolen key does not open that one.
+            Steal This Vault protects crypto with two locks: the ordinary private key every wallet uses, and a second, quantum-safe key
+            that never leaves its owner. To prove it works, the ordinary key is printed right here. Take it and try to empty the vault.
           </p>
           <div className="hero-cta">
             <a href="#lab" className="btn btn--primary">
-              Try to rob it
+              Open the attack lab
             </a>
-            <a href="#experiment" className="btn btn--ghost">
-              See the experiment
+            <a href="#how" className="btn btn--ghost">
+              How it works
             </a>
           </div>
         </div>

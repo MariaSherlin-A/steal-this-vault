@@ -23,7 +23,7 @@ export function Record() {
     <section className="section" id="record">
       <div className="wrap">
         <Reveal className="section-head">
-          <p className="eyebrow">The record</p>
+          <p className="eyebrow">Threat log</p>
           <h2>The vault keeps count.</h2>
           <p className="section-lead">
             Nothing below comes from this website. The vault writes every refusal into its own storage on the chain, where nobody can
