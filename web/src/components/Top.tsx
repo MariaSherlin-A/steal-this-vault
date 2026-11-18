@@ -1,20 +1,52 @@
 /** The header and the opening screen: the claim, the published key, and four live figures. */
 import { PUBLISHED_KEY } from "@stv/core/published";
+import { useEffect, useRef } from "react";
 import { qor, short } from "../lib/format";
 import { useChain } from "../lib/useChain";
+import { VIEWS, nextView, type View } from "../lib/useView";
 import { useWallet } from "../lib/useWallet";
 import { KeyIcon, WalletIcon } from "./icons";
 import { CopyButton, Live } from "./ui";
 
-const NAV = [
-  ["#experiment", "The experiment"],
-  ["#lab", "Try to rob it"],
-  ["#record", "The record"],
-  ["#how", "How it works"],
-  ["#technical", "Technical details"],
-] as const;
+const NAV = VIEWS.filter(([v]) => v !== "top");
 
-export function Header() {
+function Tabs({ view, className }: { view: View; className: string }) {
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    // keep the current tab in sight in the sliding strip on phones
+    const strip = ref.current;
+    const tab = strip?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (strip && tab) strip.scrollLeft = tab.offsetLeft - (strip.clientWidth - tab.offsetWidth) / 2;
+  }, [view]);
+  return (
+    <nav className={className} aria-label="Sections" ref={ref}>
+      {(className === "tabs" ? VIEWS : NAV).map(([v, label]) => (
+        <a key={v} href={`#${v}`} aria-current={view === v ? "page" : undefined}>
+          {label}
+        </a>
+      ))}
+    </nav>
+  );
+}
+
+/** The link at the foot of each view to the one after it. */
+export function NextView({ view }: { view: View }) {
+  const next = nextView(view);
+  if (!next) return null;
+  return (
+    <div className="wrap next-view">
+      <a href={`#${next[0]}`} className="next-link">
+        <span className="eyebrow">Next</span>
+        <span className="next-title">{next[1]}</span>
+        <span className="next-arrow" aria-hidden>
+          →
+        </span>
+      </a>
+    </div>
+  );
+}
+
+export function Header({ view }: { view: View }) {
   const { status, block } = useChain();
   const { wallet, connecting, connect, disconnect } = useWallet();
   const pill =
@@ -32,13 +64,7 @@ export function Header() {
           </span>
           Steal This Vault
         </a>
-        <nav className="nav" aria-label="Sections">
-          {NAV.map(([href, label]) => (
-            <a key={href} href={href}>
-              {label}
-            </a>
-          ))}
-        </nav>
+        <Tabs view={view} className="nav" />
         <div className="header-side">
           <span className={`pill pill--${status}`} role="status">
             <span className="pill-dot" aria-hidden />
@@ -56,6 +82,9 @@ export function Header() {
             </button>
           )}
         </div>
+      </div>
+      <div className="wrap">
+        <Tabs view={view} className="tabs" />
       </div>
     </header>
   );
