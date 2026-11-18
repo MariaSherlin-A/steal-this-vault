@@ -117,10 +117,13 @@ describe("keeper plan, drill mode", () => {
 });
 
 describe("keeper mode", () => {
+  // an ordinary day, outside the forced drill period, so the result does not depend on today's date
+  const ordinary = new Date(Date.UTC(2026, 10, 25, 12, 0, 0));
+
   it("defaults to normal", () => {
-    assert.equal(modeFrom([], undefined), "normal");
-    assert.equal(modeFrom([], ""), "normal");
-    assert.equal(modeFrom([], "normal"), "normal");
+    assert.equal(modeFrom([], undefined, ordinary), "normal");
+    assert.equal(modeFrom([], "", ordinary), "normal");
+    assert.equal(modeFrom([], "normal", ordinary), "normal");
   });
 
   it("reads the flag before the environment", () => {
@@ -130,7 +133,7 @@ describe("keeper mode", () => {
   });
 
   it("refuses an unknown mode instead of guessing", () => {
-    assert.throws(() => modeFrom([], "drll"), /KEEPER_MODE/);
+    assert.throws(() => modeFrom([], "drll", ordinary), /KEEPER_MODE/);
   });
 
   it("is in drill mode on drill day whatever the variable says", () => {
