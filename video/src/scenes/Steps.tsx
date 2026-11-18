@@ -152,7 +152,7 @@ export const LocksScene: React.FC = () => {
       <svg width={1920} height={1080} style={{ position: "absolute", inset: 0 }}>
         <line x1={left.x + 230} y1={left.y} x2={centre.x - 140} y2={centre.y} stroke={alpha(C.primary, 0.5)} strokeWidth={2} strokeDasharray="8 10" strokeDashoffset={-frame} />
         <line x1={right.x - 230} y1={right.y} x2={centre.x + 140} y2={centre.y} stroke={alpha(C.safe, 0.5)} strokeWidth={2} strokeDasharray="8 10" strokeDashoffset={-frame} />
-        <line x1={centre.x} y1={centre.y + 140} x2={centre.x} y2={830} stroke={alpha(C.muted, 0.4)} strokeWidth={2} strokeDasharray="6 8" strokeDashoffset={-frame} />
+        <line x1={centre.x} y1={centre.y + 140} x2={centre.x} y2={770} stroke={alpha(C.muted, 0.4)} strokeWidth={2} strokeDasharray="6 8" strokeDashoffset={-frame} />
         <Pulse x1={left.x + 230} y1={left.y} x2={centre.x - 140} y2={centre.y} a={A} b={A + 24} color={C.primary} />
         <Pulse x1={right.x - 230} y1={right.y} x2={centre.x + 140} y2={centre.y} a={A} b={A + 24} color={C.safe} />
         <Pulse x1={left.x + 230} y1={left.y} x2={centre.x - 140} y2={centre.y} a={B} b={B + 24} color={C.red} />
@@ -171,7 +171,7 @@ export const LocksScene: React.FC = () => {
           <span style={{ ...rise(frame, 30, 16) }}>A withdrawal needs both.</span>
         )}
       </div>
-      <div style={{ position: "absolute", left: centre.x - 330, top: 830, width: 660, ...rise(frame, 40, 18) }}>
+      <div style={{ position: "absolute", left: centre.x - 330, top: 770, width: 660, ...rise(frame, 40, 18) }}>
         <Card style={{ padding: "20px 28px", display: "flex", alignItems: "center", gap: 18 }}>
           <ShieldGlyph size={40} color={C.primary} />
           <div>
