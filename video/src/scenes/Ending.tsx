@@ -597,11 +597,14 @@ export const CloseScene: React.FC = () => {
             </span>
           </div>
         </div>
+        <div style={{ font: `700 46px ${FONT.display}`, letterSpacing: "-0.02em", ...rise(frame, logoAt + 10, 16) }}>
+          The private key is public. <span style={{ color: C.safe }}>The money is still in the vault.</span>
+        </div>
         <div
           style={{
             font: `600 40px ${FONT.mono}`,
-            color: C.text,
-            ...rise(frame, logoAt + 14, 16),
+            color: C.primary,
+            ...rise(frame, logoAt + 24, 16),
           }}
         >
           {data.site}
@@ -610,7 +613,7 @@ export const CloseScene: React.FC = () => {
           style={{
             font: `500 24px ${FONT.sans}`,
             color: C.faint,
-            ...rise(frame, logoAt + 22, 16),
+            ...rise(frame, logoAt + 34, 16),
           }}
         >
           Build Before Q-Day · QoreChain Developer Fest · testnet figures as of{" "}

@@ -42,7 +42,7 @@ Owner: Maria (solo, student, new to web3). Explain web3 terms in plain words whe
 - `keeper/`    window renewal and proof-of-life script
 - `web/`       the site (scaffolded with `create-qorechain-dapp`)
 - `cli/`       heist attack runner
-- `docs/`      threat model, architecture, AI build log, drill-day runbook, video script
+- `docs/`      threat model, architecture, AI build log, drill-day runbook, the film's scene plan
 - `video/`     the demo film, rendered from code with Remotion (own package, not a workspace)
 
 ## Working rules
@@ -85,7 +85,8 @@ Run from the repository root. Node 20 or newer.
 | `npm run watch` | alerts on new attempts to Telegram or Discord (`ALERT_*` in `.env`). Read-only; `--once`, `--dry` |
 | `npm run deploy -w contracts` | deploy both vaults (already done; do not repeat without asking) |
 | `npm run build` | contracts, then the site into `web/dist` |
-| `npm run video:timing` | measure the voice files in `video/public/audio` and set the scene lengths |
+| `npm run score --prefix video` | compose the film's original music to the scene lengths (`video/public/music/score.wav`) |
+| `npm run video:timing` | only for an optional voiceover: fit scene lengths to files in `video/public/audio` |
 | `npm run video` | render the demo film to `video/out/steal-this-vault-demo.mp4` (run `npm install` in `video/` first) |
 
 Do not write test counts here: they go stale.

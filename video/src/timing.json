@@ -1,16 +1,19 @@
 {
-  "note": "Scene lengths in seconds. `npm run timing` measures the audio files in public/audio and overwrites `seconds` and `audio`; until then these are the script's estimates and no audio is placed.",
+  "note": "Scene lengths in seconds. The film is music-only: the score (scripts/score.mjs) is composed to these lengths, so run `npm run score` after changing them. `npm run timing` is only for an optional voiceover in public/audio.",
   "tailSeconds": 0.6,
   "scenes": [
-    { "id": "incident", "file": "scene-01", "seconds": 11, "audio": null },
-    { "id": "threat", "file": "scene-02", "seconds": 14, "audio": null },
-    { "id": "title", "file": "scene-03", "seconds": 6, "audio": null },
-    { "id": "dare", "file": "scene-04", "seconds": 13, "audio": null },
-    { "id": "locks", "file": "scene-05", "seconds": 15, "audio": null },
-    { "id": "attacks", "file": "scene-06", "seconds": 18, "audio": null },
-    { "id": "control", "file": "scene-07", "seconds": 13, "audio": null },
-    { "id": "product", "file": "scene-08", "seconds": 20, "audio": null },
-    { "id": "drill", "file": "scene-09", "seconds": 13, "audio": null },
-    { "id": "close", "file": "scene-10", "seconds": 9, "audio": null }
+    { "id": "wallet", "file": "scene-01", "seconds": 9, "audio": null },
+    { "id": "leak", "file": "scene-02", "seconds": 13, "audio": null },
+    { "id": "drain", "file": "scene-03", "seconds": 9, "audio": null },
+    { "id": "quantum", "file": "scene-04", "seconds": 15, "audio": null },
+    { "id": "qday", "file": "scene-05", "seconds": 9, "audio": null },
+    { "id": "title", "file": "scene-06", "seconds": 7, "audio": null },
+    { "id": "dare", "file": "scene-07", "seconds": 12, "audio": null },
+    { "id": "locks", "file": "scene-08", "seconds": 14, "audio": null },
+    { "id": "attacks", "file": "scene-09", "seconds": 16, "audio": null },
+    { "id": "control", "file": "scene-10", "seconds": 12, "audio": null },
+    { "id": "product", "file": "scene-11", "seconds": 18, "audio": null },
+    { "id": "drill", "file": "scene-12", "seconds": 12, "audio": null },
+    { "id": "close", "file": "scene-13", "seconds": 10, "audio": null }
   ]
 }

@@ -6,6 +6,7 @@
   "scripts": {
     "studio": "remotion studio src/index.ts",
     "timing": "node scripts/timing.mjs",
+    "score": "node scripts/score.mjs",
     "render": "remotion render src/index.ts Main out/steal-this-vault-demo.mp4 --codec h264",
     "preview": "remotion render src/index.ts Main out/preview.mp4 --codec h264 --scale 0.5",
     "still": "remotion still src/index.ts Main out/still.png",

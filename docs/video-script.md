@@ -1,104 +1,70 @@
-# Demo video script
+# Demo video: the film
 
-A film, not a screen recording. It opens like a short cinematic story, moves into a bold
-step-by-step explainer, shows the real website with callouts, and closes on real numbers.
-Colours are the site's: midnight navy, electric blue, ice cyan, signal red. The pictures are
-built from code in [video/](../video/) and rendered to MP4 with your voice placed scene by
-scene. Captions of your words run along the bottom.
+A music-only film, about 2 min 36 s (limit: 3 min, the fest's only video rule). It tells the
+problem first, in pictures and big words, then shows how Steal This Vault answers it. There is
+no narrator and there are no subtitles: the on-screen words carry the story, and an original
+score, composed in code, carries the mood.
 
-Length: about 2 min 15 s at a steady pace. Limit: 3 min. Ten scenes, about 320 words.
+Colours are the site's: midnight navy, electric blue, ice cyan, signal red.
 
-## Recording your voice
+## Build it
 
-- One audio file per scene, named `scene-01.mp3` to `scene-10.mp3` (WAV or M4A also fine).
-  Put them in `video/public/audio/`. Each scene stretches to fit your recording.
-- Read with energy, a little faster than conversation. Pause at full stops. Leave about half
-  a second of silence at the start and end of each file.
-- Quiet room, phone 15 cm from your mouth, or a headset. A phone voice memo is good enough.
-- If you stumble, record that scene again from the start. Don't splice.
-- Say the words exactly as written: the captions show the same words.
-- Before the final render, the numbers in `video/src/data.json` are re-read from the chain.
+```sh
+cd video
+npm install          # once
+npm run score        # compose the music to the scene lengths -> public/music/score.wav
+npm run render       # -> out/steal-this-vault-demo.mp4
+```
+
+Before a final render, re-read the figures from the chain (`npm run status` at the repo root)
+and update `video/src/data.json`. Scene lengths live in `video/src/timing.json`; after changing
+them, run `npm run score` again so the music still lands on the cuts.
+
+## The score
+
+Synthesised in [video/scripts/score.mjs](../video/scripts/score.mjs), so the film carries no
+third-party music. Act one is in a minor key: a sub drone, a heartbeat that quickens, ticking
+while the quantum computer works, a riser and a deep impact on Q-Day. At the title it turns to
+a major key: a steady 100 BPM pulse with arpeggios that build through the attacks, a tense drop
+for drill day, and a resolving chord on the close.
 
 ## Scenes
 
-### Scene 1. Incident (about 11 s)
+**Act one: the problem**
 
-Picture: red-tinted network. "ONE LEAKED KEY." glitches in. A wallet card drains from
-$48,210.55 to $0.00, a red flash, then "THE MONEY IS GONE." Marked as a dramatization.
+1. **The wallet** (9 s). "On a blockchain, a wallet is one key." A key wired to a wallet
+   holding $48,210.55. Then, in red: "Whoever holds the key owns it all."
+2. **The leak** (13 s). "Keys leak every day." A phishing email, malware copying a key, a seed
+   phrase in a cloud folder, each turning red. Their lines converge on one key: "One bad click,
+   and the key is someone else's."
+3. **The drain** (9 s). Marked as a dramatization. "ONE LEAKED KEY." The wallet drains to
+   $0.00, a red flash: "THE MONEY IS GONE."
+4. **Quantum** (15 s). "Soon, nobody will even need to steal it." A public key flows into a
+   quantum computer and a private key comes out, character by character: "It works out the
+   private key from the public one."
+5. **Q-Day** (9 s). A grid of wallets turns red in a wave. "Q-DAY. Every exposed wallet. At
+   once. And public keys recorded today can be cracked later."
 
-> One leaked private key. That's all it takes. On almost every blockchain, whoever holds
-> the key owns the wallet, and the money is gone in seconds.
+**Act two: the answer**
 
-### Scene 2. The threat (about 14 s)
+6. **Title** (7 s). "So we built a vault that survives it." The two-ring logo draws itself:
+   Steal This Vault. "The private key is public. The money stays."
+7. **Step 01, the dare** (12 s). The real published key types in, stamped PUBLISHED ON
+   PURPOSE. "The real key. In full. Anyone can take it." The vault balance and live blocks.
+8. **Step 02, two locks** (14 s). The ordinary key and the quantum-safe key (ML-DSA-87), checked
+   by the chain itself. Both: "the vault pays". The stolen one alone: "refused".
+9. **Step 03, attack it** (16 s). The 17 real attacks from the lab, each stamped REFUSED, the
+   counter at 17 / 17. The 18th, the control, ROBBED.
+10. **Step 04, the control** (12 s). The same key at both vaults: the one-lock vault is
+    robbed, the two-lock vault holds, with the real figures.
+11. **The product** (18 s). The real website in a browser frame: overview, replay, attacker
+    profiles, attack lab, each with a callout. Then the alert and the rescue.
+12. **Drill day** (12 s). 18 Nov 2026. A 24-hour ring fills, "Coins the attacker moved: 0",
+    and the real proof transaction, signed with both keys.
+13. **Close** (10 s). Four real numbers, the logo, "The private key is public. The money is
+    still in the vault.", the site address and the fest.
 
-Picture: "Phishing" and "Malware" struck through, then "Quantum computers." in blue. A public
-key turns red character by character, a lock splits in two, and Q-DAY slams in.
+## Optional voiceover
 
-> Today, keys leak through phishing and malware. Tomorrow, quantum computers will work them
-> out from public data. That day has a name: Q-Day. Every exposed wallet becomes a leaked key.
-
-### Scene 3. Title (about 6 s)
-
-Picture: the two-ring logo draws itself. "Steal This Vault", a light sweep, the tagline.
-
-> So we built a vault that survives it. Steal This Vault.
-
-### Scene 4. Step 1, the dare (about 13 s)
-
-Picture: STEP 01 THE DARE. The real published key types in, stamped PUBLISHED ON PURPOSE.
-The vault balance counts up. Real testnet blocks tick along the bottom.
-
-> Step one: the dare. We published the owner's private key. The real one, in full, on the
-> website. It guards real money on the QoreChain testnet, and anyone can take it.
-
-### Scene 5. Step 2, two locks (about 15 s)
-
-Picture: STEP 02 TWO LOCKS. Lock 1 (ordinary key) and lock 2 (quantum-safe key) wired to the
-vault, the chain's checker below. Both signatures arrive: "the vault pays". Then only the
-stolen one: lock 2 flashes red, "One key alone: refused."
-
-> Step two: two locks. The ordinary key every wallet uses, and a quantum-safe key, ML-DSA-87,
-> that never leaves the owner. The chain itself checks both signatures. One without the other
-> moves nothing.
-
-### Scene 6. Step 3, attack it (about 18 s)
-
-Picture: STEP 03 ATTACK IT. The 17 real attacks from the lab stream in, each stamped
-REFUSED, the counter climbing to 17 / 17. Then the 18th in red: the control, ROBBED.
-
-> Step three: attack it. The lab runs eighteen real attacks with the stolen key. Send the
-> coins. Swap the second lock. Fake a signature. Replay the owner's own withdrawal. Seventeen
-> are refused, and the vault counts every refusal on chain.
-
-### Scene 7. Step 4, the control (about 13 s)
-
-Picture: STEP 04 THE CONTROL. The same key flies at two vaults. The one-lock vault bursts
-open, coins fly, ROBBED. The two-lock vault pulses a shield, REFUSED, with the real figures.
-
-> Step four: the control. The eighteenth attack hits an identical vault with only the
-> ordinary lock. Same key, same code. That one gets robbed. The two-lock vault keeps every coin.
-
-### Scene 8. The product (about 20 s)
-
-Picture: the real website in a browser frame, slowly zooming: the overview, the replay, the
-attacker profiles, the attack lab, each with a callout. Then two cards: the alert, the rescue.
-
-> And it's all live. The site reads the chain as you watch. The replay plays back every real
-> attempt. The threat log profiles each attacker and follows the stolen money. If the key is
-> ever used, the owner is alerted, and one command moves the funds out.
-
-### Scene 9. Drill day (about 13 s)
-
-Picture: "18 NOV 2026 · Q-DAY DRILL" typed out. A 24-hour ring fills. "Coins the attacker
-moved: 0". The real proof transaction hash, block and time, signed with both keys.
-
-> On Q-Day drill day, the published key was in an attacker's hands from start to finish.
-> Not a single coin left the vault. Our proof transaction, signed with both keys, went
-> straight through.
-
-### Scene 10. Close (about 9 s)
-
-Picture: four real numbers count up (still in the vault, attempts refused, saved by the
-second lock, attacks in the lab). The logo, the site address, the fest.
-
-> The private key is public. The money is still in the vault. Steal This Vault. Come and try.
+The film does not need one. If a voiceover is ever added, `video/src/script.ts` holds a
+narration draft, and `npm run timing` fits scene lengths to recordings in `video/public/audio`.

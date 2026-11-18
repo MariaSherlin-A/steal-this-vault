@@ -5,13 +5,20 @@ import { SCENES, TOTAL_FRAMES, type SceneId } from "./timing";
 import { NARRATION } from "./script";
 import { sceneFade } from "./components/anim";
 import { Captions, Grain } from "./components/kit";
-import { IncidentScene, ThreatScene, TitleScene } from "./scenes/Opening";
+import { IncidentScene, TitleScene } from "./scenes/Opening";
+import { QDayScene, QuantumScene, LeakScene, WalletScene } from "./scenes/Problem";
 import { AttacksScene, ControlScene, DareScene, LocksScene } from "./scenes/Steps";
 import { CloseScene, DrillScene, ProductScene } from "./scenes/Ending";
 
+/** Subtitles of the narration along the bottom. Off: the film carries no on-screen captions. */
+const SHOW_CAPTIONS = false;
+
 const SCENE: Record<SceneId, React.FC> = {
-  incident: IncidentScene,
-  threat: ThreatScene,
+  wallet: WalletScene,
+  leak: LeakScene,
+  drain: IncidentScene,
+  quantum: QuantumScene,
+  qday: QDayScene,
   title: TitleScene,
   dare: DareScene,
   locks: LocksScene,
@@ -37,12 +44,14 @@ export const Main: React.FC = () => (
         <Sequence key={s.id} from={s.start} durationInFrames={s.frames} name={s.id}>
           <Fade>
             <Scene />
-            <Captions text={NARRATION[s.id]} />
+            {SHOW_CAPTIONS && NARRATION[s.id] ? <Captions text={NARRATION[s.id]!} /> : null}
           </Fade>
           {s.audio ? <Audio src={staticFile(`audio/${s.file}.${s.audio}`)} /> : null}
         </Sequence>
       );
     })}
+    {/* the original score, composed in code to these scene lengths: npm run score */}
+    <Audio src={staticFile("music/score.wav")} />
     <Grain />
   </AbsoluteFill>
 );

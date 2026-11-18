@@ -5,10 +5,11 @@
  */
 import type { SceneId } from "./timing";
 
-export const NARRATION: Record<SceneId, string> = {
-  incident:
+/** Optional: the film is music-only, so these are used only if a voiceover is ever added. */
+export const NARRATION: Partial<Record<SceneId, string>> = {
+  drain:
     "One leaked private key. That's all it takes. On almost every blockchain, whoever holds the key owns the wallet, and the money is gone in seconds.",
-  threat:
+  quantum:
     "Today, keys leak through phishing and malware. Tomorrow, quantum computers will work them out from public data. That day has a name: Q-Day. Every exposed wallet becomes a leaked key.",
   title: "So we built a vault that survives it. Steal This Vault.",
   dare: "Step one: the dare. We published the owner's private key. The real one, in full, on the website. It guards real money on the QoreChain testnet, and anyone can take it.",

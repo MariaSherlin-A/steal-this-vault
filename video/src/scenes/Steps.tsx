@@ -4,6 +4,7 @@ import { AbsoluteFill, interpolate, random, useCurrentFrame, useVideoConfig } fr
 import data from "../data.json";
 import { clamp, countUp, ease, fadeIn, rise } from "../components/anim";
 import { Backdrop, Card, Chapter, CheckGlyph, CrossGlyph, Eyebrow, KeyGlyph, LockGlyph, Logo, ShieldGlyph } from "../components/kit";
+import { Statement } from "../components/kit";
 import { C, FONT, alpha } from "../theme";
 
 const qor = (s: string) => Number(s);
@@ -59,7 +60,10 @@ export const DareScene: React.FC = () => {
           ) : null}
         </Card>
       </div>
-      <div style={{ position: "absolute", right: 120, top: 250, width: 560, ...rise(frame, Math.round(d * 0.55), 20) }}>
+      <div style={{ position: "absolute", left: 1240, top: 150, width: 600, font: `700 44px/1.1 ${FONT.display}`, letterSpacing: "-0.02em", ...rise(frame, Math.round(d * 0.45), 18) }}>
+        The real key. In full. <span style={{ color: C.primary }}>Anyone can take it.</span>
+      </div>
+      <div style={{ position: "absolute", right: 120, top: 320, width: 560, ...rise(frame, Math.round(d * 0.55), 20) }}>
         <Card glow={C.safe} style={{ padding: 40 }}>
           <Eyebrow color={C.safe}>Guarded by that key</Eyebrow>
           <div style={{ font: `700 104px ${FONT.display}`, marginTop: 14, letterSpacing: "-0.03em" }}>
@@ -263,6 +267,7 @@ export const AttacksScene: React.FC = () => {
           <span style={{ color: C.faint, fontSize: 70 }}> / {list.length}</span>
         </div>
         <div style={{ font: `600 30px ${FONT.mono}`, color: C.safe, letterSpacing: "0.14em", marginTop: 6 }}>REFUSED</div>
+        <div style={{ font: `500 26px/1.35 ${FONT.sans}`, color: C.muted, marginTop: 22 }}>Real attacks, signed with the real stolen key, each one counted by the vault on chain.</div>
       </div>
       {frame >= controlAt ? (
         <div style={{ position: "absolute", left: 120, top: 200 + visible * rowH + 20, width: 1040, ...rise(frame, controlAt, 14) }}>

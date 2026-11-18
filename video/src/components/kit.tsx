@@ -259,3 +259,33 @@ export const Card: React.FC<{ children: React.ReactNode; style?: React.CSSProper
 export const Eyebrow: React.FC<{ children: React.ReactNode; color?: string; style?: React.CSSProperties }> = ({ children, color = C.primary, style }) => (
   <div style={{ font: `600 20px ${FONT.mono}`, letterSpacing: "0.16em", textTransform: "uppercase", color, ...style }}>{children}</div>
 );
+
+/** Big on-screen words that carry the story in place of a narrator: each line rises in, word by word. */
+export const Statement: React.FC<{ lines: string[]; at: number; top: number; size?: number; color?: string; align?: "center" | "left" }> = ({
+  lines,
+  at,
+  top,
+  size = 76,
+  color = C.text,
+  align = "center",
+}) => {
+  const frame = useCurrentFrame();
+  let n = 0;
+  return (
+    <div style={{ position: "absolute", left: align === "center" ? 0 : 120, right: align === "center" ? 0 : undefined, top, textAlign: align }}>
+      {lines.map((line, li) => (
+        <div key={li} style={{ font: `700 ${size}px/1.08 ${FONT.display}`, letterSpacing: "-0.03em", color }}>
+          {line.split(" ").map((word, wi) => {
+            const wAt = at + n++ * 3;
+            const y = interpolate(frame, [wAt, wAt + 12], [30, 0], { ...clamp, easing: ease });
+            return (
+              <span key={wi} style={{ display: "inline-block", marginRight: "0.25em", opacity: fadeIn(frame, wAt, 10), transform: `translateY(${y}px)`, filter: `blur(${interpolate(frame, [wAt, wAt + 10], [8, 0], clamp)}px)` }}>
+                {word}
+              </span>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+};
