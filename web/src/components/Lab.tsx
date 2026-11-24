@@ -18,6 +18,9 @@ const ORDER: AttackGroup[] = ["native", "evm", "vault", "control"];
 const GROUP_ICON = { native: KeyIcon, evm: DoorIcon, vault: VaultIcon, control: BugIcon } as const;
 /** Attempts that reach a vault. Recording them on chain spends the owner's fee allowance. */
 const RECORDED_PER_RUN = ATTACKS.filter((a) => a.group === "vault" || a.group === "control").length;
+/** Every attack aimed at the protected vault and its owner's account. The control twin is a comparison, counted apart. */
+const ON_VAULT = ATTACKS.filter((a) => a.expects === "refused");
+const TWIN = ATTACKS.filter((a) => a.expects === "paid");
 
 type Busy = { id: string | null; done: number; total: number };
 
@@ -142,8 +145,11 @@ export function Lab() {
   );
 
   const done = ATTACKS.filter((a) => results[a.id]);
-  const score = tally(done.map((a) => explain(results[a.id]!, a).tone));
+  const triedOnVault = ON_VAULT.filter((a) => results[a.id]);
+  const score = tally(triedOnVault.map((a) => explain(results[a.id]!, a).tone));
+  const twin = TWIN.map((a) => ({ info: a, result: results[a.id] })).filter((t) => t.result);
   const now = chain.hybrid?.stats.balance ?? null;
+  const lost = before !== null && now !== null ? (before > now ? before - now : 0n) : null;
 
   return (
     <section className="sec sec--paper labsec" id="lab">
@@ -152,7 +158,7 @@ export function Lab() {
           n="07"
           file="ATTACK_LAB.EXE"
           lines={["Your turn,", <em key="t">thief.</em>]}
-          lead={`${ATTACKS.length} things a thief can do with a stolen key. Each button really does it: your browser signs with the published key and sends the attempt to the live network. Nothing here is a recording.`}
+          lead={`${ON_VAULT.length} ways a thief can use the stolen key against this vault, plus one robbery of its unprotected twin to compare. Every button really does it: your browser signs with the published key and asks the live network. Nothing here is a recording.`}
         />
 
         <div className="lab-bar">
@@ -194,33 +200,47 @@ export function Lab() {
 
         {done.length > 0 && (
           <div className={`scorecard ${score.alarms ? "scorecard--alarm" : ""}`} role="status">
-            <div>
-              <strong>{score.held}</strong>
-              <span>{score.held === 1 ? "theft" : "thefts"} refused</span>
+            <div className="scorecard-main">
+              <strong>
+                {score.held} <small>of {triedOnVault.length === ON_VAULT.length ? ON_VAULT.length : `${triedOnVault.length} tried`}</small>
+              </strong>
+              <span>attacks on the vault refused{triedOnVault.length < ON_VAULT.length ? ` (${ON_VAULT.length} in all)` : ""}</span>
             </div>
             <div>
-              <strong>{score.robbed}</strong>
-              <span>{score.robbed === 1 ? "time" : "times"} the one-lock vault gave way</span>
+              <strong>{lost === null ? (score.alarms ? "?" : "0") : qor(lost)}</strong>
+              <span>QOR lost from the vault</span>
             </div>
             <div>
               <strong>{score.alarms}</strong>
-              <span>got into the two-lock vault</span>
+              <span>got in</span>
             </div>
             <p>
               {before !== null && now !== null
-                ? `The two-lock vault held ${qor(before)} QOR before your run. It holds ${qor(now)} QOR now.`
+                ? `The vault held ${qor(before)} QOR before your run and holds ${qor(now)} QOR now.`
                 : now !== null
-                  ? `The two-lock vault holds ${qor(now)} QOR.`
+                  ? `The vault holds ${qor(now)} QOR.`
                   : ""}
               {score.skipped > 0 && ` ${score.skipped} could not be tried just now; each says why.`}
             </p>
+            {twin.length > 0 && (
+              <div className="scorecard-twin">
+                <span className="micro">COMPARISON · THE ONE-LOCK TWIN</span>
+                {twin.map(({ info, result }) => (
+                  <p key={info.id}>
+                    The same robbery on a copy of the vault with only the ordinary lock:{" "}
+                    <b>{result!.verdict === "succeeded" ? (result!.mode === "simulated" ? "it would pay." : "it paid.") : result!.verdict === "skipped" ? "not tried just now." : "it held this time."}</b>{" "}
+                    That is what the second lock saves you from.
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
         {ORDER.map((group) => {
           const Icon = GROUP_ICON[group];
           return (
-            <Reveal key={group} className="group">
+            <Reveal key={group} className={`group group--${group}`}>
               <div className="group-head">
                 <span className="group-icon" aria-hidden>
                   <Icon size={18} />
