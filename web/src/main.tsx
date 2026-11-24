@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import { REST } from "./lib/clients";
 import { ChainProvider } from "./lib/useChain";
+import { HistoryProvider } from "./lib/useHistory";
 import { WalletProvider } from "./lib/useWallet";
 import "./styles.css";
 
@@ -15,9 +16,11 @@ async function start() {
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
       <ChainProvider>
-        <WalletProvider>
-          <App />
-        </WalletProvider>
+        <HistoryProvider>
+          <WalletProvider>
+            <App />
+          </WalletProvider>
+        </HistoryProvider>
       </ChainProvider>
     </StrictMode>,
   );
