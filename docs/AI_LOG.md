@@ -284,3 +284,27 @@ that stays on, or a small server); the voiced video; QCAI stage 2.
   another. Fixed with one shared `HistoryProvider`; the pages also say what they are loading.
   Verified on a fresh browser profile: home loads its history, then the intruder page opens with
   both cards at once. One live attack run from the lab with recording off: refused by the chain.
+
+## 25 Nov 2026: clearer site after Maria's review
+
+- **Asked:** after reviewing the site, Maria found the intruder page hard to read, "No catch"
+  unclear, the locks scene tied to scrolling, the replay slow, the drill win under-sold, the alert
+  card too small, and the lab's one "Would pay" confusing. She also asked whether the honest
+  limits belong on the site, and what would make the project more useful.
+- **Did:** a new attack, `vault-twin-robbery`, makes the exact robbery that empties the one-lock
+  twin against the two-lock vault (in the shared list, so `npm run heist` has it too). The lab
+  scorecard now counts the vault alone, "18 of 18 refused · 0 QOR lost", with the twin shown as a
+  labelled comparison. A "Survived Q-Day" banner finds the drill's 24 hours as a block range from
+  block times and counts the vault's record in it. Intruder cards lead with one plain sentence and
+  a tally. The locks scene plays by itself; the replay runs twice as fast with verdict stamps.
+  Every section intro rewritten. Limits stay on the Technical page, each with how it is handled,
+  plus a short "use the second lock in your own app" section pointing at HybridAccount.sol.
+- **Verified live (recording off):** the new attack is refused by the vault (PqSignatureMalformed)
+  while the twin would pay; the lab run reads 18 of 18 refused, 0 QOR lost; the drill range is
+  blocks 10,284,029-10,344,546 with 0 thefts, 0 QOR lost, owner in. `npm run check` green;
+  screenshots of every changed section at 1440 and 390, no horizontal overflow.
+- **Went wrong:** "SURVIVED Q-DAY" broke at its hyphen, and the replay stamp covered the vault's
+  name; fixed with a non-breaking hyphen and by centring the stamp on the door. The lock labels
+  were unreadable on phones; a legend replaces them there.
+- **Noticed:** the side door (EVM window) was shut during this session, so the keeper had not
+  renewed it. Renewing signs with the mnemonic, so it is Maria's step.
