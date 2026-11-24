@@ -3022,3 +3022,15 @@ p {
     top: 74px;
   }
 }
+
+/* a sentence worth noticing */
+mark.hl {
+  display: inline;
+  padding: 2px 6px;
+  background: rgba(61, 220, 151, 0.16);
+  color: var(--mint);
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--mint);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}

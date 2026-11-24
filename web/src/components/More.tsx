@@ -57,7 +57,7 @@ export function Technical() {
               </dd>
               <dt>Source</dt>
               <dd>
-                <Ext href={REPO_URL}>The repository</Ext>: contracts, attack runner, keeper, this site. MIT licence. The second lock is built as a reusable contract, so other apps on QoreChain could adopt it.
+                <Ext href={REPO_URL}>The repository</Ext>: contracts, attack runner, keeper, this site. MIT licence. <mark className="hl">The second lock is built as a reusable contract, so other apps on QoreChain could adopt it.</mark>
               </dd>
             </dl>
           </Reveal>
