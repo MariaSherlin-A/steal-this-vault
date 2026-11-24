@@ -308,3 +308,25 @@ that stays on, or a small server); the voiced video; QCAI stage 2.
   were unreadable on phones; a legend replaces them there.
 - **Noticed:** the side door (EVM window) was shut during this session, so the keeper had not
   renewed it. Renewing signs with the mnemonic, so it is Maria's step.
+
+## 25 Nov 2026: the second film, recorded from the live site
+
+- **Asked:** a new demo film (under 3 minutes) recorded from the Paper & Ink site, in its palette,
+  explaining every section and the project's unique details, opening with the real problem
+  (illustrations plus open-licence images, statistics only with a source), voiced by Edge
+  "Andrew", high quality at 60 fps; script shown to Maria and approved before voicing.
+- **Did:** a frame-exact recorder (video/capture/rec60.mjs) drives Chrome's headless shell one
+  frame at a time, so site animations come out perfectly smooth at 60 fps while live chain reads
+  arrive in real time. Every site shot is scripted (capture/shots.mjs); the attack lab ran all 19
+  attacks live with recording off: 18 of 18 refused, 0 QOR lost, the twin would pay. Scene 1 is
+  drawn in code (phishing, malware, a careless backup, the public ledger) with Chainalysis's
+  $3.4B (2025) figure and its source on screen; scene 2 uses one photo, IBM Quantum System One
+  by IBM Research (CC BY 2.0), downloaded with Maria's permission and credited. Voice with word
+  timings (scripts/voice-film.py), an original score to the same timings, word-lit subtitles.
+- **Went wrong, and fixed:** the recorder first stalled waiting on Chrome's virtual-time signal;
+  count-ups showed negative numbers because animation timestamps and the page clock disagreed
+  (fixed by handing animation callbacks the page clock); every CSS transition was frozen because
+  frame times started before the page's animation origin (fixed by raising the start). Clips first
+  began under the opening loader, so the recorder now lets it finish off camera. The replay on the
+  site cycled through the owner's own withdrawals, which contradicted "Watch them fail": the site
+  now replays only break-in attempts (same rule as the alerts).
