@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { REPO_URL, VAULTS } from "../lib/clients";
 import { qor, short } from "../lib/format";
-import { gsap, holdScroll, reducedMotion } from "../lib/motion";
+import { gsap, holdScroll, reducedMotion, useMagnetic } from "../lib/motion";
 import { useChain } from "../lib/useChain";
 import { INDEX, nextView, type View } from "../lib/useView";
 import { useWallet } from "../lib/useWallet";
@@ -229,10 +229,20 @@ function useToneUnder(ref: React.RefObject<HTMLElement>): { tone: "light" | "dar
   return state;
 }
 
+/** Whether the colour under the header is the violet band, where a violet button would vanish. */
+function isViolet(rgb: string): boolean {
+  const m = rgb.match(/(\d+),\s*(\d+),\s*(\d+)/);
+  if (!m) return false;
+  const [r, g, b] = [Number(m[1]), Number(m[2]), Number(m[3])];
+  return b > 180 && r < 140 && g < 110;
+}
+
 export function Header({ view }: { view: View }) {
   const [open, setOpen] = useState(false);
   const here = INDEX.find((i) => i.id === view);
   const bar = useRef<HTMLElement>(null);
+  const menuBtn = useRef<HTMLButtonElement>(null);
+  useMagnetic(menuBtn, 0.22);
   const under = useToneUnder(bar);
 
   useEffect(() => {
@@ -246,25 +256,35 @@ export function Header({ view }: { view: View }) {
     <>
       <header
         ref={bar}
-        className={`topbar topbar--${tone} ${open ? "topbar--open" : ""}`}
+        className={`topbar topbar--${tone} ${open ? "topbar--open" : ""} ${!open && isViolet(under.bg) ? "topbar--violet" : ""}`}
         style={{ "--bar-bg": open ? "var(--ink)" : under.bg } as React.CSSProperties}
       >
         <a href="#top" className="wordmark" aria-label="Steal This Vault, back to the start">
-          <Logo size={26} />
+          <Logo size={36} />
           <span>Steal This Vault</span>
         </a>
         <div className="topbar-mid">
           <LivePill />
           {view !== "top" && here ? <Micro className="topbar-where">{`/ ${here.n} ${here.label}`}</Micro> : null}
         </div>
-        <button type="button" className="menubtn" aria-expanded={open} aria-controls="menu" onClick={() => setOpen((o) => !o)}>
-          <span className="menubtn-word">
+        <button
+          ref={menuBtn}
+          type="button"
+          className="menubtn"
+          aria-expanded={open}
+          aria-controls="menu"
+          aria-label={open ? "Close the menu" : "Open the menu"}
+          onClick={() => setOpen((o) => !o)}
+        >
+          <span className="menubtn-word" aria-hidden>
             <span>Menu</span>
             <span>Close</span>
           </span>
-          <span className="menubtn-lines" aria-hidden>
-            <i />
-            <i />
+          <span className="menubtn-badge" aria-hidden>
+            <span className="menubtn-lines">
+              <i />
+              <i />
+            </span>
           </span>
         </button>
       </header>

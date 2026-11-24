@@ -39,11 +39,11 @@ export function useSmoothScroll(): void {
 /** Jump without animation: used when a new page view opens, or when the menu covers the screen. */
 export function jumpTo(target: number | HTMLElement): void {
   if (lenis) {
-    lenis.scrollTo(target, { immediate: true, force: true, offset: typeof target === "number" ? 0 : -64 });
+    lenis.scrollTo(target, { immediate: true, force: true, offset: typeof target === "number" ? 0 : -80 });
   } else if (typeof target === "number") {
     window.scrollTo({ top: target, behavior: "instant" as ScrollBehavior });
   } else {
-    window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 64, behavior: "instant" as ScrollBehavior });
+    window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 80, behavior: "instant" as ScrollBehavior });
   }
   requestAnimationFrame(() => ScrollTrigger.refresh());
 }

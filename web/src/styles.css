@@ -2914,3 +2914,111 @@ p {
     font-size: 22px;
   }
 }
+
+/* header: a brand you can read and a menu you can find */
+.topbar {
+  height: 72px;
+}
+.wordmark {
+  gap: 12px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.005em;
+}
+.wordmark .logo {
+  flex: none;
+}
+.menubtn {
+  gap: 12px;
+  height: 48px;
+  padding: 0 6px 0 22px;
+  border-radius: 999px;
+  background: var(--violet);
+  color: var(--paper);
+  font: 700 13px var(--mono);
+  letter-spacing: 0.16em;
+  box-shadow: 0 6px 18px -8px rgba(91, 61, 245, 0.7);
+  transition:
+    background 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
+  will-change: transform;
+}
+.menubtn:hover {
+  background: #4a2be8;
+  box-shadow: 0 10px 26px -8px rgba(91, 61, 245, 0.85);
+}
+.menubtn:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 3px;
+}
+.menubtn-badge {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+}
+.menubtn-lines {
+  width: 16px;
+  gap: 5px;
+}
+.menubtn-lines i {
+  height: 2px;
+}
+.menubtn:hover .menubtn-lines i:first-child {
+  transform: translateX(3px);
+}
+.menubtn:hover .menubtn-lines i:last-child {
+  transform: translateX(-3px);
+}
+.menubtn[aria-expanded="true"] .menubtn-lines i:first-child {
+  transform: translateY(3.5px) rotate(45deg);
+}
+.menubtn[aria-expanded="true"] .menubtn-lines i:last-child {
+  transform: translateY(-3.5px) rotate(-45deg);
+}
+.menu-inner {
+  padding-top: 104px;
+}
+@media (max-width: 720px) {
+  .topbar {
+    height: 64px;
+  }
+  .wordmark {
+    gap: 9px;
+    font-size: 15px;
+  }
+  .wordmark .logo {
+    width: 30px;
+    height: 30px;
+  }
+  .menubtn {
+    height: 42px;
+    padding-left: 16px;
+    font-size: 12px;
+  }
+  .menubtn-badge {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.wordmark span {
+  white-space: nowrap;
+}
+.topbar--violet .menubtn {
+  background: var(--ink);
+  box-shadow: none;
+}
+.corner--tl,
+.corner--tr {
+  top: 82px;
+}
+@media (max-width: 720px) {
+  .corner--tl,
+  .corner--tr {
+    top: 74px;
+  }
+}
