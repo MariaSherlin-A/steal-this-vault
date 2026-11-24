@@ -194,12 +194,22 @@ export const ATTACKS: readonly AttackInfo[] = [
     expects: "refused",
   },
 
+  {
+    id: "vault-twin-robbery",
+    group: "vault",
+    title: "Rob it exactly the way the twin gets robbed",
+    plain: "Make the very same request that empties the one-lock twin below, same amount, same stolen key, and point it at this vault instead.",
+    technical:
+      "withdraw(to = thief, amount = the control robbery amount) on the hybrid vault from the owner account with no signatures: the control-rob call with only the vault address changed.",
+    expects: "refused",
+  },
+
   // ----------------------------------------------------------------- control
   {
     id: "control-rob",
     group: "control",
-    title: "Rob the vault with one lock",
-    plain: "Do exactly what failed above, against the vault that only checks the ordinary key.",
+    title: "Rob the one-lock twin (comparison)",
+    plain: "Do exactly what failed above, against a copy of the vault that only checks the ordinary key. This one is supposed to pay: it shows what the second lock saves you from.",
     technical: "withdraw(to = thief, amount) on the control vault from the owner account with no signatures.",
     expects: "paid",
   },

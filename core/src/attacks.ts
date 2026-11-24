@@ -535,6 +535,9 @@ const RUNNERS: Record<string, (ctx: AttackContext, door: Door) => Promise<Outcom
     return { ...outcome, note: [`Signature taken from ${last.hash}.`, outcome.note].filter(Boolean).join(" ") };
   },
 
+  "vault-twin-robbery": async (ctx, door) =>
+    vaultAttempt(ctx, door, ctx.vaults.hybrid, await theftIntent(ctx, ctx.vaults.hybrid, ctx.robAmount), "0x", "0x"),
+
   "control-rob": async (ctx, door) => {
     const stats = await readStats(ctx.client, ctx.vaults.classic);
     if (stats.balance === 0n) {
