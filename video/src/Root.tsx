@@ -10,6 +10,7 @@ import { IncidentScene, TitleScene } from "./scenes/Opening";
 import { QDayScene, QuantumScene, LeakScene, WalletScene } from "./scenes/Problem";
 import { AttacksScene, ControlScene, DareScene, LocksScene } from "./scenes/Steps";
 import { CloseScene, DrillScene, ProductScene } from "./scenes/Ending";
+import { FILM_FRAMES, Film } from "./film/Film";
 
 /** Subtitles of the narration along the bottom, timed to the voice by scripts/timing.mjs. */
 const SHOW_CAPTIONS = !(getInputProps() as { clean?: boolean }).clean;
@@ -166,5 +167,8 @@ export const Main: React.FC = () => (
 );
 
 export const RemotionRoot: React.FC = () => (
-  <Composition id="Main" component={Main} durationInFrames={TOTAL_FRAMES} fps={FPS} width={W} height={H} />
+  <>
+    <Composition id="Main" component={Main} durationInFrames={TOTAL_FRAMES} fps={FPS} width={W} height={H} />
+    <Composition id="Film" component={Film} durationInFrames={FILM_FRAMES} fps={60} width={1920} height={1080} />
+  </>
 );
