@@ -4,6 +4,7 @@
  * Nothing here is invented: every step comes from an attempt logged on chain.
  */
 import { explorer } from "@stv/core/chain";
+import { worthAlerting } from "@stv/core/alerts";
 import { fingerprint, labelFor, sortAttempts, type Attempt } from "@stv/core/history";
 import { REFUSAL_TEXT } from "@stv/core/refusal";
 import { useEffect, useMemo, useState } from "react";
@@ -129,7 +130,8 @@ function VaultStage({
 export function Theatre() {
   const { hybrid, classic, block } = useChain();
   const { attempts, status } = useHistory();
-  const reel = useMemo(() => sortAttempts(attempts).slice(-REEL).map(scene), [attempts]);
+  // Only break-in attempts: the owner's own withdrawals and bait clean-ups are not attacks (the same rule the alerts use).
+  const reel = useMemo(() => sortAttempts(attempts).filter((a) => worthAlerting(a, KNOWN)).slice(-REEL).map(scene), [attempts]);
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState(0);
 
@@ -195,7 +197,7 @@ export function Theatre() {
                 ))}
               </ol>
               <span>
-                Replay of the {reel.length} latest real attempts · <a href="#lab">try your own</a>
+                Replay of the {reel.length} latest real break-in attempts · <a href="#lab">try your own</a>
               </span>
             </div>
           ) : null}
