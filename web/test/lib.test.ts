@@ -111,6 +111,7 @@ describe("format", () => {
     assert.equal(blocksToDuration(10n), "14 s");
     assert.equal(blocksToDuration(600n), "14 min");
     assert.equal(blocksToDuration(10_000n), "3.9 h");
+    assert.equal(blocksToDuration(400_000n), "6.5 days");
     assert.equal(blocksAgo(0n, 100n), "never");
     assert.equal(blocksAgo(90n, 100n), "14 s ago");
     assert.equal(blocksAgo(200n, 100n), "0 s ago");
