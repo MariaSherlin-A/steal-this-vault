@@ -57,7 +57,7 @@ export function Technical() {
               </dd>
               <dt>Source</dt>
               <dd>
-                <Ext href={REPO_URL}>The repository</Ext>: contracts, attack runner, keeper, this site. MIT licence.
+                <Ext href={REPO_URL}>The repository</Ext>: contracts, attack runner, keeper, this site. MIT licence. The second lock is built as a reusable contract, so other apps on QoreChain could adopt it.
               </dd>
             </dl>
           </Reveal>
@@ -158,34 +158,6 @@ export function Technical() {
                 fresh account with its own second lock.
               </dd>
             </dl>
-          </Reveal>
-
-          <Reveal className="panel panel--wide">
-            <h3>Use the second lock in your own app</h3>
-            <p className="panel-lead">
-              The two-lock check is not tied to this vault. Any contract on QoreChain can inherit it and demand both signatures before
-              it moves money: a treasury, a payroll contract, a game&rsquo;s prize pool. The repository includes a ready example,{" "}
-              <Ext href={`${REPO_URL}/blob/main/contracts/src/examples/HybridAccount.sol`}>HybridAccount.sol</Ext>, an account that
-              makes any call only when both keys sign.
-            </p>
-            <pre className="code">
-              <code>{`import {HybridAuth} from "./HybridAuth.sol";
-
-contract MyTreasury is HybridAuth {
-    address public immutable owner;
-    constructor(address owner_) HybridAuth("My Treasury", "1") { owner = owner_; }
-
-    function release(bytes memory intent, bytes calldata sigOrdinary, bytes calldata sigQuantumSafe) external {
-        // Reverts unless the owner's ordinary key AND their registered ML-DSA-87 key both signed this intent.
-        _requireHybrid(owner, intent, sigOrdinary, sigQuantumSafe);
-        // ...your logic: decode the intent, check its nonce and deadline, pay out.
-    }
-}`}</code>
-            </pre>
-            <p className="panel-note">
-              Your contract still owns its own rules: put a nonce and a deadline in the intent and check them, as the vault does, so a
-              signature cannot be replayed.
-            </p>
           </Reveal>
         </div>
       </div>
