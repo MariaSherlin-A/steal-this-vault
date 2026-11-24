@@ -278,3 +278,9 @@ that stays on, or a small server); the voiced video; QCAI stage 2.
   "6.7 days ago". Screenshot tool: Chrome headless driven over the DevTools protocol from Node.
 - **Verified:** `npm run check` green; `vite build` ok; screenshots of every section at 1440 and
   390, no horizontal overflow at either width. Not pushed, not deployed.
+- **Found later the same day:** a fresh full screenshot pass showed the alert card empty and the
+  intruder page stuck loading. Cause: the replay, scoreboard and alert sections each ran their own
+  full history read (three heavy log reads at once on a first visit), and changing page started
+  another. Fixed with one shared `HistoryProvider`; the pages also say what they are loading.
+  Verified on a fresh browser profile: home loads its history, then the intruder page opens with
+  both cards at once. One live attack run from the lab with recording off: refused by the chain.
