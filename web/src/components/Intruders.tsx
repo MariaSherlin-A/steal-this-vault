@@ -12,6 +12,7 @@ import { blocksAgo, plural, qor, short, uqorToQor } from "../lib/format";
 import { useChain } from "../lib/useChain";
 import { useHistory } from "../lib/useHistory";
 import { Addr, Ext, Reveal, Skeleton } from "./ui";
+import { Head } from "./Poster";
 
 function methodText(method: Method): string {
   return method === "Robbed" ? "Robbed the one-lock vault." : REFUSAL_TEXT[method].plain;
@@ -174,17 +175,14 @@ export function Intruders() {
   const strangers = file?.intruders.filter((i) => i.label === null).length ?? 0;
 
   return (
-    <section className="section" id="intruders">
+    <section className="sec sec--paper intrsec" id="intruders">
       <div className="wrap">
-        <Reveal className="section-head">
-          <p className="eyebrow">Attacker profiles</p>
-          <h2>Every thief leaves a trail.</h2>
-          <p className="section-lead">
-            A stolen key is not just a loss. Each attempt tells the vault where the thief wanted the money sent, and the chain
-            remembers who funded that wallet and where the money went next. This page reads all of it back, from the day the
-            vaults were built.
-          </p>
-        </Reveal>
+        <Head
+          n="08"
+          file="INTRUDERS.DB"
+          lines={["Thieves leave", <em key="f">footprints.</em>]}
+          lead="Each attempt tells the vault where the thief wanted the money sent, and the chain remembers who funded that wallet and where its money went next. All of it, read back from the day the vaults were built."
+        />
 
         {file === null || block === null ? (
           <Reveal className="panel">

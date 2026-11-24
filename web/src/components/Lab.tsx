@@ -12,6 +12,7 @@ import { useChain } from "../lib/useChain";
 import { useWallet } from "../lib/useWallet";
 import { BugIcon, CheckIcon, CrossIcon, DoorIcon, InfoIcon, KeyIcon, ReloadIcon, VaultIcon, WarnShieldIcon } from "./icons";
 import { Ext, Reveal } from "./ui";
+import { Head } from "./Poster";
 
 const ORDER: AttackGroup[] = ["native", "evm", "vault", "control"];
 const GROUP_ICON = { native: KeyIcon, evm: DoorIcon, vault: VaultIcon, control: BugIcon } as const;
@@ -145,16 +146,14 @@ export function Lab() {
   const now = chain.hybrid?.stats.balance ?? null;
 
   return (
-    <section className="section section--lab" id="lab">
+    <section className="sec sec--paper labsec" id="lab">
       <div className="wrap">
-        <Reveal className="section-head">
-          <p className="eyebrow">Attack lab</p>
-          <h2>You have the key. Go on, then.</h2>
-          <p className="section-lead">
-            These are {ATTACKS.length} things a thief can do with a stolen key. Each button really does it: your browser signs with the
-            published key and sends the attempt to the live network. Nothing here is a recording.
-          </p>
-        </Reveal>
+        <Head
+          n="07"
+          file="ATTACK_LAB.EXE"
+          lines={["Your turn,", <em key="t">thief.</em>]}
+          lead={`${ATTACKS.length} things a thief can do with a stolen key. Each button really does it: your browser signs with the published key and sends the attempt to the live network. Nothing here is a recording.`}
+        />
 
         <div className="lab-bar">
           <div className="lab-actions">

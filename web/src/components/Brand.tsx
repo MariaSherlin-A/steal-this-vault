@@ -1,17 +1,12 @@
-/** The mark: a block (hexagon) inside a second ring, a keyhole at the centre. Two rings, two locks. */
-export function Logo({ size = 30 }: { size?: number }) {
+/** The mark: a square vault door with two keyholes stacked, one filled, one ringed. Two locks. */
+export function Logo({ size = 28 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden className="logo">
-      <defs>
-        <linearGradient id="logo-g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="var(--primary)" />
-          <stop offset="1" stopColor="var(--safe)" />
-        </linearGradient>
-      </defs>
-      <path d="M16 1.8 28.3 8.9v14.2L16 30.2 3.7 23.1V8.9z" fill="none" stroke="url(#logo-g)" strokeWidth="2" strokeLinejoin="round" />
-      <path d="M16 7.6 23.3 11.8v8.4L16 24.4 8.7 20.2v-8.4z" fill="rgba(76,125,255,0.14)" stroke="var(--safe)" strokeWidth="1.4" strokeLinejoin="round" />
-      <circle cx="16" cy="14.6" r="2.3" fill="var(--text)" />
-      <path d="M14.9 15.8h2.2l.7 4.2h-3.6z" fill="var(--text)" />
+      <rect x="1.5" y="1.5" width="29" height="29" fill="none" stroke="currentColor" strokeWidth="2.2" />
+      <rect x="6" y="6" width="20" height="20" fill="var(--violet)" />
+      <circle cx="16" cy="12.6" r="2.6" fill="var(--paper)" />
+      <path d="M14.7 14.2h2.6l.9 6h-4.4z" fill="var(--paper)" />
+      <rect x="22.5" y="22.5" width="3.5" height="3.5" fill="var(--mint)" />
     </svg>
   );
 }

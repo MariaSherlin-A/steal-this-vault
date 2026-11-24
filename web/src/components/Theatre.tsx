@@ -11,7 +11,8 @@ import { blocksAgo, qor, short } from "../lib/format";
 import { useChain } from "../lib/useChain";
 import { KNOWN, useHistory } from "../lib/useHistory";
 import { KeyIcon, LockIcon, LockShieldIcon } from "./icons";
-import { Ext, Live, Reveal, Skeleton } from "./ui";
+import { Head } from "./Poster";
+import { Ext, Live, Skeleton } from "./ui";
 
 const same = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
 const REEL = 14;
@@ -138,21 +139,18 @@ export function Theatre() {
   const a = current?.attempt;
 
   return (
-    <section className="section theatre" id="replay">
-      <div className="wrap">
-        <Reveal className="section-head">
-          <p className="eyebrow">Watch it happen</p>
-          <h2>Every attempt, played back.</h2>
-          <p className="section-lead">
-            These are the latest real attempts on the two vaults, replayed from the record the vaults keep on the chain. Watch the
-            stolen key open the first lock every time, and the second lock hold.
-          </p>
-        </Reveal>
-
-        <Reveal className="th-stage">
+    <section className="sec sec--ink theatre" id="replay">
+      <Head
+        n="03"
+        file="REPLAY.LOG"
+        lines={["Watch them", <em key="f">fail.</em>]}
+        lead="The latest real attempts on both vaults, replayed from the record the vaults keep on the chain. The stolen key opens the first lock every time. The second lock holds."
+      />
+      <div className="th-wrap">
+        <div className="th-stage">
           <VaultStage kind="hybrid" balance={hybrid ? qor(hybrid.stats.balance) : null} current={current} phase={phase} />
           <VaultStage kind="classic" balance={classic ? qor(classic.stats.balance) : null} current={current} phase={phase} />
-        </Reveal>
+        </div>
 
         <div className="th-caption" aria-live="polite">
           {current && a && block !== null ? (

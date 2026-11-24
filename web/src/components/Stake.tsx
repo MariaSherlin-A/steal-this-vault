@@ -9,6 +9,7 @@ import { useChain } from "../lib/useChain";
 import { plainWalletError, useWallet } from "../lib/useWallet";
 import { CheckIcon, LockShieldIcon, WalletIcon, WarnShieldIcon } from "./icons";
 import { Ext, Reveal, Skeleton } from "./ui";
+import { Head } from "./Poster";
 
 const AMOUNTS = [100_000n, 500_000n, 1_000_000n] as const;
 /** Kept back for the network fee. */
@@ -71,17 +72,14 @@ export function Stake() {
   const short_of_funds = mine !== null && mine.balance < amount + FEE_ROOM_UQOR;
 
   return (
-    <section className="section" id="stake">
+    <section className="sec sec--ink stakesec" id="stake">
       <div className="wrap stake">
-        <Reveal className="section-head">
-          <p className="eyebrow">Raise the stakes</p>
-          <h2>Sure it will fall? Add to the prize.</h2>
-          <p className="section-lead">
-            Send a little testnet QOR into the two-lock vault from your own wallet. QoreX signs your payment with both of your keys,
-            the same protection the owner’s account has. The more the vault holds, the more there is to steal.
-          </p>
-          <p className="fine">Testnet QOR is free from the faucet and has no money value.</p>
-        </Reveal>
+        <Head
+          n="07.1"
+          file="RAISE_STAKES.TX"
+          lines={["Raise", <em key="p">the stakes.</em>]}
+          lead="Sure it will fall? Then add to the prize. Send a little testnet QOR into the two-lock vault from your own wallet. QoreX signs your payment with both of your keys, the same protection the owner has. The more it holds, the more there is to steal. Testnet QOR is free from the faucet and has no money value."
+        />
 
         <Reveal className="panel stake-panel" delay={100}>
           {!wallet ? (
