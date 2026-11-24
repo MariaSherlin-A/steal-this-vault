@@ -3,3 +3,5 @@ out/
 public/audio/*
 !public/audio/.gitkeep
 public/music/
+public/rec/
+capture/.profile/

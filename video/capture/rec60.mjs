@@ -78,10 +78,14 @@ export async function open(url, { width = 1920, height = 1080, out, port = 9520,
   await send("Page.enable");
   await send("Runtime.enable");
   await send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: false });
+  // In the recording browser only: animation callbacks get the page's own clock as their timestamp,
+  // so code that compares the two (count-ups, timed reveals) behaves exactly as in a normal browser.
+  await send("Page.addScriptToEvaluateOnNewDocument", {
+    source: "(() => { const raf = window.requestAnimationFrame.bind(window); window.requestAnimationFrame = (cb) => raf(() => cb(performance.now())); })();",
+  });
   await send("Page.navigate", { url });
 
   let ticks = 0;
-  let base = 0;
   let n = 0;
   /** Advance the clock by one frame, draw it, and save it. */
   async function frame() {
@@ -106,22 +110,16 @@ export async function open(url, { width = 1920, height = 1080, out, port = 9520,
         await sleep(500);
       }
       await send("Emulation.setVirtualTimePolicy", { policy: "pause" });
-      // Chrome's frame times count from when the computer started; the page's clock from when it
-      // loaded. One calibration frame finds the gap, so animation timestamps match the page's clock.
-      await js("window.__raf = null; requestAnimationFrame((t) => (window.__raf = t)); 1");
-      const probe = Math.round(uptime() * 1000);
-      await send("Emulation.setVirtualTimePolicy", { policy: "advance", budget: STEP });
-      await send("HeadlessExperimental.beginFrame", { frameTimeTicks: probe, interval: STEP, noDisplayUpdates: false });
-      const seen = await js("window.__raf");
-      base = seen == null ? 0 : probe - seen;
-      ticks = base + (await js("performance.now()")) + STEP;
-      // then measure what is left of the gap and take it out, until it is under a millisecond
-      for (let k = 0; k < 4; k++) {
-        const d = await this.drift();
-        if (Math.abs(d) < 1) break;
-        base -= d;
-        ticks -= d;
+      // CSS animations follow the frame times, and stand still until those pass the page's own
+      // start. Raise the starting frame time until the page's animation clock moves, then step on.
+      let x = Math.max(ticks, Math.round(uptime() * 1000));
+      for (let k = 0; k < 60; k++) {
+        await send("Emulation.setVirtualTimePolicy", { policy: "advance", budget: STEP });
+        await send("HeadlessExperimental.beginFrame", { frameTimeTicks: x, interval: STEP, noDisplayUpdates: false });
+        if ((await js("document.timeline.currentTime || 0")) > 0) break;
+        x = Math.round(x * 1.25 + 60_000);
       }
+      ticks = x + STEP;
       return (Date.now() - t0) / 1000;
     },
     /** Navigate within the open page (same document), then wait for its data in real time. */
@@ -134,7 +132,6 @@ export async function open(url, { width = 1920, height = 1080, out, port = 9520,
         await sleep(300);
       }
       await send("Emulation.setVirtualTimePolicy", { policy: "pause" });
-      ticks = Math.max(ticks, base + (await js("performance.now()")) + STEP);
     },
     /** Let real time pass (for live chain reads) while the page's clock stays still. */
     wait: sleep,
@@ -154,13 +151,6 @@ export async function open(url, { width = 1920, height = 1080, out, port = 9520,
       }
     },
     count: () => n,
-    /** For checks: the gap between the page clock and an animation timestamp, in ms (should be about 0). */
-    async drift() {
-      await js("window.__raf2 = null; requestAnimationFrame((t) => (window.__raf2 = t)); 1");
-      await frame();
-      n--;
-      return (await js("window.__raf2 - performance.now()"));
-    },
     async close() {
       ws.close();
       chrome.kill();
