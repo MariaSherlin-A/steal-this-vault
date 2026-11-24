@@ -254,3 +254,27 @@ that stays on, or a small server); the voiced video; QCAI stage 2.
 - **Verified:** figures re-read with `npm run status` (unchanged: 10.007 QOR held, 5 refused,
   control vault paid 3 times); stills checked across all 13 scenes at half and full size;
   film length 2:44, under the 3 minute limit. Two files: with subtitles, and clean.
+
+## 25 Nov 2026: the Paper & Ink website redesign
+
+- **Asked:** a new site taking UI/UX inspiration from a Webflow fashion template (loader,
+  poster type, full-screen numbered menu, scrolling strips, framed hero, a colour switch), in a
+  new palette, high-end motion, no "AI look", catchier taglines, every feature explained in plain
+  words. Plan first; Maria set it as the goal. GSAP and Lenis installed after she approved.
+- **Did (branch `redesign/paper-ink`):** "Paper & Ink" palette (paper, ink, violet, mint for
+  refused, carmine for robbed), Archivo wide caps, IBM Plex, JetBrains Mono labels. One story
+  page with numbered sections: the key, two locks (pinned scroll: the stolen key opens lock one,
+  lock two refuses), replay, scoreboard (both vaults side by side plus the counterfactual loss),
+  Q-Day drill (Today / Q-Day switch, and the 18 Nov proof payment read back from the chain live:
+  accepted, carries the second signature), alerts and rescue (the watcher's message built from
+  the latest real attempt; side door and rescue amount live). Attack lab, intruders and technical
+  pages kept their logic with new heads. The loader climbs with real steps (fonts, first chain
+  answer) and lets the visitor in after 4.5 s if the chain is slow. Nothing in the reference was
+  copied: code, words and drawings are new.
+- **Went wrong:** the header's class name `.bar` clashed with the scoreboard rows and broke the
+  header; renamed. A difference-blend header turned olive over the violet band; replaced with a
+  header that reads the background under it. The phone Technical page overflowed on long
+  addresses (grid children could not shrink); fixed with `min-width: 0`. "160.1 h ago" became
+  "6.7 days ago". Screenshot tool: Chrome headless driven over the DevTools protocol from Node.
+- **Verified:** `npm run check` green; `vite build` ok; screenshots of every section at 1440 and
+  390, no horizontal overflow at either width. Not pushed, not deployed.

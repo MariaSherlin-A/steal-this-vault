@@ -194,7 +194,9 @@ Node 20 or newer.
 - [viem](https://viem.sh), [React](https://react.dev), [Vite](https://vite.dev),
   [OpenZeppelin Contracts](https://www.openzeppelin.com/contracts), solc, EthereumJS (local
   test EVM), cosmjs-types (test only), TypeScript, ESLint
-- Fonts: Instrument Serif, Inter, JetBrains Mono (SIL Open Font License)
+- Motion on the site: [GSAP](https://gsap.com) with ScrollTrigger and SplitText (GSAP
+  standard licence, free), [Lenis](https://lenis.darkroom.engineering) (MIT)
+- Fonts: Archivo, IBM Plex Sans, JetBrains Mono (SIL Open Font License)
 - Icons: "Sharp Line - Free" by [Streamline](https://www.streamlinehq.com/), CC BY 4.0
 
 ## Licence
