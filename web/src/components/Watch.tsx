@@ -37,7 +37,9 @@ function Alert() {
         <div className="alert-notch" aria-hidden />
         <Micro className="alert-app">VAULT WATCHER · {latest && block !== null ? blocksAgo(latest.blockNumber, block) : "now"}</Micro>
         {status !== "live" ? (
-          <Skeleton width="100%" />
+          <p className="alert-line">
+            {status === "offline" ? "The vault's record could not be read just now." : "Reading the vault's record from the chain…"}
+          </p>
         ) : !latest ? (
           <p className="alert-line">No attempts yet, so nothing to report.</p>
         ) : (

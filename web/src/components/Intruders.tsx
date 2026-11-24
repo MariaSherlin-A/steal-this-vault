@@ -187,7 +187,15 @@ export function Intruders() {
         {file === null || block === null ? (
           <Reveal className="panel">
             <p>
-              {status === "offline" ? "The attempt history could not be read just now." : <Skeleton width="100%" />}
+              {status === "offline" ? (
+                "The attempt history could not be read just now."
+              ) : (
+                <>
+                  <span className="muted">Reading every attempt since the vaults were built, straight from the chain. A first visit takes a little while; after that this browser remembers.</span>
+                  <br />
+                  <Skeleton width="100%" />
+                </>
+              )}
             </p>
           </Reveal>
         ) : file.intruders.length === 0 ? (
