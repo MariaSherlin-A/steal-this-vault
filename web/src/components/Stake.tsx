@@ -78,7 +78,7 @@ export function Stake() {
           n="07.1"
           file="RAISE_STAKES.TX"
           lines={["Raise", <em key="p">the stakes.</em>]}
-          lead="Sure it will fall? Then add to the prize. Send a little testnet QOR into the two-lock vault from your own wallet. QoreX signs your payment with both of your keys, the same protection the owner has. The more it holds, the more there is to steal. Testnet QOR is free from the faucet and has no money value."
+          lead="Think it will fall? Make it worth stealing: send a little free testnet QOR into the vault from your own wallet. QoreX signs your payment with both of your keys, the same protection the vault has. Testnet QOR has no money value."
         />
 
         <Reveal className="panel stake-panel" delay={100}>

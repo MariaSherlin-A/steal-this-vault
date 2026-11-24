@@ -101,7 +101,7 @@ export function Score() {
         n="04"
         file="SCOREBOARD.DAT"
         lines={["Same key.", <em key="t">Two endings.</em>]}
-        lead="Two vaults built from the same code and guarded by the same published key. One has a single lock, the way wallets work almost everywhere. The other has two."
+        lead="The proof in numbers. The same stolen key against two identical vaults: one with a single lock, like almost every wallet today, and one with two. Read live from the chain."
       />
       <Endings />
 

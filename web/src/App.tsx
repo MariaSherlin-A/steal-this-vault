@@ -30,7 +30,13 @@ function Bands({ second = false }: { second?: boolean }) {
   }
   return (
     <Strip
-      items={["Key published", "Vault still full", h ? `${qor(h.balance, 3)} QOR inside` : "Reading the vault", "Try it yourself", "No catch"]}
+      items={[
+        "Key published",
+        h ? (h.balance > 0n ? "Vault still full" : "Vault empty") : "Reading the vault",
+        h ? `${qor(h.balance, 3)} QOR inside` : "Live from the chain",
+        h ? `${h.refusedCount} thefts refused` : "Thefts refused",
+        "Try it yourself",
+      ]}
     />
   );
 }

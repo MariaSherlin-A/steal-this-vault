@@ -68,7 +68,7 @@ export function Watch() {
         n="06"
         file="ALERTS_RESCUE.CFG"
         lines={["Every knock", "rings a bell."]}
-        lead="On an ordinary wallet, the owner finds out about a stolen key when the money is gone. Here the vault refuses first and tells the owner second, while the money is still there."
+        lead="What happens after an attack. The owner hears about it straight away, while the money is still safe, and if it is ever needed there is a way to move everything to a fresh account."
       />
       <div className="watch-grid" ref={ref}>
         <div data-rise>

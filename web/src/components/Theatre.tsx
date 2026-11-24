@@ -17,8 +17,8 @@ import { Ext, Live, Skeleton } from "./ui";
 const same = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
 const REEL = 14;
 /** When each phase starts, in ms: the key flies in, lock one answers, lock two answers, the verdict. */
-const PHASES = [0, 1000, 1900, 2800];
-const STEP = 5200;
+const PHASES = [0, 450, 900, 1350];
+const STEP = 2700;
 
 type LockState = "idle" | "pass" | "fail";
 type Verdict = "refused" | "owner" | "reset" | "rehearsal" | "robbed";
@@ -102,6 +102,11 @@ function VaultStage({
             <KeyIcon size={20} />
           </span>
         ) : null}
+        {verdict ? (
+          <span className={`th-stamp th-stamp--${verdict === "refused" ? "held" : verdict === "owner" || verdict === "reset" ? "owner" : "robbed"}`}>
+            {verdict === "refused" ? "Refused" : verdict === "owner" ? "Paid to owner" : verdict === "reset" ? "Owner took it back" : "Robbed"}
+          </span>
+        ) : null}
         <span className="th-coins">
           <i />
           <i />
@@ -144,9 +149,20 @@ export function Theatre() {
         n="03"
         file="REPLAY.LOG"
         lines={["Watch them", <em key="f">fail.</em>]}
-        lead="The latest real attempts on both vaults, replayed from the record the vaults keep on the chain. The stolen key opens the first lock every time. The second lock holds."
+        lead="Real break-in attempts on both vaults, replayed from the record the vaults keep on the chain. The stolen key opens the first lock every time. The second lock refuses it."
       />
       <div className="th-wrap">
+        <p className="th-target" aria-live="polite">
+          {current ? (
+            <>
+              <span className="micro">Now attacking</span>
+              <b>{current.vault === "hybrid" ? "The vault · two locks" : "The one-lock twin · comparison"}</b>
+              <span aria-hidden>{current.vault === "hybrid" ? "←" : "→"}</span>
+            </>
+          ) : (
+            <span className="micro">Waiting for the record</span>
+          )}
+        </p>
         <div className="th-stage">
           <VaultStage kind="hybrid" balance={hybrid ? qor(hybrid.stats.balance) : null} current={current} phase={phase} />
           <VaultStage kind="classic" balance={classic ? qor(classic.stats.balance) : null} current={current} phase={phase} />

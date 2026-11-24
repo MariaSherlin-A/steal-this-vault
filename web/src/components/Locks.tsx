@@ -1,11 +1,11 @@
 /**
- * 02: the two locks. On a wide screen the section holds still while you scroll,
- * and the stolen key walks through both locks: the first opens, the second
- * refuses. On phones, or with reduced motion, it shows the end state at once.
+ * 02: the two locks. When the drawing comes into view the stolen key walks
+ * through both locks by itself: the first opens, the second refuses. A button
+ * plays it again. With reduced motion it shows the end state at once.
  */
 import { useLayoutEffect, useRef } from "react";
 import { qor } from "../lib/format";
-import { gsap } from "../lib/motion";
+import { gsap, ScrollTrigger } from "../lib/motion";
 import { useChain } from "../lib/useChain";
 import { Head, Micro } from "./Poster";
 import { Live } from "./ui";
@@ -53,13 +53,14 @@ function Padlock({ x, id, label, sub }: { x: number; id: string; label: string; 
 
 export function Locks() {
   const stage = useRef<HTMLDivElement>(null);
+  const timeline = useRef<gsap.core.Timeline | null>(null);
   const { hybrid } = useChain();
 
   useLayoutEffect(() => {
     const el = stage.current;
     if (!el) return;
     const mm = gsap.matchMedia();
-    mm.add("(min-width: 960px) and (prefers-reduced-motion: no-preference)", () => {
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
       const q = gsap.utils.selector(el);
       const steps = q(".lstep");
       gsap.set(steps, { autoAlpha: 0.18 });
@@ -70,11 +71,16 @@ export function Locks() {
       gsap.set(q(".locks-full"), { autoAlpha: 0, y: 20 });
       el.classList.add("is-scripted");
 
-      const tl = gsap.timeline({
-        defaults: { ease: "power2.inOut" },
-        scrollTrigger: { trigger: el, start: "top top", end: "+=220%", pin: true, scrub: 0.7 },
-      });
-      tl.to(q(".skey"), { x: 0, duration: 1 })
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.inOut" } });
+      timeline.current = tl;
+      tl.set(steps, { autoAlpha: 0.18 })
+        .set(steps[0]!, { autoAlpha: 1 })
+        .set(q(".pad-stamp"), { autoAlpha: 0, scale: 0.6 })
+        .set(q(".pad--a .pad-shackle"), { y: 0 })
+        .set(q(".pad--a"), { attr: { "data-on": "shut" } })
+        .set(q(".skey"), { x: -170, y: 0, rotate: 0, autoAlpha: 1 })
+        .set(q(".locks-full"), { autoAlpha: 0, y: 20 })
+        .to(q(".skey"), { x: 0, duration: 1.1 }, "+=0.5")
         .to(steps[0]!, { autoAlpha: 0.18, duration: 0.3 }, ">-0.1")
         .to(steps[1]!, { autoAlpha: 1, duration: 0.3 }, "<")
         .to(q(".skey"), { rotate: 90, duration: 0.4 })
@@ -88,9 +94,14 @@ export function Locks() {
         .to(q(".pad--b"), { x: "+=8", duration: 0.06, repeat: 5, yoyo: true, ease: "none" })
         .to(q(".skey"), { rotate: 0, x: 200, y: 40, autoAlpha: 0.35, duration: 0.5 })
         .to(q(".pad--b .pad-stamp"), { autoAlpha: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, "<")
-        .to(q(".locks-full"), { autoAlpha: 1, y: 0, duration: 0.5 })
-        .to({}, { duration: 0.6 });
-      return () => el.classList.remove("is-scripted");
+        .to(q(".locks-full"), { autoAlpha: 1, y: 0, duration: 0.5 });
+      tl.timeScale(0.8);
+      const start = ScrollTrigger.create({ trigger: q(".locks-art")[0], start: "top 75%", once: true, onEnter: () => tl.play(0) });
+      return () => {
+        start.kill();
+        timeline.current = null;
+        el.classList.remove("is-scripted");
+      };
     });
     return () => mm.revert();
   }, []);
@@ -101,7 +112,7 @@ export function Locks() {
         n="02"
         file="TWO_LOCKS.SYS"
         lines={["One key", "opens nothing."]}
-        lead="Almost every crypto wallet in the world has a single lock: one private key. This vault has two, and the second one has never left its owner."
+        lead="Why the stolen key gets nowhere. Every crypto wallet has an ordinary key, and that is usually the only lock. This vault adds a second, quantum-safe one that only the owner holds. Watch the key try both."
       />
       <div className="locks-stage" ref={stage}>
         <ol className="locks-steps">
@@ -126,6 +137,17 @@ export function Locks() {
               </g>
             </g>
           </svg>
+          <ul className="locks-legend" aria-hidden>
+            <li>
+              <i className="ll-a" /> Lock 01 · the ordinary key, the published one
+            </li>
+            <li>
+              <i className="ll-b" /> Lock 02 · the quantum-safe key, kept by the owner
+            </li>
+          </ul>
+          <button type="button" className="textbtn locks-again" onClick={() => timeline.current?.restart()}>
+            Play again
+          </button>
           <p className="locks-full">
             <Micro>RESULT</Micro>
             <strong>

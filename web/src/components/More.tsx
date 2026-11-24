@@ -15,7 +15,7 @@ export function Technical() {
           n="09"
           file="TECHNICAL.MD"
           lines={["For the", <em key="s">sceptics.</em>]}
-          lead="Everything on this site, in the terms a developer or a judge would use. All of it can be checked from the links."
+          lead="How the two locks are built, where every piece lives on the chain, and how to check each claim on this site yourself."
         />
 
         <div className="tech">
@@ -126,23 +126,66 @@ export function Technical() {
             <pre className="code">
               <code>{`git clone ${REPO_URL}\ncd steal-this-vault && npm install\nnpm run heist     # every attack, from your terminal\nnpm run status    # both vaults and the window, read from the chain\nnpm run check     # contracts, types, lint, tests`}</code>
             </pre>
-            <h3>Honest limits</h3>
-            <ul className="limits">
-              <li>Testnet only. The two precompiles exist on the testnet and not yet on mainnet.</li>
-              <li>
-                It shows that the classical key alone is not enough. It does not test ML-DSA-87 against a real quantum computer; that
-                rests on the NIST standard (FIPS 204).
-              </li>
-              <li>
-                Recorded attempts spend the owner’s fee allowance inside the window. A visitor can use it up; the vault’s money is not
-                at risk, and the lab then checks attempts without writing them.
-              </li>
-              <li>
-                If the keeper stops, the window closes. The vault gets harder to reach, not easier, but vault-level attempts are then
-                refused earlier, by the chain.
-              </li>
-              <li>Both of the owner’s keys derive from one mnemonic. A leak of that mnemonic would defeat the vault.</li>
-            </ul>
+            <h3>Known limits and how we handle them</h3>
+            <dl className="limits2">
+              <dt>Testnet only</dt>
+              <dd>
+                The two signature checkers (<span className="mono">pqcVerify</span>, <span className="mono">pqcKeyStatus</span>) exist on the
+                QoreChain testnet, not yet on mainnet. <b>Handled:</b> the contracts reach them through one small library that fails
+                closed: if a checker is missing or answers oddly, the vault refuses. It can lock up, it can never pay out wrongly.
+              </dd>
+              <dt>No real quantum computer</dt>
+              <dd>
+                This proves the stolen ordinary key is useless on its own; it does not attack ML-DSA-87 with a quantum computer.{" "}
+                <b>Handled:</b> the second key is ML-DSA-87 at its highest level, the NIST standard FIPS 204, the scheme the chain
+                itself uses.
+              </dd>
+              <dt>Visitors can use up the fee allowance</dt>
+              <dd>
+                Recorded attempts spend the owner&rsquo;s fee allowance inside the side-door window. <b>Handled:</b> the window caps
+                transactions and fees, the money is never at risk, the lab then checks attempts live without writing them, and the keeper
+                renews the allowance.
+              </dd>
+              <dt>The keeper</dt>
+              <dd>
+                A scheduled job renews the side door. <b>Handled:</b> if it stops, the door closes, so the vault gets harder to reach,
+                not easier; the owner can still act with both keys on the native lane.
+              </dd>
+              <dt>One mnemonic</dt>
+              <dd>
+                Both of the owner&rsquo;s keys come from one mnemonic, so a leak of it would defeat the vault. <b>Handled:</b> it lives
+                only in a local secret file and the CI secret store, never on this site, and the rescue command moves everything to a
+                fresh account with its own second lock.
+              </dd>
+            </dl>
+          </Reveal>
+
+          <Reveal className="panel panel--wide">
+            <h3>Use the second lock in your own app</h3>
+            <p className="panel-lead">
+              The two-lock check is not tied to this vault. Any contract on QoreChain can inherit it and demand both signatures before
+              it moves money: a treasury, a payroll contract, a game&rsquo;s prize pool. The repository includes a ready example,{" "}
+              <Ext href={`${REPO_URL}/blob/main/contracts/src/examples/HybridAccount.sol`}>HybridAccount.sol</Ext>, an account that
+              makes any call only when both keys sign.
+            </p>
+            <pre className="code">
+              <code>{`import {HybridAuth} from "./HybridAuth.sol";
+
+contract MyTreasury is HybridAuth {
+    address public immutable owner;
+    constructor(address owner_) HybridAuth("My Treasury", "1") { owner = owner_; }
+
+    function release(bytes memory intent, bytes calldata sigOrdinary, bytes calldata sigQuantumSafe) external {
+        // Reverts unless the owner's ordinary key AND their registered ML-DSA-87 key both signed this intent.
+        _requireHybrid(owner, intent, sigOrdinary, sigQuantumSafe);
+        // ...your logic: decode the intent, check its nonce and deadline, pay out.
+    }
+}`}</code>
+            </pre>
+            <p className="panel-note">
+              Your contract still owns its own rules: put a nonce and a deadline in the intent and check them, as the vault does, so a
+              signature cannot be replayed.
+            </p>
           </Reveal>
         </div>
       </div>

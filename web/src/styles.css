@@ -958,8 +958,7 @@ p {
     grid-template-columns: 4fr 7fr;
     align-items: center;
     gap: 56px;
-    min-height: 100vh;
-    padding: 72px 0 24px;
+    padding: 24px 0;
   }
 }
 .locks-steps {
@@ -1160,7 +1159,7 @@ p {
   background: var(--grey);
 }
 .th-vault[data-active="yes"] .th-dial {
-  animation: dial 1.6s var(--ease);
+  animation: dial 0.9s var(--ease);
 }
 @keyframes dial {
   to {
@@ -1179,9 +1178,9 @@ p {
   background: var(--carmine);
   color: var(--paper);
   transition:
-    left 0.9s var(--ease),
-    opacity 0.5s,
-    transform 0.5s var(--ease);
+    left 0.4s var(--ease),
+    opacity 0.3s,
+    transform 0.3s var(--ease);
 }
 .th-key[data-phase="1"],
 .th-key[data-phase="2"],
@@ -1213,8 +1212,8 @@ p {
   background: var(--paper);
   opacity: 0.85;
   transition:
-    transform 0.8s var(--ease),
-    opacity 0.8s;
+    transform 0.5s var(--ease),
+    opacity 0.5s;
 }
 .th-coins i:nth-child(2) {
   transition-delay: 0.06s;
@@ -2541,4 +2540,377 @@ p {
 }
 .panel {
   overflow-wrap: anywhere;
+}
+
+/* lab scorecard: the vault's result first, the twin apart */
+.scorecard strong small {
+  font: 600 0.42em var(--mono);
+  letter-spacing: 0.06em;
+  color: rgba(236, 231, 220, 0.66);
+}
+.scorecard div:nth-child(2) strong {
+  color: var(--paper);
+}
+.scorecard-twin {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px dashed rgba(236, 231, 220, 0.3);
+}
+.scorecard-twin p {
+  color: rgba(236, 231, 220, 0.8);
+}
+.scorecard-twin b {
+  color: #ff8f9c;
+}
+.group--control {
+  padding: 24px;
+  border: 1.5px dashed var(--ink);
+  background: var(--paper-2);
+}
+.group--control .group-head h3::after {
+  content: "Comparison, not the vault";
+  display: inline-block;
+  margin-left: 12px;
+  padding: 4px 8px;
+  vertical-align: middle;
+  background: var(--carmine);
+  color: var(--paper);
+  font: 600 11px var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.locks-again {
+  margin-top: 14px;
+  font: 600 12px var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.locks-stage:not(.is-scripted) .locks-again {
+  display: none;
+}
+
+/* replay: what is being attacked, and the verdict as a stamp */
+.th-target {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+  font: 800 clamp(1.1rem, 2.2vw, 1.7rem) / 1.1 var(--display);
+  font-variation-settings: "wdth" 115;
+  text-transform: uppercase;
+}
+.th-target b {
+  color: var(--violet-tint);
+}
+.th-vault[data-active="yes"] {
+  outline: 2px solid var(--violet-tint);
+  outline-offset: -2px;
+}
+.th-stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  white-space: nowrap;
+  z-index: 2;
+  padding: 10px 16px;
+  font: 800 clamp(1rem, 2vw, 1.6rem) / 1 var(--display);
+  font-variation-settings: "wdth" 120;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  transform: rotate(-4deg);
+  animation: stamp 0.35s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+.th-stamp--held {
+  background: var(--mint);
+  color: var(--ink);
+}
+.th-stamp--robbed {
+  background: var(--carmine);
+  color: var(--paper);
+}
+.th-stamp--owner {
+  background: var(--paper);
+  color: var(--ink);
+}
+@keyframes stamp {
+  from {
+    opacity: 0;
+    transform: rotate(-4deg) scale(1.8);
+  }
+}
+
+/* drill: the headline result, read from the chain */
+.survived {
+  display: grid;
+  gap: 18px;
+  margin-bottom: clamp(56px, 7vw, 96px);
+  padding: clamp(24px, 4vw, 56px);
+  background: var(--ink);
+  color: var(--paper);
+  border-left: 10px solid var(--mint);
+}
+.survived--mixed {
+  border-left-color: var(--carmine);
+}
+.survived-kicker {
+  color: var(--mint) !important;
+}
+.survived-title {
+  font: 800 clamp(2.8rem, 9vw, 8.6rem) / 0.86 var(--display);
+  font-variation-settings: "wdth" 125;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--mint);
+}
+.survived--mixed .survived-title {
+  color: #ff8f9c;
+}
+.survived-figs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(236, 231, 220, 0.18);
+}
+.survived-figs dt {
+  font: 500 12px var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(236, 231, 220, 0.7);
+}
+.survived-figs dd {
+  margin: 8px 0 0;
+  font: 800 clamp(2rem, 4.4vw, 4rem) / 1 var(--display);
+  font-variation-settings: "wdth" 110;
+}
+.survived-note {
+  max-width: 52rem;
+  font-size: 15.5px;
+  color: rgba(236, 231, 220, 0.72);
+}
+@media (max-width: 640px) {
+  .survived-figs {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* alerts: a phone card you can actually read */
+@media (min-width: 960px) {
+  .watch-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 72px;
+  }
+}
+.alert-phone {
+  max-width: 600px;
+  gap: 14px;
+  padding: 58px 32px 36px;
+  border-radius: 44px;
+}
+.alert-notch {
+  top: 18px;
+  width: 110px;
+  height: 24px;
+}
+.alert-app {
+  font-size: 13px !important;
+}
+.alert-line {
+  font-size: clamp(16px, 1.4vw, 19px);
+}
+.alert-line--head {
+  font-size: clamp(20px, 1.9vw, 26px);
+  line-height: 1.3;
+}
+.alert figcaption {
+  max-width: 600px;
+  font-size: 16px;
+}
+
+/* intruders: story first, numbers second, details on demand */
+.file-big {
+  font: 800 clamp(1.6rem, 3.4vw, 3rem) / 1.05 var(--display);
+  font-variation-settings: "wdth" 115;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+.file-big strong {
+  color: var(--violet);
+}
+.file-legend {
+  list-style: none;
+  margin: 18px 0 10px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  font-size: 16px;
+}
+.intruder-tag {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 4px 9px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 600 11.5px var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  vertical-align: 2px;
+}
+.intruder-tag--stranger {
+  background: var(--carmine);
+}
+.intruder-head {
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  margin-bottom: 16px;
+  font-size: 15px;
+}
+.intruder-story {
+  font: 600 clamp(18px, 1.6vw, 22px) / 1.45 var(--body);
+  margin-bottom: 22px;
+}
+.intruder-tally {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 0 0 22px;
+}
+.intruder-tally > div {
+  padding: 14px 16px;
+  background: var(--paper);
+  border-top: 4px solid var(--ink);
+}
+.intruder-tally .is-held {
+  border-top-color: var(--mint);
+}
+.intruder-tally .is-took {
+  border-top-color: var(--carmine);
+}
+.intruder-tally dt {
+  font: 500 12px var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.intruder-tally dd {
+  margin: 6px 0 0;
+  font: 800 clamp(2rem, 3.6vw, 3rem) / 1 var(--display);
+  font-variation-settings: "wdth" 110;
+}
+.intruder-tally dd small {
+  font: 600 12px var(--mono);
+}
+.intruder-tally p {
+  margin-top: 6px;
+  font-size: 13.5px;
+  color: var(--carmine);
+}
+.intruder .trail {
+  font-size: 16px;
+}
+.intruder h4 {
+  font-size: 12.5px;
+}
+.intruder-details {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.intruder-details summary {
+  cursor: pointer;
+  font: 600 12.5px var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.intruder-details .kv {
+  margin-top: 14px;
+}
+@media (max-width: 520px) {
+  .intruder-tally {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+  }
+  .intruder-tally > div {
+    padding: 10px;
+  }
+}
+
+/* technical: limits with their handling, and the reuse panel */
+.limits2 {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  font-size: 15px;
+}
+.limits2 dt {
+  margin-top: 12px;
+  font: 700 15px var(--body);
+  color: var(--fg);
+}
+.limits2 dd {
+  margin: 0;
+  color: var(--muted);
+}
+.limits2 b {
+  color: var(--mint);
+  font-weight: 600;
+}
+@media (min-width: 1100px) {
+  .tech > .panel--wide {
+    grid-column: 1 / -1;
+  }
+}
+.panel-lead {
+  max-width: 60rem;
+  margin-bottom: 18px;
+  font-size: 16px;
+  color: var(--fg);
+}
+.panel--wide .code {
+  margin-bottom: 14px;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* two locks on phones: the drawing's own labels are too small, so a legend takes over */
+.locks-legend {
+  display: none;
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  gap: 6px;
+  font: 500 13.5px/1.4 var(--mono);
+}
+.locks-legend i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
+  vertical-align: -1px;
+}
+.ll-a {
+  background: var(--ink);
+}
+.ll-b {
+  background: var(--violet);
+}
+@media (max-width: 640px) {
+  .locks-legend {
+    display: grid;
+  }
+  .pad-label,
+  .pad-sub {
+    display: none;
+  }
+  .pad-stamp text {
+    font-size: 22px;
+  }
 }
