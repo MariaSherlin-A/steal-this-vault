@@ -5,7 +5,9 @@
  * read back from the chain live.
  */
 import { useEffect, useRef, useState } from "react";
-import { DEPLOYMENT, loadLab } from "../lib/clients";
+import { DEPLOYMENT, client, loadLab } from "../lib/clients";
+import { DRILL_END, DRILL_START, PROOF_TX, drillTally, firstBlockAt, type DrillTally } from "../lib/drill";
+import { KNOWN, useHistory } from "../lib/useHistory";
 import type { Proof } from "../lib/lab";
 import { qor, uqorToQor } from "../lib/format";
 import { gsap, reducedMotion } from "../lib/motion";
@@ -14,8 +16,6 @@ import { explorer } from "@stv/core/chain";
 import { Head, Micro } from "./Poster";
 import { Ext, Live, Skeleton } from "./ui";
 
-/** The drill-day proof payment, from docs/drill-day.md and the 18 Nov entry of docs/AI_LOG.md. Everything about it is read live. */
-const PROOF_TX = "860064E01688CBCD7EF3D4D699BB8741DF4BD8894594EF2A0E6CE0A621A192AC";
 
 type Mode = "today" | "qday";
 
@@ -32,7 +32,7 @@ const SIDE = {
   },
 } as const;
 
-function ProofCard() {
+function useProof(): Proof | null | "failed" {
   const [proof, setProof] = useState<Proof | null | "failed">(null);
   useEffect(() => {
     let gone = false;
@@ -44,7 +44,82 @@ function ProofCard() {
       gone = true;
     };
   }, []);
+  return proof;
+}
 
+/** The drill's 24 hours as a block range, found from the chain's own block times. */
+function useDrillBlocks(): { from: bigint; to: bigint } | null | "failed" {
+  const [range, setRange] = useState<{ from: bigint; to: bigint } | null | "failed">(null);
+  useEffect(() => {
+    let gone = false;
+    const times = new Map<bigint, bigint>();
+    const getTime = async (b: bigint) => {
+      const known = times.get(b);
+      if (known !== undefined) return known;
+      const t = (await client.getBlock({ blockNumber: b })).timestamp;
+      times.set(b, t);
+      return t;
+    };
+    void (async () => {
+      try {
+        const head = await client.getBlockNumber();
+        const low = BigInt(DEPLOYMENT.vaults.hybrid.deployBlock);
+        const from = await firstBlockAt(getTime, DRILL_START, low, head);
+        const to = (await firstBlockAt(getTime, DRILL_END + 1n, from, head)) - 1n;
+        if (!gone) setRange({ from, to });
+      } catch {
+        if (!gone) setRange("failed");
+      }
+    })();
+    return () => {
+      gone = true;
+    };
+  }, []);
+  return range;
+}
+
+/** The headline: what the chain says happened to the vault during the drill. */
+function Survived({ proof }: { proof: Proof | null | "failed" }) {
+  const range = useDrillBlocks();
+  const { attempts, status } = useHistory();
+  const tally: DrillTally | null =
+    range && range !== "failed" && status === "live" ? drillTally(attempts, range.from, range.to, KNOWN) : null;
+  const ownerIn = proof && proof !== "failed" ? proof.accepted && proof.twoSignatures : null;
+  const clean = tally !== null && tally.thefts === 0 && ownerIn === true;
+  return (
+    <div className={`survived ${tally && !clean ? "survived--mixed" : ""}`} role="status">
+      <p className="survived-kicker micro">
+        {range === "failed"
+          ? "Q-DAY DRILL · 18 NOV 2026 · THE CHAIN DID NOT ANSWER JUST NOW"
+          : range
+            ? `Q-DAY DRILL · 18 NOV 2026, 00:00–23:59 UTC · BLOCKS ${range.from.toLocaleString("en-US")}–${range.to.toLocaleString("en-US")}`
+            : "Q-DAY DRILL · 18 NOV 2026 · READING THE CHAIN"}
+      </p>
+      <p className="survived-title">{tally === null ? "Checking the drill…" : clean ? <>Survived <span className="nowrap">Q&#8209;Day.</span></> : <>Q&#8209;Day drill: the result</>}</p>
+      <dl className="survived-figs">
+        <div>
+          <dt>Thefts that got through</dt>
+          <dd>{tally ? tally.thefts : <Skeleton width="2ch" />}</dd>
+        </div>
+        <div>
+          <dt>QOR lost from the vault</dt>
+          <dd>{tally ? qor(tally.lostWei) : <Skeleton width="2ch" />}</dd>
+        </div>
+        <div>
+          <dt>Owner still got in</dt>
+          <dd>{ownerIn === null ? <Skeleton width="3ch" /> : ownerIn ? "Yes" : "No"}</dd>
+        </div>
+      </dl>
+      <p className="survived-note">
+        The attacker held the owner&rsquo;s key for the whole day. Counted from the vault&rsquo;s own record on the chain
+        {tally ? `: ${tally.attempts} attempt${tally.attempts === 1 ? "" : "s"} reached the vaults that day` : ""}; attacks the chain
+        turned away at the door never reach the vault at all.
+      </p>
+    </div>
+  );
+}
+
+function ProofCard({ proof }: { proof: Proof | null | "failed" }) {
   const toVault = proof && proof !== "failed" && proof.to === DEPLOYMENT.vaults.hybrid.native;
   return (
     <article className="proof">
@@ -93,6 +168,7 @@ function ProofCard() {
 
 export function Drill() {
   const [mode, setMode] = useState<Mode>("today");
+  const proof = useProof();
   const { hybrid } = useChain();
   const root = useRef<HTMLElement>(null);
   const side = SIDE[mode];
@@ -117,8 +193,10 @@ export function Drill() {
         n="05"
         file="Q_DAY.SIM"
         lines={["Q-Day", <em key="e">came early.</em>]}
-        lead="One day a large enough quantum computer will work out ordinary private keys from information that is already public. That day is called Q-Day. For this vault, every day is Q-Day: its key is already public."
+        lead="Q-Day is the day quantum computers can work out ordinary private keys from public data, so every key is as good as stolen. On 18 November the fest staged that day for real. This is what happened to the vault."
       />
+
+      <Survived proof={proof} />
 
       <div className="qd">
         <div className="qd-switch" role="radiogroup" aria-label="Show the world">
@@ -158,7 +236,7 @@ export function Drill() {
             through, how much money stayed.
           </p>
         </div>
-        <ProofCard />
+        <ProofCard proof={proof} />
       </div>
     </section>
   );
