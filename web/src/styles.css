@@ -3030,7 +3030,7 @@ mark.hl {
   background: rgba(61, 220, 151, 0.16);
   color: var(--mint);
   font-weight: 600;
-  box-shadow: inset 3px 0 0 var(--mint);
+  border-radius: 3px;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
