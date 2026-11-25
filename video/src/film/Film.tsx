@@ -42,8 +42,8 @@ function SceneBody({ id }: { id: FilmScene }) {
           ]}
           marks={[
             { at: cue("dare", /^publishes$/) + 20, until: cue("dare", /^money$/) - 20, box: [1277, 692, 587, 220], label: "The real private key · published on purpose", tone: "violet" },
-            { at: cue("dare", /^Copy$/), until: cue("dare", /^money$/) - 20, box: [1736, 850, 106, 40], label: "Copy it", tone: "mint", tagSide: "bottom" },
-            { at: cue("dare", /^inside:$/), box: [56, 840, 610, 150], label: "Still inside · read live from the chain", tone: "mint" },
+            { at: cue("dare", /^Copy$/), until: cue("dare", /^money$/) - 20, box: [1685, 850, 157, 40], label: "Copy it", tone: "mint", tagSide: "bottom" },
+            { at: cue("dare", /^inside:$/), box: [56, 833, 650, 163], label: "Still inside · read live from the chain", tone: "mint" },
           ]}
         />
       );
@@ -74,8 +74,8 @@ function SceneBody({ id }: { id: FilmScene }) {
           dark
           title={[{ text: "Watch them" }, { text: "fail.", accent: true }]}
           marks={[
-            { at: cue("replay", /^real$/), until: cue("replay", /^Every$/) - 6, box: [56, 725, 900, 135], label: "Real break-in attempts · from the vault's own record", tone: "violet" },
-            { at: cue("replay", /^Every$/), box: [56, 168, 1808, 532], label: "Every one hits the same wall", tone: "mint" },
+            { at: cue("replay", /^real$/), until: cue("replay", /^Every$/) - 6, box: [56, 727, 1808, 132], label: "Real break-in attempts · from the vault's own record", tone: "violet" },
+            { at: cue("replay", /^Every$/), box: [56, 168, 1808, 531], label: "Every one hits the same wall", tone: "mint" },
           ]}
         />
       );
@@ -88,9 +88,9 @@ function SceneBody({ id }: { id: FilmScene }) {
           chapter="Scoreboard"
           title={[{ text: "Same key." }, { text: "Two endings.", accent: true }]}
           marks={[
-            { at: cue("score", /^twin:$/), until: sec(8.9), box: [56, 110, 886, 430], label: "The one-lock twin · robbed 3 times", tone: "carmine" },
-            { at: cue("score", /^ordinary$/), until: sec(8.9), box: [978, 110, 886, 430], label: "The vault · still full · 5 thefts refused", tone: "mint", tagSide: "bottom" },
-            { at: cue("score", /^count$/), until: sec(15.3), box: [56, 196, 1150, 190], label: "Counted by the vault itself, on chain", tone: "violet" },
+            { at: cue("score", /^twin:$/), until: sec(8.9), box: [57, 111, 885, 429], label: "The one-lock twin · robbed 3 times", tone: "carmine" },
+            { at: cue("score", /^ordinary$/), until: sec(8.9), box: [979, 111, 885, 429], label: "The vault · still full · 5 thefts refused", tone: "mint", tagSide: "bottom" },
+            { at: cue("score", /^count$/), until: sec(15.3), box: [56, 200, 1180, 184], label: "Counted by the vault itself, on chain", tone: "violet" },
           ]}
         />
       );
@@ -124,9 +124,9 @@ function SceneBody({ id }: { id: FilmScene }) {
             { from: sec(10.5), clip: 11.4 },
           ]}
           marks={[
-            { at: cue("drill", /^bot$/), until: sec(6.4), box: [52, 96, 1592, 404], label: "24 hours with the thief · 0 thefts · 0 lost · read from the chain", tone: "mint", tagSide: "bottom" },
-            { at: sec(8.2), until: sec(10.4), box: [48, 186, 1596, 264], label: "On Q-Day: one-lock wallets open · this vault still shut", tone: "violet", tagSide: "bottom" },
-            { at: sec(11.8), box: [748, 64, 940, 286], label: "Proof: the owner got in, with both keys", tone: "mint", tagSide: "bottom" },
+            { at: cue("drill", /^bot$/), until: sec(6.4), box: [56, 110, 1808, 457], label: "24 hours with the thief · 0 thefts · 0 lost · read from the chain", tone: "mint", tagSide: "bottom" },
+            { at: sec(8.2), until: sec(10.4), box: [56, 210, 1808, 391], label: "On Q-Day: one-lock wallets open · this vault still shut", tone: "violet", tagSide: "bottom" },
+            { at: sec(11.8), box: [851, 110, 1013, 385], label: "Proof: the owner got in, with both keys", tone: "mint", tagSide: "bottom" },
           ]}
         />
       );
@@ -139,8 +139,8 @@ function SceneBody({ id }: { id: FilmScene }) {
           chapter="Alerts & rescue"
           title={[{ text: "Every knock" }, { text: "rings a bell.", accent: true }]}
           marks={[
-            { at: cue("watch", /^told$/), until: sec(7.0), box: [52, 100, 536, 314], label: "Warned while the money is safe", tone: "mint", tagSide: "bottom" },
-            { at: sec(8.7), box: [880, 60, 764, 400], label: "The way out · only the owner can do it", tone: "violet", tagSide: "bottom" },
+            { at: cue("watch", /^told$/), until: sec(7.0), box: [56, 110, 600, 352], label: "Warned while the money is safe", tone: "mint", tagSide: "bottom" },
+            { at: sec(8.7), box: [996, 160, 868, 401], label: "The way out · only the owner can do it", tone: "violet", tagSide: "bottom" },
           ]}
         />
       );
@@ -154,8 +154,8 @@ function SceneBody({ id }: { id: FilmScene }) {
           title={[{ text: "Thieves leave" }, { text: "footprints.", accent: true }]}
           titleFrames={50}
           marks={[
-            { at: cue("intruders", /^trail:$/), until: sec(4.5), box: [858, 90, 786, 480], label: "Every thief leaves a trail", tone: "carmine", tagSide: "bottom" },
-            { at: sec(5.2), box: [876, 300, 780, 100], label: "Where the money went · still in the thief's wallet", tone: "carmine", tagSide: "bottom" },
+            { at: cue("intruders", /^trail:$/), until: sec(4.5), box: [970, 100, 894, 545], label: "Every thief leaves a trail", tone: "carmine", tagSide: "bottom" },
+            { at: sec(5.2), box: [1003, 345, 828, 112], label: "Where the money went · still in the thief's wallet", tone: "carmine", tagSide: "bottom" },
           ]}
         />
       );

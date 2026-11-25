@@ -186,18 +186,18 @@ export function Subtitles({ words, dark = false }: { words: Word[]; dark?: boole
   const end = line[line.length - 1].to + 20;
   const show = interpolate(frame, [line[0].from - 4, line[0].from + 4, end, end + 8], [0, 1, 1, 0], clamp);
   return (
-    <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom: 54, pointerEvents: "none" }}>
+    <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom: 50, pointerEvents: "none" }}>
       <div
         style={{
           opacity: show,
           transform: `translateY(${(1 - show) * 10}px)`,
-          maxWidth: 1500,
-          padding: "16px 30px 18px",
-          background: dark ? "rgba(236,231,220,0.94)" : "rgba(20,19,17,0.9)",
-          backdropFilter: "blur(8px)",
+          maxWidth: 1400,
+          padding: "12px 26px 14px",
+          background: "rgba(236,231,220,0.94)",
+          boxShadow: "0 10px 30px rgba(20,19,17,0.18)",
           fontFamily: F.body,
           fontWeight: 600,
-          fontSize: 38,
+          fontSize: 32,
           lineHeight: 1.3,
           textAlign: "center",
           letterSpacing: "-0.005em",
@@ -206,9 +206,9 @@ export function Subtitles({ words, dark = false }: { words: Word[]; dark?: boole
         {line.map((w, i) => {
           const lit = frame >= w.from - 2;
           const bare = w.text.replace(/[^\w-]/g, "");
-          const color = RED.test(bare) ? (dark ? C.carmine : C.carmineTint) : SAFE.test(bare) ? (dark ? "#14844f" : C.mint) : dark ? C.ink : C.paper;
+          const color = RED.test(bare) ? C.carmine : SAFE.test(bare) ? "#0f7a4a" : C.ink;
           return (
-            <span key={i} style={{ color, opacity: lit ? 1 : 0.38, transition: "none" }}>
+            <span key={i} style={{ color, opacity: lit ? 1 : 0.35 }}>
               {w.text}{" "}
             </span>
           );
