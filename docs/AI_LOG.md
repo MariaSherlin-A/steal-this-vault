@@ -330,3 +330,22 @@ that stays on, or a small server); the voiced video; QCAI stage 2.
   began under the opening loader, so the recorder now lets it finish off camera. The replay on the
   site cycled through the owner's own withdrawals, which contradicted "Watch them fail": the site
   now replays only break-in attempts (same rule as the alerts).
+
+## 25 Nov 2026 (later): film fixes and getting ready to submit
+
+- **Asked:** Maria checked the film in VLC and found four callout boxes that did not fit their
+  panels (the lab's result panel and twin panel, the rescue steps, the money trail); then:
+  commit the site and the film without the film script, show the file list before anything
+  goes to GitHub, and prepare the submission (QCAI stage 2, dashboard text, a rules check).
+- **Did:** measured the four panels in the raw recordings and checked frame by frame that they
+  hold still while each box shows; the lab's result box now also leaves before the page
+  scrolls. Re-rendered both versions and checked the four moments in the final file.
+  Took `docs/film-script.md` out of git (kept locally) and moved the film's build steps and
+  credits into the README. Read the fest's official rules, prizes and FAQ, and added the
+  "post-quantum design" section the FAQ asks for to `docs/AUDIT.md` (where `pqcVerify` and
+  `pqcKeyStatus` are called, what each protects, which tests cover it). Updated the README's
+  live result from 17 refused to the latest 18 of 18. Drafted the dashboard and YouTube text.
+- **Went wrong, and fixed:** the first lab boxes had been placed by estimate, not measured,
+  which is why they missed. The checklist Maria pasted turned out to be from the QNX hackathon
+  (her other entry); the fest's own rules were used instead. The stage 1 audit PDF is not in
+  the repo, which the FAQ requires; Maria is to add it with the stage 2 report.
