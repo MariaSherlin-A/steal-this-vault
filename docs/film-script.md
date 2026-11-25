@@ -104,3 +104,18 @@ About 440 spoken words, which fits about 2:55 at a calm pace.
 
 Source for the statistic: Chainalysis via The Block, "Crypto hacks hit $3.4 billion in 2025, attacks on
 individual wallets rise", 18 Dec 2025: https://www.theblock.co/post/382477/crypto-hack-2025-chainalysis
+
+---
+
+## How the film is built (video/)
+
+1. The site running on localhost (`npm run dev`), then `node --experimental-websocket capture/shots.mjs <site-url>`:
+   every site shot recorded frame by frame at 60 fps (the attack lab with recording off).
+2. `<venv>/python scripts/voice-film.py`: Andrew's voice per scene, with word timings.
+3. `node scripts/score-film.mjs`, then `node scripts/mix-film.mjs`: the score and the final mix.
+4. `npx remotion render src/index.ts Film out/film-subtitled-picture.mp4 --muted --gl=angle --crf 16`
+   (and `--props='{"clean":true}'` for the clean picture), then join each picture with
+   `public/music/film-mix.wav` in ffmpeg, loudness-normalised to -16 LUFS.
+
+Delivered: `video/out/steal-this-vault-film-subtitled.mp4` and `video/out/steal-this-vault-film-clean.mp4`
+(1920x1080, 60 fps, 2:48.5). Photo credit: IBM Quantum System One, IBM Research, CC BY 2.0.
