@@ -16,7 +16,7 @@ robs that one every time.
 
 Built for **Build Before Q-Day**, the QoreChain Developer Fest. Testnet only.
 
-**Live site: <https://steal-this-vault.vercel.app>**
+**Live site: <https://steal-this-vault.vercel.app>** · **Demo video (2:48): <https://youtu.be/CSWNdM1PXh8>**
 
 ## Why
 
