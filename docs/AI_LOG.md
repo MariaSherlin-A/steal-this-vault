@@ -374,3 +374,7 @@ that stays on, or a small server); the voiced video; QCAI stage 2.
   <https://youtu.be/CSWNdM1PXh8> (2:48, public, checked playing). The link is on the project page
   and in the README. A custom thumbnail needs phone verification on a new channel, so YouTube
   uses a frame of the film for now.
+- **Stage 1 report recovered:** the PDF Maria shared for the stage 1 analysis was still stored in
+  the AI session's own record; it was extracted byte for byte, checked (generated 15 Nov 2026,
+  00:01, 82/100, the same five findings) and added as `docs/audit/QCAI-stage1-2026-11-15.pdf`.
+  Both audit reports are now in the repo.
