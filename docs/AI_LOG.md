@@ -367,3 +367,10 @@ that stays on, or a small server); the voiced video; QCAI stage 2.
   says so and points to the commit that recorded its findings two minutes after it was made.
   Checking the dashboard reused the tab holding the unsaved project form, which lost the
   entries; they were filled in again.
+- **Later the same evening:** the README's limits now say how each is handled (as on the site)
+  and the film details moved to `video/README.md`. Maria created her YouTube channel and chose
+  the film file; the agent filled in the title, her description, chapters, credits, audience,
+  category and the AI-content label, and published on her word:
+  <https://youtu.be/CSWNdM1PXh8> (2:48, public, checked playing). The link is on the project page
+  and in the README. A custom thumbnail needs phone verification on a new channel, so YouTube
+  uses a frame of the film for now.
