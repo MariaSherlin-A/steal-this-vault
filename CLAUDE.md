@@ -85,9 +85,7 @@ Run from the repository root. Node 20 or newer.
 | `npm run watch` | alerts on new attempts to Telegram or Discord (`ALERT_*` in `.env`). Read-only; `--once`, `--dry` |
 | `npm run deploy -w contracts` | deploy both vaults (already done; do not repeat without asking) |
 | `npm run build` | contracts, then the site into `web/dist` |
-| `npm run score --prefix video` | compose the film's original music to the scene lengths (`video/public/music/score.wav`) |
-| `npm run video:timing` | only for an optional voiceover: fit scene lengths to files in `video/public/audio` |
-| `npm run video` | render the demo film to `video/out/steal-this-vault-demo.mp4` (run `npm install` in `video/` first) |
+| `npm run video` | render the demo film's picture to `video/out/film-subtitled-picture.mp4`; recording, voice and sound first, see `video/README.md` (run `npm install` in `video/` first) |
 
 Do not write test counts here: they go stale.
 

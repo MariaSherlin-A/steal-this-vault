@@ -5,6 +5,10 @@
   "description": "The demo film for Steal This Vault, rendered from code with Remotion. Kept out of the root workspaces so the keeper's install stays small.",
   "scripts": {
     "studio": "remotion studio src/index.ts",
+    "film:voice": "python scripts/voice-film.py",
+    "film:sound": "node scripts/score-film.mjs && node scripts/mix-film.mjs",
+    "film": "remotion render src/index.ts Film out/film-subtitled-picture.mp4 --codec h264 --crf 16 --muted --gl=angle",
+    "film:clean": "remotion render src/index.ts Film out/film-clean-picture.mp4 --codec h264 --crf 16 --muted --gl=angle --props=clean-props.json",
     "timing": "node scripts/timing.mjs",
     "score": "node scripts/score.mjs",
     "render": "remotion render src/index.ts Main out/steal-this-vault-demo.mp4 --codec h264",

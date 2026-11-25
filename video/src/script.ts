@@ -1,7 +1,7 @@
 /**
- * The narration, one entry per scene. Each entry is voiced into public/audio/scene-NN
- * (NN = the scene's place in timing.json) and shown as subtitles. Keep it identical to
- * docs/video-script.md.
+ * The earlier draft film's narration, one entry per scene. Each entry is voiced into
+ * public/audio/scene-NN (NN = the scene's place in timing.json) and shown as subtitles.
+ * The submitted film's narration is in src/film/script.ts.
  */
 import type { SceneId } from "./timing";
 
