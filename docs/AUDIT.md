@@ -6,11 +6,8 @@ again.
 
 ## Stage 1 (15 Nov 2026)
 
-- Report: `QoreChain_Audit_Steal This Vault_1794681090683.pdf`, generated 15 Nov 2026, 00:01.
-  The PDF file itself was later lost and the dashboard keeps no audit history, so it could not
-  be added to `docs/audit/`. Its full content (score, risk level, every finding with its
-  severity, location and recommendation) was copied into this file two minutes after it was
-  generated, in commit `b502e46` (15 Nov 2026, 00:03 IST).
+- Report: [audit/QCAI-stage1-2026-11-15.pdf](audit/QCAI-stage1-2026-11-15.pdf), generated
+  15 Nov 2026, 00:01 IST (downloaded as `QoreChain_Audit_Steal This Vault_1794681090683.pdf`).
 - Input: [audit/StealThisVault.flat.sol](audit/StealThisVault.flat.sol) at commit `ce78a3b`:
   `QorePQC.sol`, `HybridAuth.sol` and `Vault.sol` from `contracts/src`, merged in that order,
   OpenZeppelin Contracts 5.6.1 left as imports. This is the source of the deployed vaults.
