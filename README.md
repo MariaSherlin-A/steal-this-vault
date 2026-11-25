@@ -147,7 +147,6 @@ top of the vault:
 | [web/](web/) | the site (React, Vite, plain CSS) |
 | [spikes/](spikes/) | the first proof scripts, kept as evidence |
 | [docs/](docs/) | architecture, threat model, AI build log |
-| [video/](video/) | the demo film, made from code with Remotion (its own package) |
 
 ## Commands
 
@@ -165,24 +164,6 @@ top of the vault:
 
 Node 20 or newer.
 
-## The demo film
-
-The film (2:48, 1920x1080, 60 fps) is made from code in [video/](video/). Every site shot is a
-real recording of the running site, taken frame by frame. The attack lab was run live, with
-recording off.
-
-1. Run the site (`npm run dev`), then in `video/`:
-   `node --experimental-websocket capture/shots.mjs <site-url>` to record the site shots.
-2. `python scripts/voice-film.py` for the narration, with word timings for the subtitles
-   (needs `edge-tts`).
-3. `node scripts/score-film.mjs`, then `node scripts/mix-film.mjs`: the original score and
-   the final sound mix.
-4. `npx remotion render src/index.ts Film out/film-subtitled-picture.mp4 --muted --gl=angle --crf 16`
-   (add `--props='{"clean":true}'` for the version without subtitles). Then join the picture
-   with `public/music/film-mix.wav` in ffmpeg, at -16 LUFS.
-
-Recordings, audio and rendered films are not in git.
-
 ## How it was tested
 
 - **Unit tests** (`npm test`). The contract tests run on a local EVM that executes a real
@@ -194,19 +175,28 @@ Recordings, audio and rendered films are not in git.
   on the vault refused, 0 QOR lost; the same robbery on the one-lock twin would pay. Recorded
   attempts and the vault's counters are public on the explorer.
 
-## Honest limits
+## Honest limits, and how we handle them
 
-- **Testnet only.** The two precompiles exist on the testnet and not yet on mainnet. The owner
-  account has never held real funds and must never.
-- **What it proves.** That the classical key alone is not enough on this chain. It does not
-  test ML-DSA-87 against a real quantum computer; that rests on the NIST standard (FIPS 204).
-- **Fee griefing.** Attempts recorded on chain are paid from the owner's fee allowance inside
-  the window. A visitor can use that allowance up. The vault's money is not at risk; the lab
-  then checks attempts with `eth_call` and labels them as not recorded.
-- **Keeper dependency.** If the keeper stops, the window expires. The vault becomes harder to
-  reach, not easier, but vault-level attempts are then refused earlier, by the chain.
-- **One mnemonic.** Both of the owner's keys derive from one mnemonic. If it leaked, the vault
-  would fall. It lives only in `.env` (ignored by git) and in GitHub Actions secrets.
+- **Testnet only.** The two signature checkers (`pqcVerify`, `pqcKeyStatus`) exist on the
+  QoreChain testnet, not yet on mainnet. The owner account has never held real funds and must
+  never. **Handled:** the contracts reach them through one small library that fails closed: if
+  a checker is missing or answers oddly, the vault refuses. It can lock up; it can never pay
+  out wrongly.
+- **No real quantum computer.** This proves the stolen ordinary key is useless on its own; it
+  does not attack ML-DSA-87 with a quantum computer. **Handled:** the second key is ML-DSA-87
+  at its highest level, the NIST standard FIPS 204, the scheme the chain itself uses.
+- **Visitors can use up the fee allowance.** Recorded attempts spend the owner's fee allowance
+  inside the side-door window. **Handled:** the window caps transactions and fees, the money is
+  never at risk, the lab then checks attempts live with `eth_call` without writing them (and
+  labels them as not recorded), and the keeper renews the allowance.
+- **The keeper.** A scheduled job renews the side door. **Handled:** if it stops, the door
+  closes, so the vault gets harder to reach, not easier; the owner can still act with both
+  keys on the native lane.
+- **One mnemonic.** Both of the owner's keys derive from one mnemonic, so a leak of it would
+  defeat the vault. **Handled:** it lives only in `.env` (ignored by git) and the GitHub
+  Actions secret store, never on the site, and the rescue command
+  (`npm run keeper -- --rescue <0x…>`) moves everything to a fresh account with its own
+  second lock.
 
 ## Credits
 
@@ -217,9 +207,6 @@ Recordings, audio and rendered films are not in git.
 - Motion on the site: [GSAP](https://gsap.com) with ScrollTrigger and SplitText (GSAP
   standard licence, free), [Lenis](https://lenis.darkroom.engineering) (MIT)
 - Fonts: Archivo, IBM Plex Sans, JetBrains Mono (SIL Open Font License)
-- Film: [Remotion](https://www.remotion.dev), narration by Microsoft Edge's neural voice
-  "Andrew" through [edge-tts](https://github.com/rany2/edge-tts), music composed for the film
-  in code. Photo of IBM Quantum System One by IBM Research, CC BY 2.0
 - Icons: "Sharp Line - Free" by [Streamline](https://www.streamlinehq.com/), CC BY 4.0
 
 ## Licence
