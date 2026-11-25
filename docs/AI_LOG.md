@@ -349,3 +349,21 @@ that stays on, or a small server); the voiced video; QCAI stage 2.
   which is why they missed. The checklist Maria pasted turned out to be from the QNX hackathon
   (her other entry); the fest's own rules were used instead. The stage 1 audit PDF is not in
   the repo, which the FAQ requires; Maria is to add it with the stage 2 report.
+
+## 25 Nov 2026 (evening): audit stage 2, cover, push and deploy
+
+- **Asked:** Maria approved the file list, ran QCAI stage 2 and asked for a new cover in the
+  site's look, then a push and a deploy, and the project page updated to match the site.
+- **Did:** made the outgoing files safe to read: the film's README now describes the submitted
+  film, `npm run video` builds it, and an old script and a debugging file stay local. Merged
+  `redesign/paper-ink` into `main`; full check green; secret scan 0 hits over all 49 commits.
+  Added the stage 2 report to `docs/audit/` and compared it with stage 1 in `docs/AUDIT.md`
+  (same code, same 82/100 and the same five findings, each already covered). Drew a new cover in
+  code (Remotion `Cover`), pushed, and checked the Vercel deploy that the push started: the new
+  site is live and reads the chain. Filled in the fest project page in Chrome (description,
+  how it's made, demo link, the missing control-vault address, three kits really in the
+  repo, the cover); Maria saves it.
+- **Went wrong:** the stage 1 PDF was lost and the dashboard keeps no history; `docs/AUDIT.md`
+  says so and points to the commit that recorded its findings two minutes after it was made.
+  Checking the dashboard reused the tab holding the unsaved project form, which lost the
+  entries; they were filled in again.
