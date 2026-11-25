@@ -190,8 +190,9 @@ Recordings, audio and rendered films are not in git.
   not mocked to true or false. They cover every refusal reason, replay and redirection, key
   rotation, reentrancy, accounting, and the two-vault experiment.
 - **Live testnet.** Both vaults are deployed. `npm run heist` and the site's attack lab were
-  run against them: 17 attempts refused, the control vault paid. The transactions and
-  counters are public on the explorer.
+  run against them. Latest run (25 Nov 2026, the site's lab, recording off): 18 of 18 attacks
+  on the vault refused, 0 QOR lost; the same robbery on the one-lock twin would pay. Recorded
+  attempts and the vault's counters are public on the explorer.
 
 ## Honest limits
 
