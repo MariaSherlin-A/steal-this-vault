@@ -105,8 +105,8 @@ function SceneBody({ id }: { id: FilmScene }) {
           playbackRate={1.4}
           marks={[
             { at: cue("lab", /^eighteen$/), until: sec(7.9), box: [40, 200, 1840, 820], label: "18 real attacks · run live · nothing recorded", tone: "violet" },
-            { at: cue("lab", /^Eighteen$/), until: sec(12.4), box: [50, 96, 1594, 230], label: "18 of 18 refused · 0 QOR lost", tone: "mint", tagSide: "bottom" },
-            { at: sec(12.9), box: [48, 72, 1596, 294], label: "The unprotected twin · same robbery · it pays", tone: "carmine", tagSide: "bottom" },
+            { at: cue("lab", /^Eighteen$/), until: sec(11.1), box: [56, 110, 1808, 262], label: "18 of 18 refused · 0 QOR lost", tone: "mint", tagSide: "bottom" },
+            { at: sec(12.9), box: [56, 83, 1808, 334], label: "The unprotected twin · same robbery · it pays", tone: "carmine", tagSide: "bottom" },
           ]}
         />
       );
@@ -140,7 +140,7 @@ function SceneBody({ id }: { id: FilmScene }) {
           title={[{ text: "Every knock" }, { text: "rings a bell.", accent: true }]}
           marks={[
             { at: cue("watch", /^told$/), until: sec(7.0), box: [56, 110, 600, 352], label: "Warned while the money is safe", tone: "mint", tagSide: "bottom" },
-            { at: sec(8.7), box: [996, 160, 868, 401], label: "The way out · only the owner can do it", tone: "violet", tagSide: "bottom" },
+            { at: sec(8.7), box: [996, 132, 868, 430], label: "The way out · only the owner can do it", tone: "violet", tagSide: "bottom" },
           ]}
         />
       );
@@ -155,7 +155,7 @@ function SceneBody({ id }: { id: FilmScene }) {
           titleFrames={50}
           marks={[
             { at: cue("intruders", /^trail:$/), until: sec(4.5), box: [970, 100, 894, 545], label: "Every thief leaves a trail", tone: "carmine", tagSide: "bottom" },
-            { at: sec(5.2), box: [1003, 345, 828, 112], label: "Where the money went · still in the thief's wallet", tone: "carmine", tagSide: "bottom" },
+            { at: sec(5.2), box: [1003, 322, 828, 124], label: "Where the money went · still in the thief's wallet", tone: "carmine", tagSide: "bottom" },
           ]}
         />
       );
