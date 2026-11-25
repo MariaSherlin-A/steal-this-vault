@@ -11,6 +11,7 @@ import { QDayScene, QuantumScene, LeakScene, WalletScene } from "./scenes/Proble
 import { AttacksScene, ControlScene, DareScene, LocksScene } from "./scenes/Steps";
 import { CloseScene, DrillScene, ProductScene } from "./scenes/Ending";
 import { FILM_FRAMES, Film } from "./film/Film";
+import { Cover } from "./film/Cover";
 
 /** Subtitles of the narration along the bottom, timed to the voice by scripts/timing.mjs. */
 const SHOW_CAPTIONS = !(getInputProps() as { clean?: boolean }).clean;
@@ -170,5 +171,6 @@ export const RemotionRoot: React.FC = () => (
   <>
     <Composition id="Main" component={Main} durationInFrames={TOTAL_FRAMES} fps={FPS} width={W} height={H} />
     <Composition id="Film" component={Film} durationInFrames={FILM_FRAMES} fps={60} width={1920} height={1080} />
+    <Composition id="Cover" component={Cover} durationInFrames={1} fps={60} width={1920} height={1080} />
   </>
 );
