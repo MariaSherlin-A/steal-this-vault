@@ -1,5 +1,5 @@
 /**
- * The narration of the second film, as approved by Maria (docs/film-script.md).
+ * The narration of the second film, as approved by Maria.
  * One line per scene. scripts/voice-film.py voices these and records word timings.
  */
 export const SCENES = ["problem", "qday", "dare", "locks", "replay", "score", "lab", "drill", "watch", "intruders", "close"] as const;

@@ -147,6 +147,7 @@ top of the vault:
 | [web/](web/) | the site (React, Vite, plain CSS) |
 | [spikes/](spikes/) | the first proof scripts, kept as evidence |
 | [docs/](docs/) | architecture, threat model, AI build log |
+| [video/](video/) | the demo film, made from code with Remotion (its own package) |
 
 ## Commands
 
@@ -163,6 +164,24 @@ top of the vault:
 | `npm run watch` | alert the owner on every new attempt, over Telegram or Discord (`--once`, `--dry`) |
 
 Node 20 or newer.
+
+## The demo film
+
+The film (2:48, 1920x1080, 60 fps) is made from code in [video/](video/). Every site shot is a
+real recording of the running site, taken frame by frame. The attack lab was run live, with
+recording off.
+
+1. Run the site (`npm run dev`), then in `video/`:
+   `node --experimental-websocket capture/shots.mjs <site-url>` to record the site shots.
+2. `python scripts/voice-film.py` for the narration, with word timings for the subtitles
+   (needs `edge-tts`).
+3. `node scripts/score-film.mjs`, then `node scripts/mix-film.mjs`: the original score and
+   the final sound mix.
+4. `npx remotion render src/index.ts Film out/film-subtitled-picture.mp4 --muted --gl=angle --crf 16`
+   (add `--props='{"clean":true}'` for the version without subtitles). Then join the picture
+   with `public/music/film-mix.wav` in ffmpeg, at -16 LUFS.
+
+Recordings, audio and rendered films are not in git.
 
 ## How it was tested
 
@@ -197,6 +216,9 @@ Node 20 or newer.
 - Motion on the site: [GSAP](https://gsap.com) with ScrollTrigger and SplitText (GSAP
   standard licence, free), [Lenis](https://lenis.darkroom.engineering) (MIT)
 - Fonts: Archivo, IBM Plex Sans, JetBrains Mono (SIL Open Font License)
+- Film: [Remotion](https://www.remotion.dev), narration by Microsoft Edge's neural voice
+  "Andrew" through [edge-tts](https://github.com/rany2/edge-tts), music composed for the film
+  in code. Photo of IBM Quantum System One by IBM Research, CC BY 2.0
 - Icons: "Sharp Line - Free" by [Streamline](https://www.streamlinehq.com/), CC BY 4.0
 
 ## Licence
