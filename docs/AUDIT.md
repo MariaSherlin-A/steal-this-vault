@@ -6,7 +6,11 @@ again.
 
 ## Stage 1 (15 Nov 2026)
 
-- Report: `QoreChain_Audit_Steal This Vault_1794681090683.pdf`, generated 15 Nov 2026, 00:01
+- Report: `QoreChain_Audit_Steal This Vault_1794681090683.pdf`, generated 15 Nov 2026, 00:01.
+  The PDF file itself was later lost and the dashboard keeps no audit history, so it could not
+  be added to `docs/audit/`. Its full content (score, risk level, every finding with its
+  severity, location and recommendation) was copied into this file two minutes after it was
+  generated, in commit `b502e46` (15 Nov 2026, 00:03 IST).
 - Input: [audit/StealThisVault.flat.sol](audit/StealThisVault.flat.sol) at commit `ce78a3b`:
   `QorePQC.sol`, `HybridAuth.sol` and `Vault.sol` from `contracts/src`, merged in that order,
   OpenZeppelin Contracts 5.6.1 left as imports. This is the source of the deployed vaults.
@@ -63,6 +67,30 @@ the precompile addresses):
   against both vaults).
 - Live: `npm run heist` and the site's attack lab, against the deployed vaults.
 
-## Stage 2
+## Stage 2 (25 Nov 2026)
 
-To be run on the same source after this assessment, and recorded here.
+- Report: [audit/QCAI-stage2-2026-11-25.pdf](audit/QCAI-stage2-2026-11-25.pdf), generated
+  25 Nov 2026, 16:24 IST.
+- Input: the same [audit/StealThisVault.flat.sol](audit/StealThisVault.flat.sol), unchanged
+  since stage 1 (no commit has touched `contracts/src` since `ce78a3b`), with the same
+  setting: Ethereum (EVM/Solidity).
+- Result: score **82/100**, risk MEDIUM, 5 findings: 1 high, 2 medium, 1 low, 1 info. Quantum
+  readiness: "not scored for this setting".
+
+| Severity | Finding | Stage 1 | Stage 2 | Assessment |
+|---|---|---|---|---|
+| High | Missing access control on owner deposit | Vault.sol:173 | Vault.sol:177 | Same finding. By design, as in stage 1. |
+| Medium | Potential overflow in counter updates | Vault.sol:108-110 | Vault.sol:102-109 | Same finding. Not reachable, as in stage 1. |
+| Medium | Front-running in withdrawals | Vault.sol:184 | Vault.sol:196 | Same finding. Stage 2 suggests "timestamp-based validation or commit-reveal". The timestamp check already exists: every signed withdrawal carries a deadline and is refused after it (`Expired`, test `vault.refused` "deadline"). A copy sent first can only make the same payment to the same recipient. |
+| Low | Unbounded loop in `recent()` | Vault.sol:256 | Vault.sol:271 | Same finding, now framed as gas. The loop runs at most 16 times in a `view` function. False positive, as in stage 1. |
+| Info | ERC20 / ERC777 | "consider adding support" | "No ERC compliance required … no changes required" | Stage 2 agrees with the stage 1 assessment. |
+
+**What changed between the stages.** The code did not: every stage 1 finding was assessed as
+by design, unreachable or a false positive, each with the test that covers it, so no fix was
+needed. The auditor's own text moved towards that reading. Its summary now says the contract
+"includes proper reentrancy guards and follows best practices for access control", the info
+finding now says no changes are required, and the quantum score that stage 1 showed as 0% is
+now "not scored for this setting", as the fest's FAQ says to expect on the EVM setting. The
+line numbers differ between runs although the input is the same file, so findings were again
+matched by description. The post-quantum protection the auditor cannot score is described
+above, under "Post-quantum design".

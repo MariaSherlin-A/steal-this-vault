@@ -1,0 +1,666 @@
+%PDF-1.3
+%ºß¬à
+3 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 4 0 R
+>>
+endobj
+4 0 obj
+<<
+/Length 7844
+>>
+stream
+0.5670000000000001 w
+0 G
+BT
+/F1 22 Tf
+25.2999999999999972 TL
+0.063 0.725 0.506 rg
+39.6850393700787407 785.1970866141732586 Td
+(QoreChain AI) Tj
+ET
+BT
+/F1 16 Tf
+18.3999999999999986 TL
+0.157 g
+39.6850393700787407 756.8506299212598378 Td
+(Security Audit Report) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0.392 g
+39.6850393700787407 728.5041732283464171 Td
+(Generated: 11/25/2026, 4:24:28 PM) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0.392 g
+39.6850393700787407 714.3309448818897636 Td
+(Contract Name: Steal This Vault) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0.392 g
+39.6850393700787407 700.15771653543311 Td
+(Blockchain: ethereum) Tj
+ET
+0.78 G
+39.6850393700787407 685.9844881889763428 m
+555.5905511811024553 685.9844881889763428 l
+S
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+39.6850393700787407 657.6380314960629221 Td
+(Audit Overview) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+39.6850393700787407 629.291574803149615 Td
+(Overall Security Score: 82/100) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+39.6850393700787407 615.1183464566928478 Td
+(Risk Level: MEDIUM) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+39.6850393700787407 600.9451181102361943 Td
+(Quantum Readiness: not scored for this setting) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0. g
+39.6850393700787407 586.7718897637794271 Td
+(Total Vulnerabilities: 5) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+39.6850393700787407 544.2522047244094665 Td
+(Executive Summary) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0.235 g
+39.6850393700787407 515.9057480314959321 Td
+(The Steal This Vault contract implements a hybrid authentication system combining classical secp256k1 and) Tj
+T* (post-quantum ML-DSA-87 signatures. It provides a secure mechanism for managing funds with dual-key) Tj
+T* (authorization. The contract includes proper reentrancy guards and follows best practices for access control.) Tj
+T* (However, there are some medium-severity issues related to potential overflow in counters and front-running) Tj
+T* (vulnerabilities in the withdrawal process.) Tj
+ET
+0.78 G
+0.5670000000000001 w
+0.78 G
+0.5670000000000001 w
+0.06 0.73 0.51 rg
+0.78 G
+0. w
+0.06 0.73 0.51 rg
+40. 416.69314960629913 131.2715756033080083 -21.4999999999999964 re
+f
+BT
+/F2 10 Tf
+11.5 TL
+1. g
+45. 403.1931496062991869 Td
+(Vulnerability) Tj
+ET
+0.06 0.73 0.51 rg
+0.78 G
+0. w
+0.06 0.73 0.51 rg
+171.2715756033080083 416.69314960629913 48.6000000000000014 -21.4999999999999964 re
+f
+BT
+/F2 10 Tf
+11.5 TL
+1. g
+176.2715756033080083 403.1931496062991869 Td
+(Severity) Tj
+ET
+0.06 0.73 0.51 rg
+0.78 G
+0. w
+0.06 0.73 0.51 rg
+219.8715756033080027 416.69314960629913 79.4799999999999898 -21.4999999999999964 re
+f
+BT
+/F2 10 Tf
+11.5 TL
+1. g
+224.8715756033080027 403.1931496062991869 Td
+(Location) Tj
+ET
+0.06 0.73 0.51 rg
+0.78 G
+0. w
+0.06 0.73 0.51 rg
+299.3515756033079924 416.69314960629913 255.9284243965625478 -21.4999999999999964 re
+f
+BT
+/F2 10 Tf
+11.5 TL
+1. g
+304.3515756033079924 403.1931496062991869 Td
+(Recommendation) Tj
+ET
+0.78 G
+0.5670000000000001 w
+0.96 g
+0.78 G
+0. w
+0.96 g
+40. 395.1931496062991869 131.2715756033080083 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+45. 382.5431496062992096 Td
+(Missing Access Control on) Tj
+T* (Owner Deposit) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+171.2715756033080083 395.1931496062991869 48.6000000000000014 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+176.2715756033080083 382.5431496062992096 Td
+(HIGH) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+219.8715756033080027 395.1931496062991869 79.4799999999999898 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+224.8715756033080027 382.5431496062992096 Td
+(Vault.sol:177) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+299.3515756033079924 395.1931496062991869 255.9284243965625478 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+304.3515756033079924 382.5431496062992096 Td
+(Add explicit access control to ensure only authorized entities) Tj
+T* (can deposit funds.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+40. 364.4931496062991414 131.2715756033080083 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+45. 351.843149606299221 Td
+(Potential Overflow in Counter) Tj
+T* (Updates) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+171.2715756033080083 364.4931496062991414 48.6000000000000014 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+176.2715756033080083 351.843149606299221 Td
+(MEDIUM) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+219.8715756033080027 364.4931496062991414 79.4799999999999898 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+224.8715756033080027 351.843149606299221 Td
+(Vault.sol:102-109) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+299.3515756033079924 364.4931496062991414 255.9284243965625478 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+304.3515756033079924 351.843149606299221 Td
+(Consider using larger integer types for counters or implement) Tj
+T* (explicit overflow checks.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+40. 333.7931496062991528 131.2715756033080083 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+45. 321.1431496062991755 Td
+(Front-Running Vulnerability in) Tj
+T* (Withdrawal Process) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+171.2715756033080083 333.7931496062991528 48.6000000000000014 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+176.2715756033080083 321.1431496062991755 Td
+(MEDIUM) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+219.8715756033080027 333.7931496062991528 79.4799999999999898 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+224.8715756033080027 321.1431496062991755 Td
+(Vault.sol:196) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+299.3515756033079924 333.7931496062991528 255.9284243965625478 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+304.3515756033079924 321.1431496062991755 Td
+(Implement additional protections such as timestamp-based) Tj
+T* (validation or commit-reveal mechanisms.) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+40. 303.0931496062991641 131.2715756033080083 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+45. 290.44314960629913 Td
+(Unbounded Loop in Recent) Tj
+T* (Function) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+171.2715756033080083 303.0931496062991641 48.6000000000000014 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+176.2715756033080083 290.44314960629913 Td
+(LOW) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+219.8715756033080027 303.0931496062991641 79.4799999999999898 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+224.8715756033080027 290.44314960629913 Td
+(Vault.sol:271) Tj
+ET
+1. g
+0.78 G
+0. w
+1. g
+299.3515756033079924 303.0931496062991641 255.9284243965625478 -30.6999999999999993 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+304.3515756033079924 290.44314960629913 Td
+(Optimize the loop to reduce gas consumption, especially for) Tj
+T* (edge cases.) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+40. 272.3931496062991187 131.2715756033080083 -20.3499999999999979 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+45. 259.7431496062991982 Td
+(No ERC Compliance Required) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+171.2715756033080083 272.3931496062991187 48.6000000000000014 -20.3499999999999979 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+176.2715756033080083 259.7431496062991982 Td
+(INFO) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+219.8715756033080027 272.3931496062991187 79.4799999999999898 -20.3499999999999979 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+224.8715756033080027 259.7431496062991982 Td
+(Vault.sol) Tj
+ET
+0.96 g
+0.78 G
+0. w
+0.96 g
+299.3515756033079924 272.3931496062991187 255.9284243965625478 -20.3499999999999979 re
+f
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.314 g
+304.3515756033079924 259.7431496062991982 Td
+(No changes required as this is a custom vault implementation.) Tj
+ET
+0.78 G
+0.5670000000000001 w
+0.78 G
+0. w
+0.78 G
+0.5670000000000001 w
+0.78 G
+0.5670000000000001 w
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.588 g
+227.5977952755905562 19.8427559055116944 Td
+(Page 1 of 1 - Powered by QoreChain AI) Tj
+ET
+endstream
+endobj
+1 0 obj
+<</Type /Pages
+/Kids [3 0 R ]
+/Count 1
+>>
+endobj
+5 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+6 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+7 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+8 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+9 0 obj
+<<
+/Type /Font
+/BaseFont /Courier
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+10 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+11 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+12 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+13 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Roman
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+14 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+15 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Italic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+16 0 obj
+<<
+/Type /Font
+/BaseFont /Times-BoldItalic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+17 0 obj
+<<
+/Type /Font
+/BaseFont /ZapfDingbats
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+18 0 obj
+<<
+/Type /Font
+/BaseFont /Symbol
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+2 0 obj
+<<
+/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
+/Font <<
+/F1 5 0 R
+/F2 6 0 R
+/F3 7 0 R
+/F4 8 0 R
+/F5 9 0 R
+/F6 10 0 R
+/F7 11 0 R
+/F8 12 0 R
+/F9 13 0 R
+/F10 14 0 R
+/F11 15 0 R
+/F12 16 0 R
+/F13 17 0 R
+/F14 18 0 R
+>>
+/XObject <<
+>>
+>>
+endobj
+19 0 obj
+<<
+/Producer (jsPDF 4.0.0)
+/CreationDate (D:20261125162428+05'30')
+>>
+endobj
+20 0 obj
+<<
+/Type /Catalog
+/Pages 1 0 R
+/OpenAction [3 0 R /FitH null]
+/PageLayout /OneColumn
+>>
+endobj
+xref
+0 21
+0000000000 65535 f 
+0000008048 00000 n 
+0000009865 00000 n 
+0000000015 00000 n 
+0000000152 00000 n 
+0000008105 00000 n 
+0000008230 00000 n 
+0000008360 00000 n 
+0000008493 00000 n 
+0000008630 00000 n 
+0000008753 00000 n 
+0000008882 00000 n 
+0000009014 00000 n 
+0000009150 00000 n 
+0000009278 00000 n 
+0000009405 00000 n 
+0000009534 00000 n 
+0000009667 00000 n 
+0000009769 00000 n 
+0000010113 00000 n 
+0000010199 00000 n 
+trailer
+<<
+/Size 21
+/Root 20 0 R
+/Info 19 0 R
+/ID [ <B02D9394522C567D60791D46F039A5D6> <B02D9394522C567D60791D46F039A5D6> ]
+>>
+startxref
+10303
+%%EOF
