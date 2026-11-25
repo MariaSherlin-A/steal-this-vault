@@ -4,7 +4,7 @@
  * Rereads whenever the vault counters move.
  */
 import { attemptFromJson, attemptToJson, intruderFile, readHistory, type Attempt, type AttemptJson, type IntruderFile, type KnownAccounts } from "@stv/core/history";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { Address } from "viem";
 import { DEPLOYMENT, VAULTS, client } from "./clients";
 import { useChain } from "./useChain";
@@ -62,7 +62,8 @@ export interface HistoryState {
   upTo: bigint | null;
 }
 
-export function useHistory(): HistoryState {
+/** One reader for the whole site, so the history is read once and survives moving between pages. */
+function useHistoryReader(): HistoryState {
   const { block, hybrid, classic } = useChain();
   const [state, setState] = useState<{ attempts: Attempt[]; upTo: bigint | null; failed: boolean }>({ attempts: [], upTo: null, failed: false });
   const busy = useRef(false);
@@ -95,4 +96,17 @@ export function useHistory(): HistoryState {
   const file = useMemo(() => (state.upTo === null ? null : intruderFile(state.attempts, KNOWN)), [state.attempts, state.upTo]);
   const status: HistoryState["status"] = state.upTo !== null ? "live" : state.failed ? "offline" : "loading";
   return { status, attempts: state.attempts, file, upTo: state.upTo };
+}
+
+const HistoryContext = createContext<HistoryState | null>(null);
+
+export function HistoryProvider({ children }: { children: ReactNode }) {
+  const value = useHistoryReader();
+  return <HistoryContext.Provider value={value}>{children}</HistoryContext.Provider>;
+}
+
+export function useHistory(): HistoryState {
+  const value = useContext(HistoryContext);
+  if (!value) throw new Error("useHistory must be used inside <HistoryProvider>");
+  return value;
 }

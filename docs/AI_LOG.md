@@ -254,3 +254,98 @@ that stays on, or a small server); the voiced video; QCAI stage 2.
 - **Verified:** figures re-read with `npm run status` (unchanged: 10.007 QOR held, 5 refused,
   control vault paid 3 times); stills checked across all 13 scenes at half and full size;
   film length 2:44, under the 3 minute limit. Two files: with subtitles, and clean.
+
+## 25 Nov 2026: the Paper & Ink website redesign
+
+- **Asked:** a new site taking UI/UX inspiration from a Webflow fashion template (loader,
+  poster type, full-screen numbered menu, scrolling strips, framed hero, a colour switch), in a
+  new palette, high-end motion, no "AI look", catchier taglines, every feature explained in plain
+  words. Plan first; Maria set it as the goal. GSAP and Lenis installed after she approved.
+- **Did (branch `redesign/paper-ink`):** "Paper & Ink" palette (paper, ink, violet, mint for
+  refused, carmine for robbed), Archivo wide caps, IBM Plex, JetBrains Mono labels. One story
+  page with numbered sections: the key, two locks (pinned scroll: the stolen key opens lock one,
+  lock two refuses), replay, scoreboard (both vaults side by side plus the counterfactual loss),
+  Q-Day drill (Today / Q-Day switch, and the 18 Nov proof payment read back from the chain live:
+  accepted, carries the second signature), alerts and rescue (the watcher's message built from
+  the latest real attempt; side door and rescue amount live). Attack lab, intruders and technical
+  pages kept their logic with new heads. The loader climbs with real steps (fonts, first chain
+  answer) and lets the visitor in after 4.5 s if the chain is slow. Nothing in the reference was
+  copied: code, words and drawings are new.
+- **Went wrong:** the header's class name `.bar` clashed with the scoreboard rows and broke the
+  header; renamed. A difference-blend header turned olive over the violet band; replaced with a
+  header that reads the background under it. The phone Technical page overflowed on long
+  addresses (grid children could not shrink); fixed with `min-width: 0`. "160.1 h ago" became
+  "6.7 days ago". Screenshot tool: Chrome headless driven over the DevTools protocol from Node.
+- **Verified:** `npm run check` green; `vite build` ok; screenshots of every section at 1440 and
+  390, no horizontal overflow at either width. Not pushed, not deployed.
+- **Found later the same day:** a fresh full screenshot pass showed the alert card empty and the
+  intruder page stuck loading. Cause: the replay, scoreboard and alert sections each ran their own
+  full history read (three heavy log reads at once on a first visit), and changing page started
+  another. Fixed with one shared `HistoryProvider`; the pages also say what they are loading.
+  Verified on a fresh browser profile: home loads its history, then the intruder page opens with
+  both cards at once. One live attack run from the lab with recording off: refused by the chain.
+
+## 25 Nov 2026: clearer site after Maria's review
+
+- **Asked:** after reviewing the site, Maria found the intruder page hard to read, "No catch"
+  unclear, the locks scene tied to scrolling, the replay slow, the drill win under-sold, the alert
+  card too small, and the lab's one "Would pay" confusing. She also asked whether the honest
+  limits belong on the site, and what would make the project more useful.
+- **Did:** a new attack, `vault-twin-robbery`, makes the exact robbery that empties the one-lock
+  twin against the two-lock vault (in the shared list, so `npm run heist` has it too). The lab
+  scorecard now counts the vault alone, "18 of 18 refused · 0 QOR lost", with the twin shown as a
+  labelled comparison. A "Survived Q-Day" banner finds the drill's 24 hours as a block range from
+  block times and counts the vault's record in it. Intruder cards lead with one plain sentence and
+  a tally. The locks scene plays by itself; the replay runs twice as fast with verdict stamps.
+  Every section intro rewritten. Limits stay on the Technical page, each with how it is handled,
+  plus a short "use the second lock in your own app" section pointing at HybridAccount.sol.
+- **Verified live (recording off):** the new attack is refused by the vault (PqSignatureMalformed)
+  while the twin would pay; the lab run reads 18 of 18 refused, 0 QOR lost; the drill range is
+  blocks 10,284,029-10,344,546 with 0 thefts, 0 QOR lost, owner in. `npm run check` green;
+  screenshots of every changed section at 1440 and 390, no horizontal overflow.
+- **Went wrong:** "SURVIVED Q-DAY" broke at its hyphen, and the replay stamp covered the vault's
+  name; fixed with a non-breaking hyphen and by centring the stamp on the door. The lock labels
+  were unreadable on phones; a legend replaces them there.
+- **Noticed:** the side door (EVM window) was shut during this session, so the keeper had not
+  renewed it. Renewing signs with the mnemonic, so it is Maria's step.
+
+## 25 Nov 2026: the second film, recorded from the live site
+
+- **Asked:** a new demo film (under 3 minutes) recorded from the Paper & Ink site, in its palette,
+  explaining every section and the project's unique details, opening with the real problem
+  (illustrations plus open-licence images, statistics only with a source), voiced by Edge
+  "Andrew", high quality at 60 fps; script shown to Maria and approved before voicing.
+- **Did:** a frame-exact recorder (video/capture/rec60.mjs) drives Chrome's headless shell one
+  frame at a time, so site animations come out perfectly smooth at 60 fps while live chain reads
+  arrive in real time. Every site shot is scripted (capture/shots.mjs); the attack lab ran all 19
+  attacks live with recording off: 18 of 18 refused, 0 QOR lost, the twin would pay. Scene 1 is
+  drawn in code (phishing, malware, a careless backup, the public ledger) with Chainalysis's
+  $3.4B (2025) figure and its source on screen; scene 2 uses one photo, IBM Quantum System One
+  by IBM Research (CC BY 2.0), downloaded with Maria's permission and credited. Voice with word
+  timings (scripts/voice-film.py), an original score to the same timings, word-lit subtitles.
+- **Went wrong, and fixed:** the recorder first stalled waiting on Chrome's virtual-time signal;
+  count-ups showed negative numbers because animation timestamps and the page clock disagreed
+  (fixed by handing animation callbacks the page clock); every CSS transition was frozen because
+  frame times started before the page's animation origin (fixed by raising the start). Clips first
+  began under the opening loader, so the recorder now lets it finish off camera. The replay on the
+  site cycled through the owner's own withdrawals, which contradicted "Watch them fail": the site
+  now replays only break-in attempts (same rule as the alerts).
+
+## 25 Nov 2026 (later): film fixes and getting ready to submit
+
+- **Asked:** Maria checked the film in VLC and found four callout boxes that did not fit their
+  panels (the lab's result panel and twin panel, the rescue steps, the money trail); then:
+  commit the site and the film without the film script, show the file list before anything
+  goes to GitHub, and prepare the submission (QCAI stage 2, dashboard text, a rules check).
+- **Did:** measured the four panels in the raw recordings and checked frame by frame that they
+  hold still while each box shows; the lab's result box now also leaves before the page
+  scrolls. Re-rendered both versions and checked the four moments in the final file.
+  Took `docs/film-script.md` out of git (kept locally) and moved the film's build steps and
+  credits into the README. Read the fest's official rules, prizes and FAQ, and added the
+  "post-quantum design" section the FAQ asks for to `docs/AUDIT.md` (where `pqcVerify` and
+  `pqcKeyStatus` are called, what each protects, which tests cover it). Updated the README's
+  live result from 17 refused to the latest 18 of 18. Drafted the dashboard and YouTube text.
+- **Went wrong, and fixed:** the first lab boxes had been placed by estimate, not measured,
+  which is why they missed. The checklist Maria pasted turned out to be from the QNX hackathon
+  (her other entry); the fest's own rules were used instead. The stage 1 audit PDF is not in
+  the repo, which the FAQ requires; Maria is to add it with the stage 2 report.

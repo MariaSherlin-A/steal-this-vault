@@ -12,6 +12,7 @@ import { blocksAgo, plural, qor, short, uqorToQor } from "../lib/format";
 import { useChain } from "../lib/useChain";
 import { useHistory } from "../lib/useHistory";
 import { Addr, Ext, Reveal, Skeleton } from "./ui";
+import { Head } from "./Poster";
 
 function methodText(method: Method): string {
   return method === "Robbed" ? "Robbed the one-lock vault." : REFUSAL_TEXT[method].plain;
@@ -101,69 +102,91 @@ function MoneyTrail({ intruder }: { intruder: Intruder }) {
   );
 }
 
+/** The card's opening line: what this wallet did, in one plain sentence. */
+function story(i: Intruder): string {
+  const tries = plural(i.attempts.length, "time");
+  const key = i.withPublishedKey === i.attempts.length ? ", every time with the published key" : i.withPublishedKey > 0 ? `, ${i.withPublishedKey} of them with the published key` : "";
+  const who = i.label === null ? "A stranger" : "The project's own test account";
+  const refused = i.refused > 0 ? ` The vaults refused ${i.refused === i.attempts.length ? "every one" : plural(i.refused, "try", "tries")}.` : "";
+  const took =
+    i.robbed > 0
+      ? ` The only thing taken was ${qor(i.tookWei)} QOR, from the unprotected one-lock twin; the two-lock vault gave nothing.`
+      : " Nothing was taken.";
+  return `${who} tried ${tries}${key}.${refused}${took}`;
+}
+
 function IntruderCard({ intruder, block, delay }: { intruder: Intruder; block: bigint; delay: number }) {
   const methods = Object.entries(intruder.methods) as [Method, number][];
   const stranger = intruder.label === null;
   return (
     <Reveal className={intruder.robbed > 0 ? "panel intruder intruder--robbed" : "panel intruder"} delay={delay}>
       <header className="intruder-head">
-        <div>
-          <p className="eyebrow">{stranger ? "Stranger" : "Known"}</p>
-          <h3>
-            <Addr value={intruder.address} />
-          </h3>
-          <p className="intruder-sub">{intruder.label ?? "Where this intruder wanted the money sent."}</p>
-        </div>
-        <div className="intruder-count">
-          <strong>{intruder.attempts.length}</strong>
-          <span>{plural(intruder.attempts.length, "attempt").replace(/^\d+ /, "")}</span>
-        </div>
+        <span className={`intruder-tag ${stranger ? "intruder-tag--stranger" : ""}`}>{stranger ? "Stranger" : "Known"}</span>
+        <Addr value={intruder.address} />
       </header>
 
-      <dl className="kv">
-        <dt>Seen</dt>
-        <dd>
-          {blocksAgo(intruder.firstBlock, block) === blocksAgo(intruder.lastBlock, block)
-            ? blocksAgo(intruder.lastBlock, block)
-            : `${blocksAgo(intruder.firstBlock, block)} to ${blocksAgo(intruder.lastBlock, block)}`}
-        </dd>
-        <dt>Wanted</dt>
-        <dd>{intruder.refused > 0 ? `${qor(intruder.wantedWei)} QOR over ${plural(intruder.refused, "refused attempt")}` : "nothing was refused"}</dd>
-        <dt>Took</dt>
-        <dd className={intruder.robbed > 0 ? "took" : undefined}>
-          {intruder.robbed > 0 ? `${qor(intruder.tookWei)} QOR from the one-lock vault, ${plural(intruder.robbed, "robbery", "robberies")}` : "nothing"}
-        </dd>
-        <dt>Published key</dt>
-        <dd>{intruder.withPublishedKey > 0 ? `used in ${plural(intruder.withPublishedKey, "attempt")}` : "not used"}</dd>
-        <dt>Sent from</dt>
-        <dd>
-          {intruder.callers.map((c, i) => (
-            <span key={c}>
-              {i > 0 ? ", " : ""}
-              <Addr value={c} />
-            </span>
-          ))}
-        </dd>
-      </dl>
+      <p className="intruder-story">{story(intruder)}</p>
 
-      <h4>Methods</h4>
-      <ul className="methods">
-        {methods.map(([m, n]) => (
-          <li key={m} className={m === "Robbed" ? "method method--robbed" : "method"}>
-            <span>{methodText(m)}</span>
-            <strong>{n}</strong>
-          </li>
-        ))}
-      </ul>
+      <dl className="intruder-tally">
+        <div>
+          <dt>Tries</dt>
+          <dd>{intruder.attempts.length}</dd>
+        </div>
+        <div className="is-held">
+          <dt>Refused</dt>
+          <dd>{intruder.refused}</dd>
+        </div>
+        <div className={intruder.robbed > 0 ? "is-took" : undefined}>
+          <dt>Taken</dt>
+          <dd>
+            {intruder.robbed > 0 ? qor(intruder.tookWei) : "0"} <small>QOR</small>
+          </dd>
+          {intruder.robbed > 0 ? <p>from the one-lock twin, not the vault</p> : null}
+        </div>
+      </dl>
 
       {stranger ? (
         <>
-          <h4>The money</h4>
+          <h4>Where the money went</h4>
           <MoneyTrail intruder={intruder} />
         </>
       ) : (
-        <p className="trail-note">One of the project's own accounts, used in rehearsals. Nothing to follow.</p>
+        <p className="trail-note">Used by the project in rehearsals, so there is no money to follow.</p>
       )}
+
+      <details className="intruder-details">
+        <summary>Details</summary>
+        <dl className="kv">
+          <dt>Seen</dt>
+          <dd>
+            {blocksAgo(intruder.firstBlock, block) === blocksAgo(intruder.lastBlock, block)
+              ? blocksAgo(intruder.lastBlock, block)
+              : `${blocksAgo(intruder.firstBlock, block)} to ${blocksAgo(intruder.lastBlock, block)}`}
+          </dd>
+          <dt>Wanted</dt>
+          <dd>{intruder.refused > 0 ? `${qor(intruder.wantedWei)} QOR over ${plural(intruder.refused, "refused attempt")}` : "nothing was refused"}</dd>
+          <dt>Published key</dt>
+          <dd>{intruder.withPublishedKey > 0 ? `used in ${plural(intruder.withPublishedKey, "attempt")}` : "not used"}</dd>
+          <dt>Sent from</dt>
+          <dd>
+            {intruder.callers.map((c, i) => (
+              <span key={c}>
+                {i > 0 ? ", " : ""}
+                <Addr value={c} />
+              </span>
+            ))}
+          </dd>
+        </dl>
+        <h4>How each try failed</h4>
+        <ul className="methods">
+          {methods.map(([m, n]) => (
+            <li key={m} className={m === "Robbed" ? "method method--robbed" : "method"}>
+              <span>{methodText(m)}</span>
+              <strong>{n}</strong>
+            </li>
+          ))}
+        </ul>
+      </details>
     </Reveal>
   );
 }
@@ -174,22 +197,27 @@ export function Intruders() {
   const strangers = file?.intruders.filter((i) => i.label === null).length ?? 0;
 
   return (
-    <section className="section" id="intruders">
+    <section className="sec sec--paper intrsec" id="intruders">
       <div className="wrap">
-        <Reveal className="section-head">
-          <p className="eyebrow">Attacker profiles</p>
-          <h2>Every thief leaves a trail.</h2>
-          <p className="section-lead">
-            A stolen key is not just a loss. Each attempt tells the vault where the thief wanted the money sent, and the chain
-            remembers who funded that wallet and where the money went next. This page reads all of it back, from the day the
-            vaults were built.
-          </p>
-        </Reveal>
+        <Head
+          n="08"
+          file="INTRUDERS.DB"
+          lines={["Thieves leave", <em key="f">footprints.</em>]}
+          lead="Every wallet that came for the money: what it tried, what it got, and where its money went next. Read from the chain, from the day the vaults were built."
+        />
 
         {file === null || block === null ? (
           <Reveal className="panel">
             <p>
-              {status === "offline" ? "The attempt history could not be read just now." : <Skeleton width="100%" />}
+              {status === "offline" ? (
+                "The attempt history could not be read just now."
+              ) : (
+                <>
+                  <span className="muted">Reading every attempt since the vaults were built, straight from the chain. A first visit takes a little while; after that this browser remembers.</span>
+                  <br />
+                  <Skeleton width="100%" />
+                </>
+              )}
             </p>
           </Reveal>
         ) : file.intruders.length === 0 ? (
@@ -199,11 +227,22 @@ export function Intruders() {
         ) : (
           <>
             <Reveal className="file-summary">
-              <p>
-                <strong>{plural(file.intruders.length, "wallet")}</strong> came for the money, {strangers === file.intruders.length ? "all" : strangers} of them
-                strangers. The owner's own {plural(file.ownerWithdrawals, "withdrawal")} from the two-lock vault and{" "}
-                {plural(file.ownerCleanouts, "clean-out")} of the bait money are not thefts and are left out.
-                {upTo ? <span className="file-upto"> Complete to block {upTo.toLocaleString("en-US")}.</span> : null}
+              <p className="file-big">
+                <strong>{plural(file.intruders.length, "wallet")}</strong> came for the money.{" "}
+                <strong>{strangers}</strong> {strangers === 1 ? "was a stranger" : "were strangers"}.
+              </p>
+              <ul className="file-legend">
+                <li>
+                  <span className="intruder-tag intruder-tag--stranger">Stranger</span> a wallet nobody in this project owns: a real outsider.
+                </li>
+                <li>
+                  <span className="intruder-tag">Known</span> one of the project&rsquo;s own accounts, used to test the vault.
+                </li>
+              </ul>
+              <p className="file-upto">
+                Not counted: the owner&rsquo;s own {plural(file.ownerWithdrawals, "withdrawal")} (signed with both keys) and{" "}
+                {plural(file.ownerCleanouts, "time")} the owner took the bait money back.
+                {upTo ? ` Complete to block ${upTo.toLocaleString("en-US")}.` : ""}
               </p>
             </Reveal>
             <div className="intruders">

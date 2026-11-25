@@ -26,7 +26,8 @@ export function blocksToDuration(blocks: bigint): string {
   const seconds = Number(blocks) * SECONDS_PER_BLOCK;
   if (seconds < 90) return `${Math.round(seconds)} s`;
   if (seconds < 5400) return `${Math.round(seconds / 60)} min`;
-  return `${(seconds / 3600).toFixed(1)} h`;
+  if (seconds < 172_800) return `${(seconds / 3600).toFixed(1)} h`;
+  return `${(seconds / 86_400).toFixed(1)} days`;
 }
 
 /** "12 s ago", "3 min ago", "2 h ago", from a block number relative to the current one. */

@@ -71,3 +71,37 @@ export type { Trail };
 export function followTrail(wallet: Address, sinceBlock: bigint): Promise<Trail> {
   return followMoney(lane, nativeAddress(wallet), { sinceHeight: sinceBlock });
 }
+
+// ---------------------------------------------------------------- the drill proof
+
+/** What the chain says about the drill-day proof payment, read live. Null when the node does not have it. */
+export interface Proof {
+  height: bigint;
+  accepted: boolean;
+  time: string;
+  /** Whether the transaction carries the second, post-quantum signature. */
+  twoSignatures: boolean;
+  uqor: bigint;
+  to: string;
+}
+
+export async function readProof(hash: string): Promise<Proof | null> {
+  const found = await lane.tx(hash);
+  const r = found?.tx_response;
+  if (!found || !r) return null;
+  const body = (found.tx?.body ?? {}) as {
+    messages?: { amount?: { amount: string }[]; to_address?: string }[];
+    extension_options?: { "@type"?: string }[];
+    non_critical_extension_options?: { "@type"?: string }[];
+  };
+  const ext = [...(body.extension_options ?? []), ...(body.non_critical_extension_options ?? [])];
+  const msg = body.messages?.[0];
+  return {
+    height: BigInt(r.height ?? "0"),
+    accepted: Number(r.code) === 0,
+    time: String((r as { timestamp?: string }).timestamp ?? ""),
+    twoSignatures: ext.some((e) => (e["@type"] ?? "").includes("PQCHybridSignature")),
+    uqor: BigInt(msg?.amount?.[0]?.amount ?? "0"),
+    to: msg?.to_address ?? "",
+  };
+}

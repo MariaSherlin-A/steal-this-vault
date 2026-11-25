@@ -33,6 +33,36 @@ auditor returns no value for it, so we read it as missing, not as a result.
 are. That keeps the public record of attempts intact and keeps the address registered for the
 Q-Day Drill valid.
 
+## Post-quantum design
+
+The auditor's EVM setting cannot see QoreChain's precompiles, so this is where the vault's
+post-quantum protection is, and which tests cover it.
+
+| Where | What it does | What it protects |
+|---|---|---|
+| `QorePQC.keyOf` (`QorePQC.sol`) | calls `pqcKeyStatus(address)` at `0x…0A02` and decodes the owner's registered ML-DSA-87 key | the vault never stores a key of its own: it always checks against the key the chain has on record for the owner, so a key rotation on chain applies at once |
+| `QorePQC.isUsable` | accepts only a registered ML-DSA-87 key with proof of possession | a missing, unproven or wrong-algorithm key fails closed (`PqKeyUnavailable`), never open |
+| `QorePQC.verify` | calls `pqcVerify(bytes,bytes,bytes)` at `0x…0A01` | anything other than a well-formed `true` counts as a failed check |
+| `HybridAuth._postQuantumLayer` | checks the signature length, then verifies it over `hybridSignBytes`, which binds the intent to the chain id and the vault | a signature for another amount, recipient, nonce, deadline, vault or chain is refused |
+| `Vault._judge` | order: deadline, nonce, classical key, then post-quantum (only in the two-lock vault) | the published classical key alone ends at `PqSignatureMalformed` or `PqSignatureInvalid`; no money moves |
+
+On top of the contract, the owner account sends EVM transactions only through a **scoped EVM
+window** limited to the two vaults, renewed by the keeper. Outside it, the chain refuses
+the published key before the vault is reached.
+
+Tests (`contracts/test`, run on a local EVM that executes a real ML-DSA-87 implementation at
+the precompile addresses):
+
+- `vault.refused` "post-quantum layer": no signature, wrong length, zeros, one flipped bit,
+  the thief's own ML-DSA-87 key, the thief registering a key on their own account, the
+  owner's real signature for a different amount, recipient, nonce or deadline.
+- `vault.refused` "fail closed": every way the owner's key can be unreadable, and the verify
+  precompile not being active, even with the owner's real signature.
+- `vault.refused` "domain separation" and "order of checks"; `vault.rotation` (key rotation);
+  `vault.property` (random tamperings of a valid withdrawal); `experiment` (the same key
+  against both vaults).
+- Live: `npm run heist` and the site's attack lab, against the deployed vaults.
+
 ## Stage 2
 
 To be run on the same source after this assessment, and recorded here.

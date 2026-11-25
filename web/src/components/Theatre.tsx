@@ -4,6 +4,7 @@
  * Nothing here is invented: every step comes from an attempt logged on chain.
  */
 import { explorer } from "@stv/core/chain";
+import { worthAlerting } from "@stv/core/alerts";
 import { fingerprint, labelFor, sortAttempts, type Attempt } from "@stv/core/history";
 import { REFUSAL_TEXT } from "@stv/core/refusal";
 import { useEffect, useMemo, useState } from "react";
@@ -11,13 +12,14 @@ import { blocksAgo, qor, short } from "../lib/format";
 import { useChain } from "../lib/useChain";
 import { KNOWN, useHistory } from "../lib/useHistory";
 import { KeyIcon, LockIcon, LockShieldIcon } from "./icons";
-import { Ext, Live, Reveal, Skeleton } from "./ui";
+import { Head } from "./Poster";
+import { Ext, Live, Skeleton } from "./ui";
 
 const same = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
 const REEL = 14;
 /** When each phase starts, in ms: the key flies in, lock one answers, lock two answers, the verdict. */
-const PHASES = [0, 1000, 1900, 2800];
-const STEP = 5200;
+const PHASES = [0, 450, 900, 1350];
+const STEP = 2700;
 
 type LockState = "idle" | "pass" | "fail";
 type Verdict = "refused" | "owner" | "reset" | "rehearsal" | "robbed";
@@ -101,6 +103,11 @@ function VaultStage({
             <KeyIcon size={20} />
           </span>
         ) : null}
+        {verdict ? (
+          <span className={`th-stamp th-stamp--${verdict === "refused" ? "held" : verdict === "owner" || verdict === "reset" ? "owner" : "robbed"}`}>
+            {verdict === "refused" ? "Refused" : verdict === "owner" ? "Paid to owner" : verdict === "reset" ? "Owner took it back" : "Robbed"}
+          </span>
+        ) : null}
         <span className="th-coins">
           <i />
           <i />
@@ -123,7 +130,8 @@ function VaultStage({
 export function Theatre() {
   const { hybrid, classic, block } = useChain();
   const { attempts, status } = useHistory();
-  const reel = useMemo(() => sortAttempts(attempts).slice(-REEL).map(scene), [attempts]);
+  // Only break-in attempts: the owner's own withdrawals and bait clean-ups are not attacks (the same rule the alerts use).
+  const reel = useMemo(() => sortAttempts(attempts).filter((a) => worthAlerting(a, KNOWN)).slice(-REEL).map(scene), [attempts]);
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState(0);
 
@@ -138,21 +146,29 @@ export function Theatre() {
   const a = current?.attempt;
 
   return (
-    <section className="section theatre" id="replay">
-      <div className="wrap">
-        <Reveal className="section-head">
-          <p className="eyebrow">Watch it happen</p>
-          <h2>Every attempt, played back.</h2>
-          <p className="section-lead">
-            These are the latest real attempts on the two vaults, replayed from the record the vaults keep on the chain. Watch the
-            stolen key open the first lock every time, and the second lock hold.
-          </p>
-        </Reveal>
-
-        <Reveal className="th-stage">
+    <section className="sec sec--ink theatre" id="replay">
+      <Head
+        n="03"
+        file="REPLAY.LOG"
+        lines={["Watch them", <em key="f">fail.</em>]}
+        lead="Real break-in attempts on both vaults, replayed from the record the vaults keep on the chain. The stolen key opens the first lock every time. The second lock refuses it."
+      />
+      <div className="th-wrap">
+        <p className="th-target" aria-live="polite">
+          {current ? (
+            <>
+              <span className="micro">Now attacking</span>
+              <b>{current.vault === "hybrid" ? "The vault · two locks" : "The one-lock twin · comparison"}</b>
+              <span aria-hidden>{current.vault === "hybrid" ? "←" : "→"}</span>
+            </>
+          ) : (
+            <span className="micro">Waiting for the record</span>
+          )}
+        </p>
+        <div className="th-stage">
           <VaultStage kind="hybrid" balance={hybrid ? qor(hybrid.stats.balance) : null} current={current} phase={phase} />
           <VaultStage kind="classic" balance={classic ? qor(classic.stats.balance) : null} current={current} phase={phase} />
-        </Reveal>
+        </div>
 
         <div className="th-caption" aria-live="polite">
           {current && a && block !== null ? (
@@ -181,7 +197,7 @@ export function Theatre() {
                 ))}
               </ol>
               <span>
-                Replay of the {reel.length} latest real attempts · <a href="#lab">try your own</a>
+                Replay of the {reel.length} latest real break-in attempts · <a href="#lab">try your own</a>
               </span>
             </div>
           ) : null}

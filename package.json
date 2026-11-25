@@ -29,7 +29,7 @@
     "intruders": "npm run intruders -w cli --",
     "watch": "npm run watch -w keeper --",
     "video:timing": "npm run timing --prefix video",
-    "video": "npm run render --prefix video"
+    "video": "npm run film --prefix video"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",

@@ -1,77 +1,22 @@
-/** How it works in plain words, the technical details for people who want them, and the footer. */
-import { ML_DSA_87, PQC_KEY_STATUS_ADDRESS, PQC_VERIFY_ADDRESS, TESTNET } from "@stv/core/chain";
+/** 09: the technical details, for people who want to check. */
+import { ML_DSA_87, PQC_KEY_STATUS_ADDRESS, PQC_VERIFY_ADDRESS, TESTNET, explorer } from "@stv/core/chain";
 import { DEPLOYMENT, OWNER, REPO_URL, VAULTS } from "../lib/clients";
 import { blocksToDuration, uqorToQor } from "../lib/format";
 import { useChain } from "../lib/useChain";
-import { ClockIcon, CodeIcon, KeyIcon, LockShieldIcon, VaultIcon } from "./icons";
 import { Addr, Ext, Reveal, Skeleton } from "./ui";
-
-const STEPS = [
-  {
-    Icon: KeyIcon,
-    title: "Every account has an ordinary key",
-    text: "It is the same kind of key that guards almost all crypto today. Whoever holds it can sign for the account. Here, everybody holds it.",
-  },
-  {
-    Icon: LockShieldIcon,
-    title: "This account added a second lock",
-    text: "The owner registered a second key of a newer kind, built to stay safe even against quantum computers. From that moment the chain refuses anything from the account that is not signed with both.",
-  },
-  {
-    Icon: VaultIcon,
-    title: "The vault checks for itself, too",
-    text: "Even when the owner opens the side door that ordinary wallets use, the vault asks the chain to check the second signature on every single withdrawal. No second signature, no money.",
-  },
-] as const;
-
-export function HowItWorks() {
-  return (
-    <section className="section" id="how">
-      <div className="wrap">
-        <Reveal className="section-head">
-          <p className="eyebrow">How it works</p>
-          <h2>One key was never meant to be enough.</h2>
-        </Reveal>
-        <ol className="steps">
-          {STEPS.map(({ Icon, title, text }, i) => (
-            <li key={title}>
-              <Reveal delay={i * 90} className="step">
-                <span className="step-n">{i + 1}</span>
-                <Icon size={22} className="step-icon" />
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </Reveal>
-            </li>
-          ))}
-        </ol>
-        <Reveal className="qday">
-          <ClockIcon size={22} />
-          <div>
-            <h3>Why this matters: Q-Day</h3>
-            <p>
-              A large enough quantum computer could work out an ordinary private key from information that is already public. The day
-              that becomes practical is called Q-Day, and on that day every ordinary key is, in effect, published. This page skips the
-              wait: the key is published now, and the money is still here.
-            </p>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
+import { Head } from "./Poster";
 
 export function Technical() {
   const { door, ownerLiquidUqor } = useChain();
   return (
-    <section className="section section--technical" id="technical">
+    <section className="sec sec--ink techsec" id="technical">
       <div className="wrap">
-        <Reveal className="section-head">
-          <p className="eyebrow">
-            <CodeIcon size={14} /> Technical specs
-          </p>
-          <h2>For people who want to check.</h2>
-          <p className="section-lead">Everything above, in the terms a developer or a judge would use. All of it is verifiable from the links.</p>
-        </Reveal>
+        <Head
+          n="09"
+          file="TECHNICAL.MD"
+          lines={["For the", <em key="s">sceptics.</em>]}
+          lead="How the two locks are built, where every piece lives on the chain, and how to check each claim on this site yourself."
+        />
 
         <div className="tech">
           <Reveal className="panel">
@@ -102,9 +47,17 @@ export function Technical() {
                 <span className="mono">pqcVerify</span> at <span className="mono">{PQC_VERIFY_ADDRESS}</span>,{" "}
                 <span className="mono">pqcKeyStatus</span> at <span className="mono">{PQC_KEY_STATUS_ADDRESS}</span>
               </dd>
+              <dt>Drill proof</dt>
+              <dd>
+                Native <span className="mono">MsgSend</span> of 0.01 QOR, owner to hybrid vault, with the{" "}
+                <span className="mono">PQCHybridSignature</span> extension, 18 Nov 2026:{" "}
+                <Ext href={explorer.tx("860064E01688CBCD7EF3D4D699BB8741DF4BD8894594EF2A0E6CE0A621A192AC")} className="mono">
+                  860064E0…A192AC
+                </Ext>
+              </dd>
               <dt>Source</dt>
               <dd>
-                <Ext href={REPO_URL}>The repository</Ext>: contracts, attack runner, keeper, this site. MIT licence.
+                <Ext href={REPO_URL}>The repository</Ext>: contracts, attack runner, keeper, this site. MIT licence. <mark className="hl">The second lock is built as a reusable contract, so other apps on QoreChain could adopt it.</mark>
               </dd>
             </dl>
           </Reveal>
@@ -173,43 +126,41 @@ export function Technical() {
             <pre className="code">
               <code>{`git clone ${REPO_URL}\ncd steal-this-vault && npm install\nnpm run heist     # every attack, from your terminal\nnpm run status    # both vaults and the window, read from the chain\nnpm run check     # contracts, types, lint, tests`}</code>
             </pre>
-            <h3>Honest limits</h3>
-            <ul className="limits">
-              <li>Testnet only. The two precompiles exist on the testnet and not yet on mainnet.</li>
-              <li>
-                It shows that the classical key alone is not enough. It does not test ML-DSA-87 against a real quantum computer; that
-                rests on the NIST standard (FIPS 204).
-              </li>
-              <li>
-                Recorded attempts spend the owner’s fee allowance inside the window. A visitor can use it up; the vault’s money is not
-                at risk, and the lab then checks attempts without writing them.
-              </li>
-              <li>
-                If the keeper stops, the window closes. The vault gets harder to reach, not easier, but vault-level attempts are then
-                refused earlier, by the chain.
-              </li>
-              <li>Both of the owner’s keys derive from one mnemonic. A leak of that mnemonic would defeat the vault.</li>
-            </ul>
+            <h3>Known limits and how we handle them</h3>
+            <dl className="limits2">
+              <dt>Testnet only</dt>
+              <dd>
+                The two signature checkers (<span className="mono">pqcVerify</span>, <span className="mono">pqcKeyStatus</span>) exist on the
+                QoreChain testnet, not yet on mainnet. <b>Handled:</b> the contracts reach them through one small library that fails
+                closed: if a checker is missing or answers oddly, the vault refuses. It can lock up, it can never pay out wrongly.
+              </dd>
+              <dt>No real quantum computer</dt>
+              <dd>
+                This proves the stolen ordinary key is useless on its own; it does not attack ML-DSA-87 with a quantum computer.{" "}
+                <b>Handled:</b> the second key is ML-DSA-87 at its highest level, the NIST standard FIPS 204, the scheme the chain
+                itself uses.
+              </dd>
+              <dt>Visitors can use up the fee allowance</dt>
+              <dd>
+                Recorded attempts spend the owner&rsquo;s fee allowance inside the side-door window. <b>Handled:</b> the window caps
+                transactions and fees, the money is never at risk, the lab then checks attempts live without writing them, and the keeper
+                renews the allowance.
+              </dd>
+              <dt>The keeper</dt>
+              <dd>
+                A scheduled job renews the side door. <b>Handled:</b> if it stops, the door closes, so the vault gets harder to reach,
+                not easier; the owner can still act with both keys on the native lane.
+              </dd>
+              <dt>One mnemonic</dt>
+              <dd>
+                Both of the owner&rsquo;s keys come from one mnemonic, so a leak of it would defeat the vault. <b>Handled:</b> it lives
+                only in a local secret file and the CI secret store, never on this site, and the rescue command moves everything to a
+                fresh account with its own second lock.
+              </dd>
+            </dl>
           </Reveal>
         </div>
       </div>
     </section>
-  );
-}
-
-export function Footer() {
-  return (
-    <footer className="footer">
-      <div className="wrap footer-row">
-        <p>
-          <strong>Steal This Vault</strong> · built for Build Before Q-Day, the QoreChain Developer Fest. Testnet only; testnet QOR has no
-          money value.
-        </p>
-        <p>
-          <Ext href={REPO_URL}>Source code</Ext> · MIT licence · Icons by{" "}
-          <Ext href="https://www.streamlinehq.com/">Streamline</Ext> (Sharp Line, CC BY 4.0)
-        </p>
-      </div>
-    </footer>
   );
 }

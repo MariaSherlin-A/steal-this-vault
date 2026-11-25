@@ -147,6 +147,7 @@ top of the vault:
 | [web/](web/) | the site (React, Vite, plain CSS) |
 | [spikes/](spikes/) | the first proof scripts, kept as evidence |
 | [docs/](docs/) | architecture, threat model, AI build log |
+| [video/](video/) | the demo film, made from code with Remotion (its own package) |
 
 ## Commands
 
@@ -164,6 +165,24 @@ top of the vault:
 
 Node 20 or newer.
 
+## The demo film
+
+The film (2:48, 1920x1080, 60 fps) is made from code in [video/](video/). Every site shot is a
+real recording of the running site, taken frame by frame. The attack lab was run live, with
+recording off.
+
+1. Run the site (`npm run dev`), then in `video/`:
+   `node --experimental-websocket capture/shots.mjs <site-url>` to record the site shots.
+2. `python scripts/voice-film.py` for the narration, with word timings for the subtitles
+   (needs `edge-tts`).
+3. `node scripts/score-film.mjs`, then `node scripts/mix-film.mjs`: the original score and
+   the final sound mix.
+4. `npx remotion render src/index.ts Film out/film-subtitled-picture.mp4 --muted --gl=angle --crf 16`
+   (add `--props='{"clean":true}'` for the version without subtitles). Then join the picture
+   with `public/music/film-mix.wav` in ffmpeg, at -16 LUFS.
+
+Recordings, audio and rendered films are not in git.
+
 ## How it was tested
 
 - **Unit tests** (`npm test`). The contract tests run on a local EVM that executes a real
@@ -171,8 +190,9 @@ Node 20 or newer.
   not mocked to true or false. They cover every refusal reason, replay and redirection, key
   rotation, reentrancy, accounting, and the two-vault experiment.
 - **Live testnet.** Both vaults are deployed. `npm run heist` and the site's attack lab were
-  run against them: 17 attempts refused, the control vault paid. The transactions and
-  counters are public on the explorer.
+  run against them. Latest run (25 Nov 2026, the site's lab, recording off): 18 of 18 attacks
+  on the vault refused, 0 QOR lost; the same robbery on the one-lock twin would pay. Recorded
+  attempts and the vault's counters are public on the explorer.
 
 ## Honest limits
 
@@ -194,7 +214,12 @@ Node 20 or newer.
 - [viem](https://viem.sh), [React](https://react.dev), [Vite](https://vite.dev),
   [OpenZeppelin Contracts](https://www.openzeppelin.com/contracts), solc, EthereumJS (local
   test EVM), cosmjs-types (test only), TypeScript, ESLint
-- Fonts: Instrument Serif, Inter, JetBrains Mono (SIL Open Font License)
+- Motion on the site: [GSAP](https://gsap.com) with ScrollTrigger and SplitText (GSAP
+  standard licence, free), [Lenis](https://lenis.darkroom.engineering) (MIT)
+- Fonts: Archivo, IBM Plex Sans, JetBrains Mono (SIL Open Font License)
+- Film: [Remotion](https://www.remotion.dev), narration by Microsoft Edge's neural voice
+  "Andrew" through [edge-tts](https://github.com/rany2/edge-tts), music composed for the film
+  in code. Photo of IBM Quantum System One by IBM Research, CC BY 2.0
 - Icons: "Sharp Line - Free" by [Streamline](https://www.streamlinehq.com/), CC BY 4.0
 
 ## Licence
